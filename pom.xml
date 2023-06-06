@@ -8,19 +8,7 @@
     <artifactId>cc4j</artifactId>
     <version>0.0.1</version>
 
-    <name>cc4c</name>
-
-    <scm>
-        <url>https://code.roche.com/homscaum/cc4j</url>
-    </scm>
-
-    <developers>
-        <developer>
-            <id>homscaum</id>
-            <email>marti.homs_caussa@roche.com</email>
-            <organization>Roche</organization>
-        </developer>
-    </developers>
+    <name>cc4j</name>
 
     <properties>
         <java.version>19</java.version>
