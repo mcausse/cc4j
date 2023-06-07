@@ -3,7 +3,6 @@ package org.homs.cc4j;
 import org.homs.cc4j.issue.IssueSeverity;
 import org.homs.cc4j.issue.IssuesReportJ;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -98,10 +97,10 @@ public class Rules {
                 methodsCount, 15, 25, 30);
     }
 
-    public void checkTooManyEffectiveLinesPerMethod(Location location, int linesOfEffectiveCode) {
-        registerIssue(location, "too many effective lines of code: %s (>%s warning, >%s critical, >%s error)",
-                linesOfEffectiveCode, 25, 35, 45);
-    }
+//    public void checkTooManyEffectiveLinesPerMethod(Location location, int linesOfEffectiveCode) {
+//        registerIssue(location, "too many effective lines of code: %s (>%s warning, >%s critical, >%s error)",
+//                linesOfEffectiveCode, 25, 35, 45);
+//    }
 
 //    public void checkTooManyMethodArguments(Location location, int argumentsCount) {
 //        registerIssue(location, "too many arguments: %s (>%s warning, >%s critical, >%s error)",
@@ -132,54 +131,54 @@ public class Rules {
         }
     }
 
-    void validateNamingConvention(Location location, String regexp, String elementName, String name) {
-        if (!name.matches(regexp)) {
-            this.issuesReport.registerIssue(CRITICAL, location.toString(),
-                    String.format("%s name should comply with a naming convention: %s", elementName, name));
-        }
-    }
+//    void validateNamingConvention(Location location, String regexp, String elementName, String name) {
+//        if (!name.matches(regexp)) {
+//            this.issuesReport.registerIssue(CRITICAL, location.toString(),
+//                    String.format("%s name should comply with a naming convention: %s", elementName, name));
+//        }
+//    }
 
     // LOGGER(1), STATIC(2), PROPERTY(3), CTOR(4), METHOD(5), EQUALS_HASHCODE(6), TOSTRING(7);
-    public void checkClassMembersOrdering(Location location, List<Cc4j.Member> r) {
-        var s = new StringBuilder();
-        for (var m : r) {
-            s.append(m.getOrder());
-        }
+//    public void checkClassMembersOrdering(Location location, List<Cc4j.Member> r) {
+//        var s = new StringBuilder();
+//        for (var m : r) {
+//            s.append(m.getOrder());
+//        }
+//
+//        var pattern = "^1?2*3*4*5*6*7*$";
+//        if (!s.toString().matches(pattern)) {
+//            this.issuesReport.registerIssue(CRITICAL, location.toString(),
+//                    String.format("class members should be ordered as the convention: %s (pattern is: %s)", s, pattern));
+//        }
+//    }
 
-        var pattern = "^1?2*3*4*5*6*7*$";
-        if (!s.toString().matches(pattern)) {
-            this.issuesReport.registerIssue(CRITICAL, location.toString(),
-                    String.format("class members should be ordered as the convention: %s (pattern is: %s)", s, pattern));
-        }
-    }
-
-    public void pronounceableAnalysis(Location location, String name) {
-        int consonants = consonantAnalysis(name);
-        registerIssue(location, "use pronounceable names: '" + name + "' scored with %s (>%s warning, >%s critical, >%s error)",
-                consonants, 4, 5, 6);
-    }
-
-    int consonantAnalysis(String name) {
-        String vowels = "aeiouAEIOUwyWY_";
-
-        int maxRun = 0;
-        int run = 0;
-        char last = 'a';
-        for (char c : name.toCharArray()) {
-            if (vowels.indexOf(c) >= 0) {
-                run = 0;
-            } else if (Character.isLowerCase(last) != Character.isLowerCase(c)) {
-                run = 1;
-            } else {
-                run++;
-            }
-
-            if (maxRun < run) {
-                maxRun = run;
-            }
-
-            last = c;
-        }
-        return maxRun;
-    }
+//    public void pronounceableAnalysis(Location location, String name) {
+//        int consonants = consonantAnalysis(name);
+//        registerIssue(location, "use pronounceable names: '" + name + "' scored with %s (>%s warning, >%s critical, >%s error)",
+//                consonants, 4, 5, 6);
+//    }
+//
+//    int consonantAnalysis(String name) {
+//        String vowels = "aeiouAEIOUwyWY_";
+//
+//        int maxRun = 0;
+//        int run = 0;
+//        char last = 'a';
+//        for (char c : name.toCharArray()) {
+//            if (vowels.indexOf(c) >= 0) {
+//                run = 0;
+//            } else if (Character.isLowerCase(last) != Character.isLowerCase(c)) {
+//                run = 1;
+//            } else {
+//                run++;
+//            }
+//
+//            if (maxRun < run) {
+//                maxRun = run;
+//            }
+//
+//            last = c;
+//        }
+//        return maxRun;
+//    }
 }

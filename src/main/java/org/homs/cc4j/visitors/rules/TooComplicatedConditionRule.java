@@ -5,7 +5,7 @@ import org.homs.cc4j.Listener;
 import org.homs.cc4j.Location;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
-public class TooComplicatedConditionRule extends RuleTreeVisitor {
+public class TooComplicatedConditionRule extends RuleTreeVisitor<Void> {
 
     static int THR_ERROR = 7;
     static int THR_CRITICAL = 5;

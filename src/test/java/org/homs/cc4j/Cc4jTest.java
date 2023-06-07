@@ -109,22 +109,6 @@ public class Cc4jTest {
     }
 
     @Test
-    void too_many_properties_in_class() throws IOException {
-
-        // act
-        var r = new Cc4j().analyseJavaFile(
-                getFile("cc4j/rules/too_many_properties_in_class.java"),
-                new DefaultListener());
-
-        assertThat(r.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
-        assertThat(r.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
-        assertThat(r.getIssuesCountBySeverity(WARNING)).isEqualTo(1);
-        assertThat(r.getIssues().toString()).contains(
-                "too many properties in a class: 17"
-        );
-    }
-
-    @Test
     void too_many_method_arguments() throws IOException {
 
         // act

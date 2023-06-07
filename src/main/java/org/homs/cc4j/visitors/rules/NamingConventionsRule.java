@@ -11,7 +11,7 @@ import org.homs.cc4j.visitors.RuleTreeVisitor;
 
 import javax.lang.model.element.Modifier;
 
-public class NamingConventionsRule extends RuleTreeVisitor {
+public class NamingConventionsRule extends RuleTreeVisitor<Void> {
 
     static final String CONSTANT_PATTERN = "^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$";
     static final String VARIABLE_NAME_PATTERN = "^[a-z][a-zA-Z0-9]*$";

@@ -8,7 +8,7 @@ import org.homs.cc4j.issue.IssueSeverity;
 
 import java.util.UnknownFormatConversionException;
 
-public abstract class RuleTreeVisitor extends Java19MetricsTreeVisitor<Void> {
+public abstract class RuleTreeVisitor<T> extends Java19MetricsTreeVisitor<T> {
 
     final Listener listener;
     final Location location;
@@ -18,12 +18,12 @@ public abstract class RuleTreeVisitor extends Java19MetricsTreeVisitor<Void> {
         this.location = location;
     }
 
-    public Integer visitClass(ClassTree node, Void p) {
+    public Integer visitClass(ClassTree node, T p) {
         this.location.push(node.getSimpleName().toString());
         return super.visitClass(node, p);
     }
 
-    public Integer visitMethod(MethodTree node, Void p) {
+    public Integer visitMethod(MethodTree node, T p) {
         location.push(node.getName().toString() + "(..)");
         int r = super.visitMethod(node, p);
         location.pop();
@@ -47,5 +47,13 @@ public abstract class RuleTreeVisitor extends Java19MetricsTreeVisitor<Void> {
         } else if (metricValue > warningThr) {
             this.listener.getIssuesReport().registerIssue(IssueSeverity.WARNING, location.toString(), message);
         }
+    }
+
+    protected Listener getListener() {
+        return listener;
+    }
+
+    protected Location getLocation() {
+        return location;
     }
 }
