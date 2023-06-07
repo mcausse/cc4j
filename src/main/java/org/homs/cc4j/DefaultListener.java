@@ -20,31 +20,31 @@ public class DefaultListener implements Listener {
 
     @Override
     public void checkClassName(Location location, String className) {
-        rules.checkClassNameConvention(location, className, "class");
+//        rules.checkClassNameConvention(location, className, "class");
         rules.pronounceableAnalysis(location, className);
     }
 
     @Override
     public void checkMethodName(Location location, String methodName) {
-        rules.checkMethodNameConvention(location, methodName);
+//        rules.checkMethodNameConvention(location, methodName);
         rules.pronounceableAnalysis(location, methodName);
     }
 
     @Override
     public void checkConstantName(Location location, String propertyName) {
-        rules.checkConstantNameConvention(location, propertyName);
+//        rules.checkConstantNameConvention(location, propertyName);
         rules.pronounceableAnalysis(location, propertyName);
     }
 
     @Override
     public void checkPropertyName(Location location, String propertyName) {
-        rules.checkPropertyNameConvention(location, propertyName);
+//        rules.checkPropertyNameConvention(location, propertyName);
         rules.pronounceableAnalysis(location, propertyName);
     }
 
     @Override
     public void checkArgumentName(Location location, String argumentName) {
-        rules.checkArgumentNameConvention(location, argumentName);
+//        rules.checkArgumentNameConvention(location, argumentName);
         rules.pronounceableAnalysis(location, argumentName);
     }
 

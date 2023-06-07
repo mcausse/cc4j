@@ -5,14 +5,14 @@ import org.homs.cc4j.Listener;
 import org.homs.cc4j.Location;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
-public class TooManyArgumentsTreeVisitor extends RuleTreeVisitor {
+public class TooManyArgumentsRule extends RuleTreeVisitor {
 
     static int THR_ERROR = 5;
     static int THR_CRITICAL = 4;
     static int THR_WARNING = 3;
 
-    public TooManyArgumentsTreeVisitor(Listener listener, Location location) {
-        super(listener,location);
+    public TooManyArgumentsRule(Listener listener, Location location) {
+        super(listener, location);
     }
 
     public Integer visitMethod(MethodTree node, Void p) {

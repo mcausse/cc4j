@@ -7,13 +7,13 @@ import org.homs.cc4j.Listener;
 import org.homs.cc4j.Location;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
-public class TooManyMethodsTreeVisitor extends RuleTreeVisitor {
+public class TooManyMethodsRule extends RuleTreeVisitor {
 
     static int THR_ERROR = 30;
     static int THR_CRITICAL = 25;
     static int THR_WARNING = 15;
 
-    public TooManyMethodsTreeVisitor(Listener listener, Location location) {
+    public TooManyMethodsRule(Listener listener, Location location) {
         super(listener, location);
     }
 

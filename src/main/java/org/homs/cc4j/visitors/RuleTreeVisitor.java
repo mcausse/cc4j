@@ -30,6 +30,10 @@ public abstract class RuleTreeVisitor extends Java19MetricsTreeVisitor<Void> {
         return r;
     }
 
+    protected void generateIssue(IssueSeverity severity, String message) {
+        listener.getIssuesReport().registerIssue(severity, location.toString(), message);
+    }
+
     protected void generateIssueIfThreshold(String message, int metricValue, int warningThr, int criticalThr, int errorThr) {
         try {
             message = String.format(message, metricValue, warningThr, criticalThr, errorThr);

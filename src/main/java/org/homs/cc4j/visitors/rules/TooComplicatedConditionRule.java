@@ -5,13 +5,13 @@ import org.homs.cc4j.Listener;
 import org.homs.cc4j.Location;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
-public class TooComplicatedConditionTreeVisitor extends RuleTreeVisitor {
+public class TooComplicatedConditionRule extends RuleTreeVisitor {
 
     static int THR_ERROR = 7;
     static int THR_CRITICAL = 5;
     static int THR_WARNING = 3;
 
-    public TooComplicatedConditionTreeVisitor(Listener listener, Location location) {
+    public TooComplicatedConditionRule(Listener listener, Location location) {
         super(listener, location);
     }
 

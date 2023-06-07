@@ -4,9 +4,10 @@ import com.sun.source.tree.*;
 import com.sun.source.util.JavacTask;
 import org.homs.cc4j.issue.IssuesReportJ;
 import org.homs.cc4j.util.FileUtils;
-import org.homs.cc4j.visitors.rules.TooComplicatedConditionTreeVisitor;
-import org.homs.cc4j.visitors.rules.TooManyArgumentsTreeVisitor;
-import org.homs.cc4j.visitors.rules.TooManyMethodsTreeVisitor;
+import org.homs.cc4j.visitors.rules.NamingConventionsRule;
+import org.homs.cc4j.visitors.rules.TooComplicatedConditionRule;
+import org.homs.cc4j.visitors.rules.TooManyArgumentsRule;
+import org.homs.cc4j.visitors.rules.TooManyMethodsRule;
 
 import javax.lang.model.element.Modifier;
 import javax.tools.JavaCompiler;
@@ -61,15 +62,17 @@ public class Cc4j {
 //            var vv=new Java19TreeVisitor();
 //            compUnit.accept(vv,null);
 
-            var vv2 = new TooComplicatedConditionTreeVisitor(listener, new Location(file.getName()));
+            var vv2 = new TooComplicatedConditionRule(listener, new Location(file.getName()));
             compUnit.accept(vv2, null);
 
-            var vv3 = new TooManyArgumentsTreeVisitor(listener, new Location(file.getName()));
+            var vv3 = new TooManyArgumentsRule(listener, new Location(file.getName()));
             compUnit.accept(vv3, null);
 
-            var vv4 = new TooManyMethodsTreeVisitor(listener, new Location(file.getName()));
+            var vv4 = new TooManyMethodsRule(listener, new Location(file.getName()));
             compUnit.accept(vv4, null);
 
+            var vv5 = new NamingConventionsRule(listener, new Location(file.getName()));
+            compUnit.accept(vv5, null);
 
             analizeCompilationUnit(listener, file, compUnit);
         }

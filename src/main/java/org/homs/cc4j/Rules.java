@@ -11,10 +11,10 @@ import static org.homs.cc4j.issue.IssueSeverity.*;
 
 public class Rules {
 
-    static final String CONSTANT_PATTERN = "^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$";
-    static final String VARIABLE_NAME_PATTERN = "^[a-z][a-zA-Z0-9]*$";
-    static final String METHOD_NAME_PATTERN = "^[a-z][a-zA-Z0-9]*$";
-    static final String CLASS_NAME_PATTERN = "^[A-Z][a-zA-Z0-9]*$";
+//    static final String CONSTANT_PATTERN = "^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$";
+//    static final String VARIABLE_NAME_PATTERN = "^[a-z][a-zA-Z0-9]*$";
+//    static final String METHOD_NAME_PATTERN = "^[a-z][a-zA-Z0-9]*$";
+//    static final String CLASS_NAME_PATTERN = "^[A-Z][a-zA-Z0-9]*$";
 
     final IssuesReportJ issuesReport;
 
@@ -43,28 +43,28 @@ public class Rules {
         }
     }
 
-    public void checkConstantNameConvention(Location location, String propertyName) {
-        validateNamingConvention(location, CONSTANT_PATTERN, "constant", propertyName);
-    }
-
-    public void checkPropertyNameConvention(Location location, String propertyName) {
-        validateNamingConvention(location, VARIABLE_NAME_PATTERN, "property", propertyName);
-    }
-
-    public void checkClassNameConvention(Location location, String className, String s) {
-        validateNamingConvention(location, CLASS_NAME_PATTERN, s, className);
-    }
-
-    public void checkMethodNameConvention(Location location, String methodName) {
-//        if (methodName.equals("<init>")) {
-//            return;
-//        }
-        validateNamingConvention(location, METHOD_NAME_PATTERN, "method", methodName);
-    }
-
-    public void checkArgumentNameConvention(Location location, String argumentName) {
-        validateNamingConvention(location, VARIABLE_NAME_PATTERN, "argument", argumentName);
-    }
+//    public void checkConstantNameConvention(Location location, String propertyName) {
+//        validateNamingConvention(location, CONSTANT_PATTERN, "constant", propertyName);
+//    }
+//
+//    public void checkPropertyNameConvention(Location location, String propertyName) {
+//        validateNamingConvention(location, VARIABLE_NAME_PATTERN, "property", propertyName);
+//    }
+//
+//    public void checkClassNameConvention(Location location, String className, String s) {
+//        validateNamingConvention(location, CLASS_NAME_PATTERN, s, className);
+//    }
+//
+//    public void checkMethodNameConvention(Location location, String methodName) {
+////        if (methodName.equals("<init>")) {
+////            return;
+////        }
+//        validateNamingConvention(location, METHOD_NAME_PATTERN, "method", methodName);
+//    }
+//
+//    public void checkArgumentNameConvention(Location location, String argumentName) {
+//        validateNamingConvention(location, VARIABLE_NAME_PATTERN, "argument", argumentName);
+//    }
 
     public void checkTodosAndFixmes(String javaFileName, String sourceCode) {
         checkForRegexp(sourceCode, javaFileName, "TODO ");

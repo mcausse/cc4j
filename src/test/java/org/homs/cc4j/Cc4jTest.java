@@ -34,12 +34,12 @@ public class Cc4jTest {
         assertThat(r.getIssuesCountBySeverity(CRITICAL)).isEqualTo(6);
         assertThat(r.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
         assertThat(r.getIssues().toString()).contains(
-                "class name should comply with a naming convention: le_class",
-                "constant name should comply with a naming convention: leConstant",
-                "property name should comply with a naming convention: LeProperty",
-                "method name should comply with a naming convention: Le_Method",
-                "argument name should comply with a naming convention: Abc",
-                "class name should comply with a naming convention: le_inner_class"
+                "class 'le_class' should comply with a naming convention: ^[A-Z][a-zA-Z0-9]*$ (at [naming_convention_rules.java])",
+                "constant 'leConstant' should comply with a naming convention: ^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$",
+                "property 'LeProperty' should comply with a naming convention: ^[a-z][a-zA-Z0-9]*$",
+                "method 'Le_Method' should comply with a naming convention: ^[a-z][a-zA-Z0-9]*$",
+                "parameter 'Abc' should comply with a naming convention: ^[a-z][a-zA-Z0-9]*$",
+                "class 'le_inner_class' should comply with a naming convention: ^[A-Z][a-zA-Z0-9]*$"
         );
     }
 
