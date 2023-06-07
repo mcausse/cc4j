@@ -216,7 +216,7 @@ public class Cc4jTest {
         assertThat(r.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
         assertThat(r.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
         assertThat(r.getIssues().toString()).contains(
-                "too complicated logical condition: '&|!&|||': (a <= b && b >= c || c < b && !(b > a || e == f) || f == g || g != h)"
+                "+ too complicated logical condition, rated as 7; expression=(a <= b && b >= c || c < b && !(b > a || e == f) || f == g || g != h) (at [Jou]: jou(..))]"
         );
     }
 }

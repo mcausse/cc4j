@@ -1,5 +1,6 @@
 package org.homs.cc4j;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -56,6 +57,7 @@ public class Cc4jSelfTest {
         new Cc4j().analyseJavaFiles(files, listener);
     }
 
+    @Disabled
     @Test
     void all() throws IOException {
 

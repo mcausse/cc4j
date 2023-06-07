@@ -3,6 +3,7 @@ package org.homs.cc4j;
 import java.util.Stack;
 
 public class Location {
+
     final String javaFileName;
     final Stack<String> path;
 
