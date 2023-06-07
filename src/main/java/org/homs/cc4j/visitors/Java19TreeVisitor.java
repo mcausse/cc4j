@@ -1,8 +1,9 @@
 package org.homs.cc4j.visitors;
 
 import com.sun.source.tree.*;
+import com.sun.source.util.SimpleTreeVisitor;
 
-public class Java19TreeVisitor<R, P> implements TreeVisitor<R, P> {
+public class Java19TreeVisitor<R, P> extends SimpleTreeVisitor<R, P> /*implements TreeVisitor<R, P>*/ {
 
     @Override
     public R visitAnnotatedType(AnnotatedTypeTree node, P p) {

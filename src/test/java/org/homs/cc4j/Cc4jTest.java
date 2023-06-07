@@ -104,7 +104,7 @@ public class Cc4jTest {
         assertThat(r.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
         assertThat(r.getIssuesCountBySeverity(WARNING)).isEqualTo(1);
         assertThat(r.getIssues().toString()).contains(
-                "too many methods in a class: 17"
+                "too many methods: 17 (>15 warning, >25 critical, >30 error) (at [too_many_methods_in_class.java])"
         );
     }
 
@@ -216,7 +216,7 @@ public class Cc4jTest {
         assertThat(r.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
         assertThat(r.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
         assertThat(r.getIssues().toString()).contains(
-                "+ too complicated logical condition, rated as 7; expression=(a <= b && b >= c || c < b && !(b > a || e == f) || f == g || g != h) (at [Jou]: jou(..))]"
+                "+ too complicated logical condition, rated as 7 (>3 warning, >5 critical, >7 error); expression=(a <= b && b >= c || c < b && !(b > a || e == f) || f == g || g != h) (at [too_complicated_relational_expression.java]: Jou.jou(..))]"
         );
     }
 }

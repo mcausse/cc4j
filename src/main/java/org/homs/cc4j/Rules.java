@@ -88,10 +88,10 @@ public class Rules {
                 maxWidth, 120, 160, 180);
     }
 
-    public void checkTooManyMethodsPerClass(Location location, int methodsCount) {
-        registerIssue(location, "too many methods in a class: %s (>%s warning, >%s critical, >%s error)",
-                methodsCount, 15, 25, 30);
-    }
+//    public void checkTooManyMethodsPerClass(Location location, int methodsCount) {
+//        registerIssue(location, "too many methods in a class: %s (>%s warning, >%s critical, >%s error)",
+//                methodsCount, 15, 25, 30);
+//    }
 
     public void checkTooManyPropertiesPerClass(Location location, int methodsCount) {
         registerIssue(location, "too many properties in a class: %s (>%s warning, >%s critical, >%s error)",
@@ -103,10 +103,10 @@ public class Rules {
                 linesOfEffectiveCode, 25, 35, 45);
     }
 
-    public void checkTooManyMethodArguments(Location location, int argumentsCount) {
-        registerIssue(location, "too many arguments: %s (>%s warning, >%s critical, >%s error)",
-                argumentsCount, 3, 4, 5);
-    }
+//    public void checkTooManyMethodArguments(Location location, int argumentsCount) {
+//        registerIssue(location, "too many arguments: %s (>%s warning, >%s critical, >%s error)",
+//                argumentsCount, 3, 4, 5);
+//    }
 
     public void checkTooDeplyNestedCode(Location location, int indentMaxLevel) {
         registerIssue(location, "%s indent levels (>%s warning, >%s critical, >%s error)",

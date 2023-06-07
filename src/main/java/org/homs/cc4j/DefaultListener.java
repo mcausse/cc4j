@@ -51,12 +51,12 @@ public class DefaultListener implements Listener {
     @Override
     public void onClassMembersCount(Location location, int constantsCount, int propertiesCount, int methodsCount, int innerClassesCount) {
         rules.checkTooManyPropertiesPerClass(location, propertiesCount);
-        rules.checkTooManyMethodsPerClass(location, methodsCount);
+//        rules.checkTooManyMethodsPerClass(location, methodsCount);
     }
 
     @Override
     public void checkMethodMetrics(Location location, int argumentsCount, int linesOfEffectiveCode) {
-        rules.checkTooManyMethodArguments(location, argumentsCount);
+//        rules.checkTooManyMethodArguments(location, argumentsCount);
         rules.checkTooManyEffectiveLinesPerMethod(location, linesOfEffectiveCode);
     }
 

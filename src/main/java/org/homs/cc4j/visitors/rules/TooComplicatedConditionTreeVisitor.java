@@ -1,32 +1,23 @@
-package org.homs.cc4j.visitors;
+package org.homs.cc4j.visitors.rules;
 
 import com.sun.source.tree.*;
 import org.homs.cc4j.Listener;
 import org.homs.cc4j.Location;
-import org.homs.cc4j.issue.IssueSeverity;
+import org.homs.cc4j.visitors.RuleTreeVisitor;
 
-public class TooComplicatedConditionTreeVisitor extends Java19MetricsTreeVisitor<Void> {
+public class TooComplicatedConditionTreeVisitor extends RuleTreeVisitor {
 
     static int THR_ERROR = 7;
     static int THR_CRITICAL = 5;
     static int THR_WARNING = 3;
 
-    final Listener listener;
-
-    Location location;
-
-    public TooComplicatedConditionTreeVisitor(Listener listener) {
-        this.listener = listener;
+    public TooComplicatedConditionTreeVisitor(Listener listener, Location location) {
+        super(listener, location);
     }
 
-    public Integer visitClass(ClassTree node, Void p) {
-        this.location = new Location(node.getSimpleName().toString());
-        return super.visitClass(node, p);
-    }
-
-    public Integer visitMethod(MethodTree node, Void p) {
-        location.push(node.getName().toString() + "(..)");
-        return super.visitMethod(node, p);
+    void generateIssueIfThreshold(int metricValue, String expression) {
+        String message = "too complicated logical condition, rated as %s (>%s warning, >%s critical, >%s error); expression=" + expression.replace("%", "%%");
+        generateIssueIfThreshold(message, metricValue, THR_WARNING, THR_CRITICAL, THR_ERROR);
     }
 
     public Integer visitIf(IfTree node, Void p) {
@@ -48,18 +39,6 @@ public class TooComplicatedConditionTreeVisitor extends Java19MetricsTreeVisitor
         generateIssueIfThreshold(metricValue, node.getCondition().toString());
 
         return super.visitDoWhileLoop(node, p);
-    }
-
-    private void generateIssueIfThreshold(int metricValue, String expression) {
-        final String message = "too complicated logical condition, rated as " + metricValue + "; expression=" + expression;
-
-        if (metricValue > THR_ERROR) {
-            this.listener.getIssuesReport().registerIssue(IssueSeverity.ERROR, location.toString(), message);
-        } else if (metricValue > THR_CRITICAL) {
-            this.listener.getIssuesReport().registerIssue(IssueSeverity.CRITICAL, location.toString(), message);
-        } else if (metricValue > THR_WARNING) {
-            this.listener.getIssuesReport().registerIssue(IssueSeverity.WARNING, location.toString(), message);
-        }
     }
 
     public Integer visitBinary(BinaryTree node, Void p) {
