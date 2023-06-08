@@ -2,8 +2,11 @@ package org.homs.cc4j;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.JavacTask;
-import org.homs.cc4j.issue.IssuesReportJ;
+import org.homs.cc4j.issue.IssuesReport;
+import org.homs.cc4j.issue.Location;
+import org.homs.cc4j.issue.SimpleIssuesReportVisitor;
 import org.homs.cc4j.util.FileUtils;
+import org.homs.cc4j.visitors.RuleTreeVisitor;
 import org.homs.cc4j.visitors.rules.*;
 
 import javax.tools.JavaCompiler;
@@ -24,44 +27,61 @@ public class Cc4j {
         System.out.println("=============================================================");
     }
 
-    public IssuesReportJ analyseJavaFile(File file, Listener listener) throws IOException {
-        return analyseJavaFiles(List.of(file), listener);
+    public void analyseJavaFile(File file, IssuesReport issuesReport) throws IOException {
+        analyseJavaFiles(List.of(file), issuesReport);
     }
 
-    public IssuesReportJ analyseJavaFiles(List<File> files, Listener listener) throws IOException {
+    public void analyseJavaFiles(List<File> files, IssuesReport issuesReport) throws IOException {
 
         final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
         try (final StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, StandardCharsets.UTF_8)) {
             for (var file : files) {
-                analizeFile(listener, compiler, fileManager, file);
+                analizeFile(issuesReport, compiler, fileManager, file);
             }
-            listener.displayReport();
+            issuesReport.acceptReportVisitor(new SimpleIssuesReportVisitor());
         }
-        return listener.getIssuesReport();
     }
 
-    void analizeFile(Listener listener, JavaCompiler compiler, StandardJavaFileManager fileManager, File file) throws IOException {
+    void analizeFile(IssuesReport issuesReport, JavaCompiler compiler, StandardJavaFileManager fileManager, File file) throws IOException {
 
-        String sourceCode = FileUtils.loadFile(file.toString());
+        {
+            String sourceCode = FileUtils.loadFile(file.toString());
 
-        listener.verifyClassSourceCode(file.getName(), sourceCode);
+            final FileRules fileRules = new FileRules(issuesReport);
+            fileRules.checkTodosAndFixmes(file.getName(), sourceCode);
+            fileRules.checkClassMaxLineWidth(file.getName(), sourceCode);
+            fileRules.checkClassMaxNumberOfLines(file.getName(), sourceCode);
+            fileRules.checkForAddSpacesToIncreaseReadibility(file.getName(), sourceCode);
+        }
 
         final Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromFiles(List.of(file));
 
         final JavacTask javacTask = (JavacTask) compiler.getTask(null, fileManager, null, null, null, compilationUnits);
         final Iterable<? extends CompilationUnitTree> compilationUnitTrees = javacTask.parse();
 
-        for (CompilationUnitTree compUnit : compilationUnitTrees) {
+        List<RuleTreeVisitor<?>> rules = List.of(
+                new ClassMembersOrderingRule(),
+                new MaxIndentLevelRule(),
+                new NamingConventionsRule(),
+                new TooComplicatedConditionRule(),
+                new TooManyArgumentsRule(),
+                new TooManyEffectiveLinesPerMethodRule(),
+                new TooManyMethodsRule(),
+                new UsePronounceableNamesRule()
 
-            compUnit.accept(new TooComplicatedConditionRule(listener, new Location(file.getName())), null);
-            compUnit.accept(new TooManyArgumentsRule(listener, new Location(file.getName())), null);
-            compUnit.accept(new TooManyMethodsRule(listener, new Location(file.getName())), null);
-            compUnit.accept(new NamingConventionsRule(listener, new Location(file.getName())), null);
-            compUnit.accept(new TooManyEffectiveLinesPerMethodRule(listener, new Location(file.getName())), null);
-            compUnit.accept(new ClassMembersOrderingRule(listener, new Location(file.getName())), null);
-            compUnit.accept(new MaxIndentLevelRule(listener, new Location(file.getName())), null);
-            compUnit.accept(new UsePronounceableNamesRule(listener, new Location(file.getName())), null);
+                // avoid Optional<..> arguments
+                // https://rules.sonarsource.com/java/type/Code%20Smell/RSPEC-1607
+                // clean the code + add spaces to increase the readibility
+        );
+
+        for (CompilationUnitTree compUnit : compilationUnitTrees) {
+            for (var rule : rules) {
+                rule.setIssuesReport(issuesReport);
+                rule.setLocation(new Location(file.getName()));
+
+                compUnit.accept(rule, null);
+            }
         }
     }
 

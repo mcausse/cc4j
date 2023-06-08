@@ -1,8 +1,6 @@
 package org.homs.cc4j.visitors.rules;
 
 import com.sun.source.tree.*;
-import org.homs.cc4j.Listener;
-import org.homs.cc4j.Location;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
 import java.util.List;
@@ -13,11 +11,8 @@ public class MaxIndentLevelRule extends RuleTreeVisitor<Void> {
     static int THR_CRITICAL = 4;
     static int THR_WARNING = 3;
 
-    public MaxIndentLevelRule(Listener listener, Location location) {
-        super(listener, location);
-    }
-
     public Integer visitMethod(MethodTree node, Void p) {
+        location.push(node.getName().toString() + "(..)");
 
         if (node.getBody() != null) {
             int indentMaxLevel = inspectStatements(node.getBody().getStatements(), 0);
@@ -25,6 +20,8 @@ public class MaxIndentLevelRule extends RuleTreeVisitor<Void> {
             generateIssueIfThreshold("%s indent levels (>%s warning, >%s critical, >%s error)",
                     indentMaxLevel, THR_WARNING, THR_CRITICAL, THR_ERROR);
         }
+
+        location.pop();
         return 0;
     }
 
@@ -66,8 +63,7 @@ public class MaxIndentLevelRule extends RuleTreeVisitor<Void> {
                     }
                 }
                 return localLevel;
-            } else if (stm instanceof TryTree) {
-                var stmTree = (TryTree) stm;
+            } else if (stm instanceof TryTree stmTree) {
                 int maxLevel = inspectStatements(stmTree.getBlock().getStatements(), level);
                 for (CatchTree catchTree : stmTree.getCatches()) {
                     int catchMaxLevel = inspectStatement(catchTree.getBlock(), level);

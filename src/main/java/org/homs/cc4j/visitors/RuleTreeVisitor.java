@@ -2,25 +2,30 @@ package org.homs.cc4j.visitors;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
-import org.homs.cc4j.Listener;
-import org.homs.cc4j.Location;
 import org.homs.cc4j.issue.IssueSeverity;
+import org.homs.cc4j.issue.IssuesReport;
+import org.homs.cc4j.issue.Location;
 
 import java.util.UnknownFormatConversionException;
 
 public abstract class RuleTreeVisitor<T> extends Java19MetricsTreeVisitor<T> {
 
-    final Listener listener;
-    final Location location;
+    protected IssuesReport issuesReport;
+    protected Location location;
 
-    public RuleTreeVisitor(Listener listener, Location location) {
-        this.listener = listener;
+    public void setIssuesReport(IssuesReport issuesReport) {
+        this.issuesReport = issuesReport;
+    }
+
+    public void setLocation(Location location) {
         this.location = location;
     }
 
     public Integer visitClass(ClassTree node, T p) {
         this.location.push(node.getSimpleName().toString());
-        return super.visitClass(node, p);
+        var r = super.visitClass(node, p);
+        this.location.pop();
+        return r;
     }
 
     public Integer visitMethod(MethodTree node, T p) {
@@ -31,7 +36,7 @@ public abstract class RuleTreeVisitor<T> extends Java19MetricsTreeVisitor<T> {
     }
 
     protected void generateIssue(IssueSeverity severity, String message) {
-        listener.getIssuesReport().registerIssue(severity, location.toString(), message);
+        issuesReport.registerIssue(severity, location, message);
     }
 
     protected void generateIssueIfThreshold(String message, int metricValue, int warningThr, int criticalThr, int errorThr) {
@@ -41,19 +46,11 @@ public abstract class RuleTreeVisitor<T> extends Java19MetricsTreeVisitor<T> {
             throw new RuntimeException(message, e);
         }
         if (metricValue > errorThr) {
-            this.listener.getIssuesReport().registerIssue(IssueSeverity.ERROR, location.toString(), message);
+            issuesReport.registerIssue(IssueSeverity.ERROR, location, message);
         } else if (metricValue > criticalThr) {
-            this.listener.getIssuesReport().registerIssue(IssueSeverity.CRITICAL, location.toString(), message);
+            issuesReport.registerIssue(IssueSeverity.CRITICAL, location, message);
         } else if (metricValue > warningThr) {
-            this.listener.getIssuesReport().registerIssue(IssueSeverity.WARNING, location.toString(), message);
+            issuesReport.registerIssue(IssueSeverity.WARNING, location, message);
         }
-    }
-
-    protected Listener getListener() {
-        return listener;
-    }
-
-    protected Location getLocation() {
-        return location;
     }
 }

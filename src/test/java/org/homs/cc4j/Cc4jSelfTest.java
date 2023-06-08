@@ -1,5 +1,7 @@
 package org.homs.cc4j;
 
+import org.homs.cc4j.issue.IssuesReport;
+import org.homs.cc4j.issue.PerClassIssuesReportVisitor;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -19,9 +21,10 @@ public class Cc4jSelfTest {
                         && f.contains("cc4j")
                         && !f.contains("test")
         );
-        var listener = new DefaultListener();
 
-        new Cc4j().analyseJavaFiles(files, listener);
+        var ir = new IssuesReport();
+        new Cc4j().analyseJavaFiles(files, ir);
+        ir.acceptReportVisitor(new PerClassIssuesReportVisitor());
     }
 
     @Test
@@ -30,9 +33,8 @@ public class Cc4jSelfTest {
         List<File> files = processDirectory(new File("C:\\java\\workospace\\lispo2021"),
                 f -> f.endsWith(".java")
         );
-        var listener = new DefaultListener();
 
-        new Cc4j().analyseJavaFiles(files, listener);
+        new Cc4j().analyseJavaFiles(files, new IssuesReport());
     }
 
     @Test
@@ -41,9 +43,8 @@ public class Cc4jSelfTest {
         List<File> files = processDirectory(new File("C:\\java\\workospace\\martin-uml"),
                 f -> f.endsWith(".java")
         );
-        var listener = new DefaultListener();
 
-        new Cc4j().analyseJavaFiles(files, listener);
+        new Cc4j().analyseJavaFiles(files, new IssuesReport());
     }
 
     @Test
@@ -52,9 +53,8 @@ public class Cc4jSelfTest {
         List<File> files = processDirectory(new File("C:\\java\\workospace\\tool-improved-terminal"),
                 f -> f.endsWith(".java")
         );
-        var listener = new DefaultListener();
 
-        new Cc4j().analyseJavaFiles(files, listener);
+        new Cc4j().analyseJavaFiles(files, new IssuesReport());
     }
 
     @Disabled
@@ -64,9 +64,8 @@ public class Cc4jSelfTest {
         List<File> files = processDirectory(new File("C:\\java\\workospace"),
                 f -> f.endsWith(".java")
         );
-        var listener = new DefaultListener();
 
-        new Cc4j().analyseJavaFiles(files, listener);
+        new Cc4j().analyseJavaFiles(files, new IssuesReport());
     }
 
 }

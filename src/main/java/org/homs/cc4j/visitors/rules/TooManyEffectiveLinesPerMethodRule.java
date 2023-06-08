@@ -1,8 +1,6 @@
 package org.homs.cc4j.visitors.rules;
 
 import com.sun.source.tree.MethodTree;
-import org.homs.cc4j.Listener;
-import org.homs.cc4j.Location;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
 public class TooManyEffectiveLinesPerMethodRule extends RuleTreeVisitor<Void> {
@@ -11,11 +9,8 @@ public class TooManyEffectiveLinesPerMethodRule extends RuleTreeVisitor<Void> {
     static int THR_CRITICAL = 35;
     static int THR_WARNING = 25;
 
-    public TooManyEffectiveLinesPerMethodRule(Listener listener, Location location) {
-        super(listener, location);
-    }
-
     public Integer visitMethod(MethodTree node, Void p) {
+        location.push(node.getName().toString() + "(..)");
 
         final int linesOfEffectiveCode;
         if (node.getBody() == null) {
@@ -28,6 +23,7 @@ public class TooManyEffectiveLinesPerMethodRule extends RuleTreeVisitor<Void> {
                 linesOfEffectiveCode,
                 THR_WARNING, THR_CRITICAL, THR_ERROR);
 
+        location.pop();
         return 0;
     }
 }

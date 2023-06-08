@@ -1,8 +1,6 @@
 package org.homs.cc4j.visitors.rules;
 
 import com.sun.source.tree.*;
-import org.homs.cc4j.Listener;
-import org.homs.cc4j.Location;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
 public class TooComplicatedConditionRule extends RuleTreeVisitor<Void> {
@@ -11,12 +9,9 @@ public class TooComplicatedConditionRule extends RuleTreeVisitor<Void> {
     static int THR_CRITICAL = 5;
     static int THR_WARNING = 3;
 
-    public TooComplicatedConditionRule(Listener listener, Location location) {
-        super(listener, location);
-    }
-
     void generateIssueIfThreshold(int metricValue, String expression) {
-        String message = "too complicated logical condition, rated as %s (>%s warning, >%s critical, >%s error); expression=" + expression.replace("%", "%%");
+        String message = "too complicated logical condition, rated as %s (>%s warning, >%s critical, >%s error); expression=" +
+                expression.replace("%", "%%");
         generateIssueIfThreshold(message, metricValue, THR_WARNING, THR_CRITICAL, THR_ERROR);
     }
 
@@ -61,12 +56,4 @@ public class TooComplicatedConditionRule extends RuleTreeVisitor<Void> {
         var r = super.visitConditionalExpression(node, p);
         return r + 3;
     }
-
-
-//    public Void visitParenthesized(ParenthesizedTree node, Void p) {
-//        this.strb.append('(');
-//        var r = super.visitParenthesized(node, p);
-//        this.strb.append(')');
-//        return r;
-//    }
 }

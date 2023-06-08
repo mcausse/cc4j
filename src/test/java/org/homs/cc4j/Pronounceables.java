@@ -1,17 +1,19 @@
 package org.homs.cc4j;
 
+import org.homs.cc4j.visitors.rules.UsePronounceableNamesRule;
 import org.junit.jupiter.api.Test;
 
 public class Pronounceables {
-
 
     @Test
     void name() {
 
         String[] ns = {"GoodName", "nPLHDirectory", "yyyymmdd"};
 
+        var sut = new UsePronounceableNamesRule();
+
         for (var n : ns) {
-            System.out.println(n + " => " + analisis(n));
+            System.out.println(n + " => " + sut.consonantAnalysis(n));
         }
     }
 

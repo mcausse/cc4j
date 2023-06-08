@@ -4,8 +4,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import org.homs.cc4j.Listener;
-import org.homs.cc4j.Location;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
 import javax.lang.model.element.Modifier;
@@ -15,10 +13,6 @@ import java.util.List;
 import static org.homs.cc4j.issue.IssueSeverity.CRITICAL;
 
 public class ClassMembersOrderingRule extends RuleTreeVisitor<Void> {
-
-    public ClassMembersOrderingRule(Listener listener, Location location) {
-        super(listener, location);
-    }
 
     enum Member {
         LOGGER(1), STATIC(2), PROPERTY(3), CTOR(4), METHOD(5), EQUALS_HASHCODE(6), TOSTRING(7);
@@ -35,7 +29,13 @@ public class ClassMembersOrderingRule extends RuleTreeVisitor<Void> {
     }
 
     public Integer visitClass(ClassTree node, Void p) {
+        location.push(node.getSimpleName().toString());
+        inspectClassMembersOrder(node);
+        location.pop();
+        return 0;
+    }
 
+    private void inspectClassMembersOrder(ClassTree node) {
         List<Member> r = new ArrayList<>();
         for (Tree member : node.getMembers()) {
             if (member instanceof VariableTree) {
@@ -87,7 +87,5 @@ public class ClassMembersOrderingRule extends RuleTreeVisitor<Void> {
         if (!s.toString().matches(pattern)) {
             generateIssue(CRITICAL, String.format("class members should be ordered as the convention: %s (pattern is: %s)", s, pattern));
         }
-
-        return 0;
     }
 }

@@ -4,8 +4,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import org.homs.cc4j.Listener;
-import org.homs.cc4j.Location;
 import org.homs.cc4j.issue.IssueSeverity;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
@@ -18,11 +16,8 @@ public class NamingConventionsRule extends RuleTreeVisitor<Void> {
     static final String METHOD_NAME_PATTERN = "^[a-z][a-zA-Z0-9]*$";
     static final String CLASS_NAME_PATTERN = "^[A-Z][a-zA-Z0-9]*$";
 
-    public NamingConventionsRule(Listener listener, Location location) {
-        super(listener, location);
-    }
-
     public Integer visitClass(ClassTree node, Void p) {
+        location.push(node.getSimpleName().toString());
 
         var className = node.getSimpleName().toString();
         if (!className.matches(CLASS_NAME_PATTERN)) {
@@ -34,11 +29,11 @@ public class NamingConventionsRule extends RuleTreeVisitor<Void> {
                 checkProperty((VariableTree) member);
             } else if (member instanceof MethodTree) {
                 checkMethod(((MethodTree) member));
-            } else if (member instanceof ClassTree) {
-                member.accept(this, p);
             }
         }
-        return 0;
+
+        location.pop();
+        return super.visitClass(node, p);
     }
 
     void checkProperty(VariableTree property) {
@@ -66,11 +61,15 @@ public class NamingConventionsRule extends RuleTreeVisitor<Void> {
             // we skip c'tors
             return;
         }
+        location.push(methodTree.getName().toString() + "(..)");
+
         String name = methodTree.getName().toString();
         if (!name.matches(METHOD_NAME_PATTERN)) {
             generateIssue(IssueSeverity.CRITICAL, String.format("method '%s' should comply with a naming convention: %s", name, METHOD_NAME_PATTERN));
         }
         checkMethodArguments(methodTree);
+
+        location.pop();
     }
 
     void checkMethodArguments(MethodTree methodTree) {
@@ -81,6 +80,4 @@ public class NamingConventionsRule extends RuleTreeVisitor<Void> {
             }
         }
     }
-
-
 }

@@ -29,7 +29,7 @@ public class FileUtils {
                 r.addAll(processDirectory(fileEntry, fileNamePredicate));
             } else {
                 if (fileNamePredicate.test(fileEntry.getAbsoluteFile().toString())) {
-                    System.out.println(fileEntry.getName());
+//                    System.out.println(fileEntry.getName());
                     r.add(fileEntry);
                 }
             }

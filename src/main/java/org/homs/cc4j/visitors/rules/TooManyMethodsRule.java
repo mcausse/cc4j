@@ -3,8 +3,6 @@ package org.homs.cc4j.visitors.rules;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import org.homs.cc4j.Listener;
-import org.homs.cc4j.Location;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
 public class TooManyMethodsRule extends RuleTreeVisitor<Void> {
@@ -13,11 +11,9 @@ public class TooManyMethodsRule extends RuleTreeVisitor<Void> {
     static int THR_CRITICAL = 25;
     static int THR_WARNING = 15;
 
-    public TooManyMethodsRule(Listener listener, Location location) {
-        super(listener, location);
-    }
-
     public Integer visitClass(ClassTree node, Void p) {
+        location.push(node.getSimpleName().toString());
+
         var r = 0;
         for (Tree tree1 : node.getMembers()) {
             r += tree1.accept(this, p);
@@ -26,6 +22,7 @@ public class TooManyMethodsRule extends RuleTreeVisitor<Void> {
                 r,
                 THR_WARNING, THR_CRITICAL, THR_ERROR);
 
+        location.pop();
         return 0;
     }
 

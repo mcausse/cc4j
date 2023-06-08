@@ -1,4 +1,4 @@
-package org.homs.cc4j;
+package org.homs.cc4j.issue;
 
 import java.util.Stack;
 
@@ -6,6 +6,12 @@ public class Location {
 
     final String javaFileName;
     final Stack<String> path;
+
+    public Location(Location location) {
+        this.javaFileName = location.javaFileName;
+        this.path = new Stack<>();
+        this.path.addAll(location.path);
+    }
 
     public Location(String javaFileName) {
         this.javaFileName = javaFileName;
@@ -18,6 +24,14 @@ public class Location {
 
     public void pop() {
         this.path.pop();
+    }
+
+    public String getJavaFileName() {
+        return javaFileName;
+    }
+
+    public Stack<String> getPath() {
+        return path;
     }
 
     @Override
