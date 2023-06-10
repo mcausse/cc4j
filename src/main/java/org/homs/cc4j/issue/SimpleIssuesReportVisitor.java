@@ -17,8 +17,6 @@ public class SimpleIssuesReportVisitor implements IssuesReportVisitor {
         }
         ps.println();
 
-        //TODO passar PrintStream "System.out"
-        //TODO reportar per class
         ps.println("-------------------------------------------------------------");
         ps.printf("%4d Errors(s) found.%n", issuesReport.getIssuesCountBySeverity(ERROR));
         ps.printf("%4d Critical(s) found.%n", issuesReport.getIssuesCountBySeverity(CRITICAL));

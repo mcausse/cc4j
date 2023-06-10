@@ -1,4 +1,4 @@
-package org.homs.cc4j;
+package org.homs.cc4j.util;
 
 public class CodeCleaner {
 
@@ -24,7 +24,7 @@ public class CodeCleaner {
 
     State consumeChar(State state, char c, StringBuilder strb) {
         switch (state) {
-            case CODE:
+            case CODE -> {
                 strb.append(c);
                 if (c == '/') {
                     return State.SLASH;
@@ -33,7 +33,8 @@ public class CodeCleaner {
                     return State.STRING;
                 }
                 return State.CODE;
-            case SLASH:
+            }
+            case SLASH -> {
                 if (c == '/') {
                     strb.append(c);
                     return State.SINGLELINE_COMMENT;
@@ -44,21 +45,24 @@ public class CodeCleaner {
                 }
                 strb.append(encode(c));
                 return State.CODE;
-            case SINGLELINE_COMMENT:
+            }
+            case SINGLELINE_COMMENT -> {
                 if (c == '\n') {
                     strb.append(c);
                     return State.CODE;
                 }
                 strb.append(encode(c));
                 return State.SINGLELINE_COMMENT;
-            case MULTILINE_COMMENT:
+            }
+            case MULTILINE_COMMENT -> {
                 if (c == '*') {
                     strb.append(c);
                     return State.STAR;
                 }
                 strb.append(encode(c));
                 return State.MULTILINE_COMMENT;
-            case STAR:
+            }
+            case STAR -> {
                 if (c == '/') {
                     strb.append(c);
                     return State.CODE;
@@ -69,15 +73,16 @@ public class CodeCleaner {
                 }
                 strb.append(encode(c));
                 return State.MULTILINE_COMMENT;
-            case STRING:
+            }
+            case STRING -> {
                 if (c == '"') {
                     strb.append(c);
                     return State.CODE;
                 }
                 strb.append(encode(c));
                 return State.STRING;
-            default:
-                throw new RuntimeException(state.name());
+            }
+            default -> throw new RuntimeException(state.name());
         }
     }
 }

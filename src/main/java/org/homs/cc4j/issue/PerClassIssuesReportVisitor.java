@@ -32,11 +32,13 @@ public class PerClassIssuesReportVisitor implements IssuesReportVisitor {
         ps.printf("%40s %4s %4s %4s%n", "", "*", "+", "-");
         ps.println("-------------------------------------------------------------");
         for (var fileName : fileNames) {
-            ps.printf("%40s %4d %4d %4d%n",
-                    fileName,
-                    getIssuesCountBySeverity(issuesReport, fileName, ERROR),
-                    getIssuesCountBySeverity(issuesReport, fileName, CRITICAL),
-                    getIssuesCountBySeverity(issuesReport, fileName, WARNING));
+            int errors = getIssuesCountBySeverity(issuesReport, fileName, ERROR);
+            int criticals = getIssuesCountBySeverity(issuesReport, fileName, CRITICAL);
+            int warnings = getIssuesCountBySeverity(issuesReport, fileName, WARNING);
+            ps.printf("%40s %4s %4s %4s%n", fileName,
+                    errors == 0 ? "" : errors,
+                    criticals == 0 ? "" : criticals,
+                    warnings == 0 ? "" : warnings);
         }
         ps.println();
     }

@@ -3,6 +3,7 @@ package org.homs.cc4j;
 import org.homs.cc4j.issue.IssueSeverity;
 import org.homs.cc4j.issue.IssuesReport;
 import org.homs.cc4j.issue.Location;
+import org.homs.cc4j.util.CodeCleaner;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,9 +38,6 @@ public class FileRules {
     public void checkTodosAndFixmes(String javaFileName, String sourceCode) {
         checkForRegexp(new Location(javaFileName), sourceCode, "TODO ", CRITICAL, "%s pending TODO(s) found");
         checkForRegexp(new Location(javaFileName), sourceCode, "FIXME ", CRITICAL, "%s pending FIXME(s) found");
-        checkForRegexp(new Location(javaFileName), sourceCode, "@Deprecated", CRITICAL, "%s pending @Deprecated(s) found");
-        checkForRegexp(new Location(javaFileName), sourceCode, "@Ignore[^(]", CRITICAL, "%s pending @Ignore(s) (without justification) found");
-        checkForRegexp(new Location(javaFileName), sourceCode, "@Disabled[^(]", CRITICAL, "%s pending @Disabled(s) (without justification) found");
     }
 
     public void checkClassMaxLineWidth(String javaFileName, String sourceCode) {
@@ -86,6 +84,11 @@ public class FileRules {
             location.push("line " + (i + 1));
 
             String line = sourceLines[i];
+
+            checkForRegexp(location, line, "@Deprecated", CRITICAL, "%s pending @Deprecated(s) found");
+            checkForRegexp(location, line, "@Ignore[^(]", CRITICAL, "%s pending @Ignore(s) (without justification) found");
+            checkForRegexp(location, line, "@Disabled[^(]", CRITICAL, "%s pending @Disabled(s) (without justification) found");
+
             checkForRegexp(location, line, ",[^\\s]", WARNING, "%s (after ',') spaces pending to add to increase the readibility");
             checkForRegexp(location, line, "[^\\s]\\&\\&[^\\s]", WARNING, "%s ('&&') spaces pending to add to increase the readibility");
             checkForRegexp(location, line, "[^\\s]\\|\\|[^\\s]", WARNING, "%s ('||') spaces pending to add to increase the readibility");

@@ -20,24 +20,6 @@ public class IssuesReport {
         issuesVisitor.visit(this, System.out);
     }
 
-//    @Deprecated
-//    public void displayReport() {
-//        for (var severity : IssueSeverity.values()) {
-//            for (var e : issues) {
-//                if (severity == e.getSeverity()) {
-//                    System.out.println(e);
-//                }
-//            }
-//        }
-//        System.out.println();
-//
-//        System.out.println("-------------------------------------------------------------");
-//        System.out.printf("%4d Errors(s) found.%n", getIssuesCountBySeverity(ERROR));
-//        System.out.printf("%4d Critical(s) found.%n", getIssuesCountBySeverity(CRITICAL));
-//        System.out.printf("%4d Warning(s) found.%n", getIssuesCountBySeverity(WARNING));
-//        System.out.println("-------------------------------------------------------------");
-//    }
-
     public int getIssuesCountBySeverity(IssueSeverity severity) {
         int count = 0;
         for (var e : issues) {

@@ -57,9 +57,11 @@ public class MaxIndentLevelRule extends RuleTreeVisitor<Void> {
                 var cases = ((SwitchTree) stm).getCases();
                 int localLevel = level;
                 for (var casee : cases) {
-                    int caseMaxLevel = inspectStatements(casee.getStatements(), level);
-                    if (localLevel < caseMaxLevel) {
-                        localLevel = caseMaxLevel;
+                    if (casee.getStatements() != null) {
+                        int caseMaxLevel = inspectStatements(casee.getStatements(), level);
+                        if (localLevel < caseMaxLevel) {
+                            localLevel = caseMaxLevel;
+                        }
                     }
                 }
                 return localLevel;

@@ -93,8 +93,10 @@ public class Java19MetricsTreeVisitor<P> implements TreeVisitor<Integer, P> {
         for (ExpressionTree expressionTree : node.getExpressions()) {
             r += expressionTree.accept(this, p);
         }
-        for (StatementTree tree : node.getStatements()) {
-            r += tree.accept(this, p);
+        if (node.getStatements() != null) {
+            for (StatementTree tree : node.getStatements()) {
+                r += tree.accept(this, p);
+            }
         }
         return r;
     }
