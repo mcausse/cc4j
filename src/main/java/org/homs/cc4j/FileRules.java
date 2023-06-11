@@ -18,26 +18,28 @@ public class FileRules {
         this.issuesReport = issuesReport;
     }
 
-    private void registerIssue(Location location, String message, int currentMetric, int warningThr, int criticalThr, int errorThr) {
-        var msg = String.format(message, currentMetric, warningThr, criticalThr, errorThr);
+    static class Thresholds {
+        public final int warningThr;
+        public final int criticalThr;
+        public final int errorThr;
 
-        IssueSeverity severity = null;
-        if (currentMetric > errorThr) {
-            severity = ERROR;
-        } else if (currentMetric > criticalThr) {
-            severity = CRITICAL;
-        } else if (currentMetric > warningThr) {
-            severity = WARNING;
-        }
-
-        if (severity != null) {
-            issuesReport.registerIssue(severity, location, msg);
+        public Thresholds(int warningThr, int criticalThr, int errorThr) {
+            this.warningThr = warningThr;
+            this.criticalThr = criticalThr;
+            this.errorThr = errorThr;
         }
     }
 
-    public void checkTodosAndFixmes(String javaFileName, String sourceCode) {
-        checkForRegexp(new Location(javaFileName), sourceCode, "TODO ", CRITICAL, "%s pending TODO(s) found");
-        checkForRegexp(new Location(javaFileName), sourceCode, "FIXME ", CRITICAL, "%s pending FIXME(s) found");
+    private IssueSeverity getIssueSeverity(int currentMetric, Thresholds thresholds) {
+        IssueSeverity severity = null;
+        if (currentMetric > thresholds.errorThr) {
+            severity = ERROR;
+        } else if (currentMetric > thresholds.criticalThr) {
+            severity = CRITICAL;
+        } else if (currentMetric > thresholds.warningThr) {
+            severity = WARNING;
+        }
+        return severity;
     }
 
     public void checkClassMaxLineWidth(String javaFileName, String sourceCode) {
@@ -52,26 +54,41 @@ public class FileRules {
             }
         }
 
-        registerIssue(new Location(javaFileName),
-                "file has a line (line #" + (maxWidthNumLine + 1) + ") of %s columns width (>%s warning, >%s critical, >%s error)",
-                maxWidth, 130, 160, 190);
+        var thrs = new Thresholds(140, 160, 190);
+        IssueSeverity severity = getIssueSeverity(maxWidth, thrs);
+        if (severity != null) {
+            var msg = String.format(
+                    "file has a line (line #" + (maxWidthNumLine + 1) + ") of %s columns width (>%s warning, >%s critical, >%s error)",
+                    maxWidth, thrs.warningThr, thrs.criticalThr, thrs.errorThr);
+            issuesReport.registerIssue(severity, new Location(javaFileName), msg);
+        }
     }
 
     public void checkClassMaxNumberOfLines(String javaFileName, String sourceCode) {
         int classLines = sourceCode.split("\\n").length;
-        registerIssue(new Location(javaFileName), "file has a total of %s lines (>%s warning, >%s critical, >%s error)",
-                classLines, 200, 350, 500);
+
+        var thrs = new Thresholds(200, 350, 500);
+        IssueSeverity severity = getIssueSeverity(classLines, thrs);
+        if (severity != null) {
+            var msg = String.format(
+                    "file has a total of %s lines (>%s warning, >%s critical, >%s error)",
+                    classLines, thrs.warningThr, thrs.criticalThr, thrs.errorThr);
+
+            issuesReport.registerIssue(severity, new Location(javaFileName), msg);
+        }
     }
 
-    void checkForRegexp(Location location, String sourceCode, String regexp, IssueSeverity severity, String message) {
-        int hits = 0;
-        Pattern p = Pattern.compile(regexp);
-        Matcher m = p.matcher(sourceCode);
-        while (m.find()) {
-            hits++;
-        }
+    public void checkTodosAndFixmes(String javaFileName, String sourceCode) {
+        int hits;
+
+        hits = checkForRegexp(sourceCode, "TODO ");
         if (hits > 0) {
-            issuesReport.registerIssue(severity, location, String.format(message, hits));
+            issuesReport.registerIssue(CRITICAL, new Location(javaFileName), String.format("%s pending TODO(s) found", hits));
+        }
+
+        hits = checkForRegexp(sourceCode, "FIXME ");
+        if (hits > 0) {
+            issuesReport.registerIssue(CRITICAL, new Location(javaFileName), String.format("%s pending FIXME(s) found", hits));
         }
     }
 
@@ -85,17 +102,70 @@ public class FileRules {
 
             String line = sourceLines[i];
 
-            checkForRegexp(location, line, "@Deprecated", CRITICAL, "%s pending @Deprecated(s) found");
-            checkForRegexp(location, line, "@Ignore[^(]", CRITICAL, "%s pending @Ignore(s) (without justification) found");
-            checkForRegexp(location, line, "@Disabled[^(]", CRITICAL, "%s pending @Disabled(s) (without justification) found");
-
-            checkForRegexp(location, line, ",[^\\s]", WARNING, "%s (after ',') spaces pending to add to increase the readibility");
-            checkForRegexp(location, line, "[^\\s]\\&\\&[^\\s]", WARNING, "%s ('&&') spaces pending to add to increase the readibility");
-            checkForRegexp(location, line, "[^\\s]\\|\\|[^\\s]", WARNING, "%s ('||') spaces pending to add to increase the readibility");
-            checkForRegexp(location, line, "[^\\s]\\=+[^\\s]", WARNING, "%s ('=') spaces pending to add to increase the readibility");
-            checkForRegexp(location, line, "\\)\\{", WARNING, "%s ('){') spaces pending to add to increase the readibility");
+            checkTechnicalDebtSmells(location, line);
+            checkLackOfFormatting(location, line);
 
             location.pop();
         }
+    }
+
+    void checkLackOfFormatting(Location location, String line) {
+        int hits;
+
+        hits = checkForRegexp(line, ",[^\\s]");
+        if (hits > 0) {
+            issuesReport.registerIssue(WARNING, location,
+                    String.format("%s (after ',') spaces pending to add to increase the readibility", hits));
+        }
+        hits = checkForRegexp(line, "[^\\s]\\&\\&[^\\s]");
+        if (hits > 0) {
+            issuesReport.registerIssue(WARNING, location,
+                    String.format("%s ('&&') spaces pending to add to increase the readibility", hits));
+        }
+        hits = checkForRegexp(line, "[^\\s]\\|\\|[^\\s]");
+        if (hits > 0) {
+            issuesReport.registerIssue(WARNING, location,
+                    String.format("%s ('||') spaces pending to add to increase the readibility", hits));
+        }
+        hits = checkForRegexp(line, "[^\\s]\\=+[^\\s]");
+        if (hits > 0) {
+            issuesReport.registerIssue(WARNING, location,
+                    String.format("%s ('=') spaces pending to add to increase the readibility", hits));
+        }
+        hits = checkForRegexp(line, "\\)\\{");
+        if (hits > 0) {
+            issuesReport.registerIssue(WARNING, location,
+                    String.format("%s ('){') spaces pending to add to increase the readibility", hits));
+        }
+    }
+
+    void checkTechnicalDebtSmells(Location location, String line) {
+        int hits;
+        hits = checkForRegexp(line, "@Deprecated");
+        if (hits > 0) {
+            issuesReport.registerIssue(CRITICAL, location,
+                    String.format("%s pending @Deprecated(s) found", hits));
+        }
+
+        hits = checkForRegexp(line, "@Ignore[^(]");
+        if (hits > 0) {
+            issuesReport.registerIssue(CRITICAL, location,
+                    String.format("%s pending @Ignore(s) (without justification) found", hits));
+        }
+        hits = checkForRegexp(line, "@Disabled[^(]");
+        if (hits > 0) {
+            issuesReport.registerIssue(CRITICAL, location,
+                    String.format("%s pending @Disabled(s) (without justification) found", hits));
+        }
+    }
+
+    int checkForRegexp(String sourceCode, String regexp) {
+        int hits = 0;
+        Pattern p = Pattern.compile(regexp);
+        Matcher m = p.matcher(sourceCode);
+        while (m.find()) {
+            hits++;
+        }
+        return hits;
     }
 }

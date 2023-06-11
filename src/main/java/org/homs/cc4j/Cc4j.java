@@ -27,23 +27,29 @@ public class Cc4j {
         System.out.println("=============================================================");
     }
 
-    public void analyseJavaFile(File file, IssuesReport issuesReport) throws IOException {
-        analyseJavaFiles(List.of(file), issuesReport);
+    final IssuesReport issuesReport;
+
+    public Cc4j(IssuesReport issuesReport) {
+        this.issuesReport = issuesReport;
     }
 
-    public void analyseJavaFiles(List<File> files, IssuesReport issuesReport) throws IOException {
+    public void analyseJavaFile(File file) throws IOException {
+        analyseJavaFiles(List.of(file));
+    }
+
+    public void analyseJavaFiles(List<File> files) throws IOException {
 
         final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
         try (final StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, StandardCharsets.UTF_8)) {
             for (var file : files) {
-                analizeFile(issuesReport, compiler, fileManager, file);
+                analizeFile(compiler, fileManager, file);
             }
             issuesReport.acceptReportVisitor(new SimpleIssuesReportVisitor());
         }
     }
 
-    void analizeFile(IssuesReport issuesReport, JavaCompiler compiler, StandardJavaFileManager fileManager, File file) throws IOException {
+    void analizeFile(JavaCompiler compiler, StandardJavaFileManager fileManager, File file) throws IOException {
 
         {
             String sourceCode = FileUtils.loadFile(file.toString());
@@ -69,10 +75,6 @@ public class Cc4j {
                 new TooManyEffectiveLinesPerMethodRule(),
                 new TooManyMethodsRule(),
                 new UsePronounceableNamesRule()
-
-                // avoid Optional<..> arguments
-                // https://rules.sonarsource.com/java/type/Code%20Smell/RSPEC-1607
-                // clean the code + add spaces to increase the readibility
         );
 
         for (CompilationUnitTree compUnit : compilationUnitTrees) {

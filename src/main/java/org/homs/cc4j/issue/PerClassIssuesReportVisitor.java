@@ -1,8 +1,7 @@
 package org.homs.cc4j.issue;
 
 import java.io.PrintStream;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.homs.cc4j.issue.IssueSeverity.*;
 
@@ -15,26 +14,20 @@ public class PerClassIssuesReportVisitor implements IssuesReportVisitor {
             fileNames.add(e.getLocation().getJavaFileName());
         }
 
-        for (var fileName : fileNames) {
-            ps.println("-------------------------------------------------------------");
-            ps.println(fileName);
-            ps.println();
-            for (var severity : IssueSeverity.values()) {
-                for (var e : issuesReport.getIssues()) {
-                    if (severity == e.getSeverity() && fileName.equals(e.getLocation().getJavaFileName())) {
-                        ps.println(e);
-                    }
-                }
-            }
-            ps.println();
-        }
+        var issues = new ArrayList<>(issuesReport.getIssues());
+        Collections.sort(issues);
 
+        reportByFileDetailed(issues, ps, fileNames);
+        reportByFileBrief(issues, ps, fileNames);
+    }
+
+    protected void reportByFileBrief(List<Issue> issues, PrintStream ps, Set<String> fileNames) {
         ps.printf("%40s %4s %4s %4s%n", "", "*", "+", "-");
         ps.println("-------------------------------------------------------------");
         for (var fileName : fileNames) {
-            int errors = getIssuesCountBySeverity(issuesReport, fileName, ERROR);
-            int criticals = getIssuesCountBySeverity(issuesReport, fileName, CRITICAL);
-            int warnings = getIssuesCountBySeverity(issuesReport, fileName, WARNING);
+            int errors = getIssuesCountBySeverity(issues, fileName, ERROR);
+            int criticals = getIssuesCountBySeverity(issues, fileName, CRITICAL);
+            int warnings = getIssuesCountBySeverity(issues, fileName, WARNING);
             ps.printf("%40s %4s %4s %4s%n", fileName,
                     errors == 0 ? "" : errors,
                     criticals == 0 ? "" : criticals,
@@ -43,9 +36,27 @@ public class PerClassIssuesReportVisitor implements IssuesReportVisitor {
         ps.println();
     }
 
-    public int getIssuesCountBySeverity(IssuesReport issuesReport, String fileName, IssueSeverity severity) {
+    protected void reportByFileDetailed(List<Issue> issues, PrintStream ps, Set<String> fileNames) {
+        for (var fileName : fileNames) {
+            reportFileDetail(issues, ps, fileName);
+        }
+    }
+
+    protected void reportFileDetail(List<Issue> issues, PrintStream ps, String fileName) {
+        ps.println("-------------------------------------------------------------");
+        ps.println(fileName);
+        ps.println();
+        for (var e : issues) {
+            if (fileName.equals(e.getLocation().getJavaFileName())) {
+                ps.println(e);
+            }
+        }
+        ps.println();
+    }
+
+    public int getIssuesCountBySeverity(List<Issue> issues, String fileName, IssueSeverity severity) {
         int count = 0;
-        for (var e : issuesReport.getIssues()) {
+        for (var e : issues) {
             if (e.getSeverity() == severity && e.getLocation().getJavaFileName().equals(fileName)) {
                 count++;
             }

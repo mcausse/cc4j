@@ -29,9 +29,8 @@ public class Cc4jTest {
         var ir = new IssuesReport();
 
         // act
-        new Cc4j().analyseJavaFile(
-                getFile("cc4j/rules/naming_convention_rules.java"),
-                ir);
+        new Cc4j(ir).analyseJavaFile(
+                getFile("cc4j/rules/naming_convention_rules.java"));
 
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(7);
@@ -53,9 +52,8 @@ public class Cc4jTest {
         var ir = new IssuesReport();
 
         // act
-        new Cc4j().analyseJavaFile(
-                getFile("cc4j/rules/todos_and_fixmes.java"),
-                ir);
+        new Cc4j(ir).analyseJavaFile(
+                getFile("cc4j/rules/todos_and_fixmes.java"));
 
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(2);
@@ -72,15 +70,14 @@ public class Cc4jTest {
         var ir = new IssuesReport();
 
         // act
-        new Cc4j().analyseJavaFile(
-                getFile("cc4j/rules/class_max_line_width.java"),
-                ir);
+        new Cc4j(ir).analyseJavaFile(
+                getFile("cc4j/rules/class_max_line_width.java"));
 
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(1);
         assertThat(ir.getIssues().toString()).contains(
-                "file has a line (line #3) of 136 columns width"
+                "file has a line (line #3) of 146 columns width"
         );
     }
 
@@ -90,9 +87,8 @@ public class Cc4jTest {
         var ir = new IssuesReport();
 
         // act
-        new Cc4j().analyseJavaFile(
-                getFile("cc4j/rules/class_members_ordering.java"),
-                ir);
+        new Cc4j(ir).analyseJavaFile(
+                getFile("cc4j/rules/class_members_ordering.java"));
 
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
@@ -108,9 +104,8 @@ public class Cc4jTest {
         var ir = new IssuesReport();
 
         // act
-        new Cc4j().analyseJavaFile(
-                getFile("cc4j/rules/too_many_methods_in_class.java"),
-                ir);
+        new Cc4j(ir).analyseJavaFile(
+                getFile("cc4j/rules/too_many_methods_in_class.java"));
 
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
@@ -126,9 +121,8 @@ public class Cc4jTest {
         var ir = new IssuesReport();
 
         // act
-        new Cc4j().analyseJavaFile(
-                getFile("cc4j/rules/too_many_method_arguments.java"),
-                ir);
+        new Cc4j(ir).analyseJavaFile(
+                getFile("cc4j/rules/too_many_method_arguments.java"));
 
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
@@ -144,9 +138,8 @@ public class Cc4jTest {
         var ir = new IssuesReport();
 
         // act
-        new Cc4j().analyseJavaFile(
-                getFile("cc4j/rules/use_pronounceable_names.java"),
-                ir);
+        new Cc4j(ir).analyseJavaFile(
+                getFile("cc4j/rules/use_pronounceable_names.java"));
 
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
@@ -162,9 +155,8 @@ public class Cc4jTest {
         var ir = new IssuesReport();
 
         // act
-        new Cc4j().analyseJavaFile(
-                getFile("cc4j/rules/too_deply_nested_code.java"),
-                ir);
+        new Cc4j(ir).analyseJavaFile(
+                getFile("cc4j/rules/too_deply_nested_code.java"));
 
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
@@ -180,9 +172,8 @@ public class Cc4jTest {
         var ir = new IssuesReport();
 
         // act
-        new Cc4j().analyseJavaFile(
-                getFile("cc4j/rules/too_many_effective_lines_in_method.java"),
-                ir);
+        new Cc4j(ir).analyseJavaFile(
+                getFile("cc4j/rules/too_many_effective_lines_in_method.java"));
 
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
@@ -198,9 +189,8 @@ public class Cc4jTest {
         var ir = new IssuesReport();
 
         // act
-        new Cc4j().analyseJavaFile(
-                getFile("cc4j/rules/too_many_lines_of_code_per_class.java"),
-                ir);
+        new Cc4j(ir).analyseJavaFile(
+                getFile("cc4j/rules/too_many_lines_of_code_per_class.java"));
 
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
@@ -216,9 +206,8 @@ public class Cc4jTest {
         var ir = new IssuesReport();
 
         // act
-        new Cc4j().analyseJavaFile(
-                getFile("cc4j/rules/too_complicated_relational_expression.java"),
-                ir);
+        new Cc4j(ir).analyseJavaFile(
+                getFile("cc4j/rules/too_complicated_relational_expression.java"));
 
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
@@ -234,9 +223,8 @@ public class Cc4jTest {
         var ir = new IssuesReport();
 
         // act
-        new Cc4j().analyseJavaFile(
-                getFile("cc4j/rules/add_spaces_to_increase_the_readibility.java"),
-                ir);
+        new Cc4j(ir).analyseJavaFile(
+                getFile("cc4j/rules/add_spaces_to_increase_the_readibility.java"));
 
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);

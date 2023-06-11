@@ -39,40 +39,9 @@ public class ClassMembersOrderingRule extends RuleTreeVisitor<Void> {
         List<Member> r = new ArrayList<>();
         for (Tree member : node.getMembers()) {
             if (member instanceof VariableTree) {
-                var var = (VariableTree) member;
-                boolean isStatic = var.getModifiers().getFlags().contains(Modifier.STATIC);
-                var name = var.getName().toString();
-                if (name.equalsIgnoreCase("log") || name.equalsIgnoreCase("logger")) {
-                    r.add(Member.LOGGER);
-                } else {
-                    if (isStatic) {
-                        r.add(Member.STATIC);
-                    } else {
-                        r.add(Member.PROPERTY);
-                    }
-                }
+                inspectProperty(r, (VariableTree) member);
             } else if (member instanceof MethodTree) {
-                var method = (MethodTree) member;
-
-                //                /**
-                //                 * Returns the return type of the method being declared.
-                //                 * Returns {@code null} for a constructor.
-                //                 * @return the return type
-                //                 */
-                //                Tree getReturnType();
-
-                var name = method.getName().toString();
-                if (method.getReturnType() == null) {
-                    r.add(Member.CTOR);
-                } else if (name.equals("equals") && method.getParameters().size() == 1 && method.getReturnType().toString().equals("boolean")) {
-                    r.add(Member.EQUALS_HASHCODE);
-                } else if (name.equals("hashCode") && method.getParameters().isEmpty() && method.getReturnType().toString().equals("int")) {
-                    r.add(Member.EQUALS_HASHCODE);
-                } else if (name.equals("toString") && method.getParameters().isEmpty() && method.getReturnType().toString().equals("String")) {
-                    r.add(Member.TOSTRING);
-                } else {
-                    r.add(Member.METHOD);
-                }
+                inspectMethod(r, (MethodTree) member);
             } else if (member instanceof ClassTree) {
             }
         }
@@ -86,6 +55,42 @@ public class ClassMembersOrderingRule extends RuleTreeVisitor<Void> {
         var pattern = "^1?2*3*4*5*6*7*$";
         if (!s.toString().matches(pattern)) {
             generateIssue(CRITICAL, String.format("class members should be ordered as the convention: %s (pattern is: %s)", s, pattern));
+        }
+    }
+
+    protected void inspectMethod(List<Member> r, MethodTree method) {
+        //                /**
+        //                 * Returns the return type of the method being declared.
+        //                 * Returns {@code null} for a constructor.
+        //                 * @return the return type
+        //                 */
+        //                Tree getReturnType();
+
+        var name = method.getName().toString();
+        if (method.getReturnType() == null) {
+            r.add(Member.CTOR);
+        } else if (name.equals("equals") && method.getParameters().size() == 1 && method.getReturnType().toString().equals("boolean")) {
+            r.add(Member.EQUALS_HASHCODE);
+        } else if (name.equals("hashCode") && method.getParameters().isEmpty() && method.getReturnType().toString().equals("int")) {
+            r.add(Member.EQUALS_HASHCODE);
+        } else if (name.equals("toString") && method.getParameters().isEmpty() && method.getReturnType().toString().equals("String")) {
+            r.add(Member.TOSTRING);
+        } else {
+            r.add(Member.METHOD);
+        }
+    }
+
+    protected void inspectProperty(List<Member> r, VariableTree var) {
+        boolean isStatic = var.getModifiers().getFlags().contains(Modifier.STATIC);
+        var name = var.getName().toString();
+        if (name.equalsIgnoreCase("log") || name.equalsIgnoreCase("logger")) {
+            r.add(Member.LOGGER);
+        } else {
+            if (isStatic) {
+                r.add(Member.STATIC);
+            } else {
+                r.add(Member.PROPERTY);
+            }
         }
     }
 }

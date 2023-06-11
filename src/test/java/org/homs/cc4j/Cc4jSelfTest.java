@@ -23,7 +23,7 @@ public class Cc4jSelfTest {
         );
 
         var ir = new IssuesReport();
-        new Cc4j().analyseJavaFiles(files, ir);
+        new Cc4j(ir).analyseJavaFiles(files);
         ir.acceptReportVisitor(new PerClassIssuesReportVisitor());
     }
 
@@ -34,7 +34,8 @@ public class Cc4jSelfTest {
                 f -> f.endsWith(".java")
         );
 
-        new Cc4j().analyseJavaFiles(files, new IssuesReport());
+        var ir = new IssuesReport();
+        new Cc4j(ir).analyseJavaFiles(files);
     }
 
     @Test
@@ -44,7 +45,8 @@ public class Cc4jSelfTest {
                 f -> f.endsWith(".java")
         );
 
-        new Cc4j().analyseJavaFiles(files, new IssuesReport());
+        var ir = new IssuesReport();
+        new Cc4j(ir).analyseJavaFiles(files);
     }
 
     @Test
@@ -54,7 +56,8 @@ public class Cc4jSelfTest {
                 f -> f.endsWith(".java")
         );
 
-        new Cc4j().analyseJavaFiles(files, new IssuesReport());
+        var ir = new IssuesReport();
+        new Cc4j(ir).analyseJavaFiles(files);
     }
 
     @Disabled
@@ -65,7 +68,8 @@ public class Cc4jSelfTest {
                 f -> f.endsWith(".java")
         );
 
-        new Cc4j().analyseJavaFiles(files, new IssuesReport());
+        var ir = new IssuesReport();
+        new Cc4j(ir).analyseJavaFiles(files);
     }
 
 }

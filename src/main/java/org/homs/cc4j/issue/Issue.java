@@ -1,12 +1,11 @@
 package org.homs.cc4j.issue;
 
-public class Issue {
+public class Issue implements Comparable<Issue> {
 
     public final Location location;
     public final IssueSeverity severity;
     public final String message;
 
-    // TODO + categoria [CleanCode], [Conventions]
     public Issue(Location location, IssueSeverity severity, String message) {
         this.location = new Location(location);
         this.severity = severity;
@@ -26,11 +25,12 @@ public class Issue {
     }
 
     @Override
+    public int compareTo(Issue o) {
+        return Integer.compare(severity.getOrder(), o.getSeverity().getOrder());
+    }
+
+    @Override
     public String toString() {
-//        if (location.isEmpty()) {
-//            return String.format("%s %s", severity.getSymbol(), message);
-//        } else {
         return String.format("%s %s (at %s)", severity.getSymbol(), message, location);
-//        }
     }
 }

@@ -1,6 +1,8 @@
 package org.homs.cc4j.issue;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.homs.cc4j.issue.IssueSeverity.*;
 
@@ -8,12 +10,12 @@ public class SimpleIssuesReportVisitor implements IssuesReportVisitor {
 
     @Override
     public void visit(IssuesReport issuesReport, PrintStream ps) {
-        for (var severity : IssueSeverity.values()) {
-            for (var e : issuesReport.getIssues()) {
-                if (severity == e.getSeverity()) {
-                    ps.println(e);
-                }
-            }
+
+        var issues = new ArrayList<>(issuesReport.getIssues());
+        Collections.sort(issues);
+
+        for (var e : issues) {
+            ps.println(e);
         }
         ps.println();
 

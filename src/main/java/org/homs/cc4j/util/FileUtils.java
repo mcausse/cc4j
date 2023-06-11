@@ -27,11 +27,8 @@ public class FileUtils {
         for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
             if (fileEntry.isDirectory()) {
                 r.addAll(processDirectory(fileEntry, fileNamePredicate));
-            } else {
-                if (fileNamePredicate.test(fileEntry.getAbsoluteFile().toString())) {
-//                    System.out.println(fileEntry.getName());
-                    r.add(fileEntry);
-                }
+            } else if (fileNamePredicate.test(fileEntry.getAbsoluteFile().toString())) {
+                r.add(fileEntry);
             }
         }
         return r;

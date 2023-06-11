@@ -3,7 +3,6 @@ package org.homs.cc4j.issue;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class IssuesReport {
 
     final List<Issue> issues = new ArrayList<>();
