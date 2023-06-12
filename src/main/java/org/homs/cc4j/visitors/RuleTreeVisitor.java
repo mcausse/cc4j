@@ -53,4 +53,5 @@ public abstract class RuleTreeVisitor<T> extends Java19MetricsTreeVisitor<T> {
             issuesReport.registerIssue(IssueSeverity.WARNING, location, message);
         }
     }
+
 }

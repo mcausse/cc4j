@@ -12,12 +12,7 @@ public class TooManyEffectiveLinesPerMethodRule extends RuleTreeVisitor<Void> {
     public Integer visitMethod(MethodTree node, Void p) {
         location.push(node.getName().toString() + "(..)");
 
-        final int linesOfEffectiveCode;
-        if (node.getBody() == null) {
-            linesOfEffectiveCode = 0;
-        } else {
-            linesOfEffectiveCode = node.getBody().toString().split("\\n").length - 2 /* { & } */;
-        }
+        final int linesOfEffectiveCode = getLinesOfEffectiveCode(node);
 
         generateIssueIfThreshold("too many effective lines of code: %s (>%s warning, >%s critical, >%s error)",
                 linesOfEffectiveCode,
@@ -25,5 +20,15 @@ public class TooManyEffectiveLinesPerMethodRule extends RuleTreeVisitor<Void> {
 
         location.pop();
         return 0;
+    }
+
+    public static int getLinesOfEffectiveCode(MethodTree node) {
+        final int linesOfEffectiveCode;
+        if (node.getBody() == null) {
+            linesOfEffectiveCode = 0;
+        } else {
+            linesOfEffectiveCode = node.getBody().toString().split("\\n").length - 2 /* { & } */;
+        }
+        return linesOfEffectiveCode;
     }
 }

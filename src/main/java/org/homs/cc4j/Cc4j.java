@@ -74,7 +74,8 @@ public class Cc4j {
                 new TooManyArgumentsRule(),
                 new TooManyEffectiveLinesPerMethodRule(),
                 new TooManyMethodsRule(),
-                new UsePronounceableNamesRule()
+                new UsePronounceableNamesRule(),
+                new AvoidOptionalArgumentsRule()
         );
 
         for (CompilationUnitTree compUnit : compilationUnitTrees) {

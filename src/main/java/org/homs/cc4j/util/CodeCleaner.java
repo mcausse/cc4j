@@ -6,6 +6,14 @@ public class CodeCleaner {
         CODE, SLASH, SINGLELINE_COMMENT, MULTILINE_COMMENT, STAR, STRING
     }
 
+    final boolean cleanComments;
+    final boolean cleanStrings;
+
+    public CodeCleaner(boolean cleanComments, boolean cleanStrings) {
+        this.cleanComments = cleanComments;
+        this.cleanStrings = cleanStrings;
+    }
+
     public String cleanTheCode(String code) {
         var state = State.CODE;
         var strb = new StringBuilder();
@@ -51,7 +59,11 @@ public class CodeCleaner {
                     strb.append(c);
                     return State.CODE;
                 }
-                strb.append(encode(c));
+                if (cleanComments) {
+                    strb.append(encode(c));
+                } else {
+                    strb.append(c);
+                }
                 return State.SINGLELINE_COMMENT;
             }
             case MULTILINE_COMMENT -> {
@@ -59,7 +71,11 @@ public class CodeCleaner {
                     strb.append(c);
                     return State.STAR;
                 }
-                strb.append(encode(c));
+                if (cleanComments) {
+                    strb.append(encode(c));
+                } else {
+                    strb.append(c);
+                }
                 return State.MULTILINE_COMMENT;
             }
             case STAR -> {
@@ -79,7 +95,11 @@ public class CodeCleaner {
                     strb.append(c);
                     return State.CODE;
                 }
-                strb.append(encode(c));
+                if (cleanStrings) {
+                    strb.append(encode(c));
+                } else {
+                    strb.append(c);
+                }
                 return State.STRING;
             }
             default -> throw new RuntimeException(state.name());

@@ -79,21 +79,25 @@ public class FileRules {
     }
 
     public void checkTodosAndFixmes(String javaFileName, String sourceCode) {
+
+        sourceCode = new CodeCleaner(false, true).cleanTheCode(sourceCode);
         int hits;
 
         hits = checkForRegexp(sourceCode, "TODO ");
+        hits += checkForRegexp(sourceCode, "TODO\\n");
         if (hits > 0) {
             issuesReport.registerIssue(CRITICAL, new Location(javaFileName), String.format("%s pending TODO(s) found", hits));
         }
 
         hits = checkForRegexp(sourceCode, "FIXME ");
+        hits += checkForRegexp(sourceCode, "FIXME\\n");
         if (hits > 0) {
             issuesReport.registerIssue(CRITICAL, new Location(javaFileName), String.format("%s pending FIXME(s) found", hits));
         }
     }
 
     public void checkForAddSpacesToIncreaseReadibility(String javaFileName, String sourceCode) {
-        sourceCode = new CodeCleaner().cleanTheCode(sourceCode);
+        sourceCode = new CodeCleaner(true, true).cleanTheCode(sourceCode);
         String[] sourceLines = sourceCode.split("\\n");
 
         var location = new Location(javaFileName);

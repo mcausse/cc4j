@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 class CodeCleanerTest {
 
     @Test
@@ -19,7 +18,7 @@ class CodeCleanerTest {
         String code = TestUtils.loadFromClasspath("SimpleClass.cls");
 
         // Act
-        var cleaned = new CodeCleaner().cleanTheCode(code);
+        var cleaned = new CodeCleaner(true, true).cleanTheCode(code);
 
         assertThat(cleaned).isEqualTo(
                 "// ***\n" +
@@ -57,7 +56,7 @@ class CodeCleanerTest {
     void name_1(String code, String expectedCleaned) {
 
         // Act
-        var cleaned = new CodeCleaner().cleanTheCode(code);
+        var cleaned = new CodeCleaner(true, true).cleanTheCode(code);
 
         assertThat(cleaned).isEqualTo(expectedCleaned);
     }
@@ -68,7 +67,7 @@ class CodeCleanerTest {
         String code = TestUtils.loadFromClasspath("SimpleClass2.cls");
 
         // Act
-        var cleaned = new CodeCleaner().cleanTheCode(code);
+        var cleaned = new CodeCleaner(true, true).cleanTheCode(code);
 
         assertThat(cleaned).isEqualTo(
                 "// ***\n" +

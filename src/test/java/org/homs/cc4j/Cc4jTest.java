@@ -235,4 +235,22 @@ public class Cc4jTest {
                 "- 1 ('){') spaces pending to add to increase the readibility (at [add_spaces_to_increase_the_readibility.java]: line 3)"
         );
     }
+
+    @Test
+    void avoid_optional_arguments() throws IOException {
+
+        var ir = new IssuesReport();
+
+        // act
+        new Cc4j(ir).analyseJavaFile(
+                getFile("cc4j/rules/avoid_optional_arguments.java"));
+
+        assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
+        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(2);
+        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
+        assertThat(ir.getIssues().toString()).contains(
+                "+ avoid Optional<..> arguments (at [avoid_optional_arguments.java]: Jou.a(..))",
+                "+ avoid Optional<..> arguments (at [avoid_optional_arguments.java]: Jou.b(..))"
+        );
+    }
 }
