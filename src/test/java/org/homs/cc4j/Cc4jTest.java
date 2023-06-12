@@ -47,20 +47,23 @@ public class Cc4jTest {
     }
 
     @Test
-    void todos_and_fixmes() throws IOException {
+    void todos_and_fixmes_and_posponed_debt() throws IOException {
 
         var ir = new IssuesReport();
 
         // act
         new Cc4j(ir).analyseJavaFile(
-                getFile("cc4j/rules/todos_and_fixmes.java"));
+                getFile("cc4j/rules/todos_and_fixmes_and_posponed_debt.java"));
 
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
-        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(2);
+        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(5);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
         assertThat(ir.getIssues().toString()).contains(
-                "1 pending TODO(s) found",
-                "1 pending FIXME(s) found"
+                "+ 1 pending TODO(s) found (at [todos_and_fixmes_and_posponed_debt.java])",
+                "+ 1 pending FIXME(s) found (at [todos_and_fixmes_and_posponed_debt.java])",
+                "+ 1 pending @Ignore(s) (without justification) found (at [todos_and_fixmes_and_posponed_debt.java]: line 6)",
+                "+ 1 pending @Disabled(s) (without justification) found (at [todos_and_fixmes_and_posponed_debt.java]: line 7)",
+                "+ 1 pending @Deprecated(s) found (at [todos_and_fixmes_and_posponed_debt.java]: line 8)"
         );
     }
 

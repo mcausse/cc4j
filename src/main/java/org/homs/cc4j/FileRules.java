@@ -145,18 +145,18 @@ public class FileRules {
 
     void checkTechnicalDebtSmells(Location location, String line) {
         int hits;
-        hits = checkForRegexp(line, "@Deprecated");
+        hits = checkForRegexp(line, "\\@Deprecated\\s*$");
         if (hits > 0) {
             issuesReport.registerIssue(CRITICAL, location,
                     String.format("%s pending @Deprecated(s) found", hits));
         }
 
-        hits = checkForRegexp(line, "@Ignore[^(]");
+        hits = checkForRegexp(line, "\\@Ignore\\s*$");
         if (hits > 0) {
             issuesReport.registerIssue(CRITICAL, location,
                     String.format("%s pending @Ignore(s) (without justification) found", hits));
         }
-        hits = checkForRegexp(line, "@Disabled[^(]");
+        hits = checkForRegexp(line, "\\@Disabled\\s*$");
         if (hits > 0) {
             issuesReport.registerIssue(CRITICAL, location,
                     String.format("%s pending @Disabled(s) (without justification) found", hits));
@@ -165,7 +165,7 @@ public class FileRules {
 
     int checkForRegexp(String sourceCode, String regexp) {
         int hits = 0;
-        Pattern p = Pattern.compile(regexp);
+        Pattern p = Pattern.compile(regexp, Pattern.MULTILINE);
         Matcher m = p.matcher(sourceCode);
         while (m.find()) {
             hits++;
