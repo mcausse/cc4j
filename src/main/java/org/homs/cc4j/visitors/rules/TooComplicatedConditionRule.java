@@ -5,9 +5,9 @@ import org.homs.cc4j.visitors.RuleTreeVisitor;
 
 public class TooComplicatedConditionRule extends RuleTreeVisitor<Void> {
 
-    static int THR_ERROR = 7;
-    static int THR_CRITICAL = 5;
-    static int THR_WARNING = 3;
+    static final int THR_ERROR = 7;
+    static final int THR_CRITICAL = 5;
+    static final int THR_WARNING = 3;
 
     void generateIssueIfThreshold(int metricValue, String expression) {
         String message = "too complicated logical condition, rated as %s (>%s warning, >%s critical, >%s error); expression=" +

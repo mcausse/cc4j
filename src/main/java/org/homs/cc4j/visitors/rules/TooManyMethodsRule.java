@@ -7,9 +7,9 @@ import org.homs.cc4j.visitors.RuleTreeVisitor;
 
 public class TooManyMethodsRule extends RuleTreeVisitor<Void> {
 
-    static int THR_ERROR = 30;
-    static int THR_CRITICAL = 25;
-    static int THR_WARNING = 15;
+    static final int THR_ERROR = 30;
+    static final int THR_CRITICAL = 25;
+    static final int THR_WARNING = 15;
 
     public Integer visitClass(ClassTree node, Void p) {
         location.push(node.getSimpleName().toString());

@@ -17,9 +17,15 @@ public class NamingConventionsRule extends RuleTreeVisitor<Void> {
     static final String CLASS_NAME_PATTERN = "^[A-Z][a-zA-Z0-9]*$";
 
     public Integer visitClass(ClassTree node, Void p) {
-        location.push(node.getSimpleName().toString());
 
         var className = node.getSimpleName().toString();
+
+        if (className.isEmpty()) {
+            return super.visitClass(node, p);
+        }
+
+        location.push(node.getSimpleName().toString());
+
         if (!className.matches(CLASS_NAME_PATTERN)) {
             generateIssue(IssueSeverity.CRITICAL,
                     String.format("class '%s' should comply with a naming convention: %s",
@@ -64,7 +70,7 @@ public class NamingConventionsRule extends RuleTreeVisitor<Void> {
         //                 */
         //                Tree getReturnType();
         if (methodTree.getReturnType() == null) {
-            // we skip c'tors
+            // just skip the c'tors
             return;
         }
         location.push(methodTree.getName().toString() + "(..)");

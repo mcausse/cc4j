@@ -124,8 +124,9 @@ public class Java19MetricsTreeVisitor<P> implements TreeVisitor<Integer, P> {
         for (TypeParameterTree tree : node.getTypeParameters()) {
             r += tree.accept(this, p);
         }
-        if (node.getExtendsClause() != null)
+        if (node.getExtendsClause() != null) {
             r += node.getExtendsClause().accept(this, p);
+        }
         r += node.getModifiers().accept(this, p);
         return r;
     }

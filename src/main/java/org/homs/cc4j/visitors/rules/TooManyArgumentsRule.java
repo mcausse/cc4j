@@ -5,9 +5,9 @@ import org.homs.cc4j.visitors.RuleTreeVisitor;
 
 public class TooManyArgumentsRule extends RuleTreeVisitor<Void> {
 
-    static int THR_ERROR = 5;
-    static int THR_CRITICAL = 4;
-    static int THR_WARNING = 3;
+    static final int THR_ERROR = 5;
+    static final int THR_CRITICAL = 4;
+    static final int THR_WARNING = 3;
 
     public Integer visitMethod(MethodTree node, Void p) {
         super.visitMethod(node, p);

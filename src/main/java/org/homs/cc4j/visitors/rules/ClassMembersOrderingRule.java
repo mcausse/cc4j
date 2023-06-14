@@ -43,6 +43,7 @@ public class ClassMembersOrderingRule extends RuleTreeVisitor<Void> {
             } else if (member instanceof MethodTree) {
                 inspectMethod(r, (MethodTree) member);
             } else if (member instanceof ClassTree) {
+                // -
             }
         }
 

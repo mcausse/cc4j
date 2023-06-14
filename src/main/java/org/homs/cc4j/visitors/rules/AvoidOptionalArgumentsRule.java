@@ -28,8 +28,8 @@ public class AvoidOptionalArgumentsRule extends RuleTreeVisitor<Void> {
         if (type.getType() == null) {
             return;
         }
-        if (type.getType().toString().equals(Optional.class.getSimpleName()) ||
-                type.getType().toString().equals(Optional.class.getName())) {
+        final String typeName = type.getType().toString();
+        if (typeName.equals(Optional.class.getSimpleName()) || typeName.equals(Optional.class.getName())) {
             generateIssue(CRITICAL, "avoid Optional<..> arguments");
         }
     }
