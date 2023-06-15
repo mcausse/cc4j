@@ -24,7 +24,7 @@ public class Cc4jTest {
     }
 
     @Test
-    void naming_convention_rules() throws IOException {
+    void naming_convention_rules() {
 
         var cc4j = new Cc4j();
         cc4j.analyseFile(getFile("cc4j/rules/naming_convention_rules.java"));
@@ -49,7 +49,7 @@ public class Cc4jTest {
     }
 
     @Test
-    void todos_and_fixmes_and_posponed_debt() throws IOException {
+    void todos_and_fixmes_and_posponed_debt() {
 
         var cc4j = new Cc4j();
         cc4j.analyseFile(getFile("cc4j/rules/todos_and_fixmes_and_posponed_debt.java"));
@@ -72,7 +72,7 @@ public class Cc4jTest {
     }
 
     @Test
-    void class_max_line_width() throws IOException {
+    void class_max_line_width() {
 
         var cc4j = new Cc4j();
         cc4j.analyseFile(getFile("cc4j/rules/class_max_line_width.java"));
@@ -88,7 +88,7 @@ public class Cc4jTest {
     }
 
     @Test
-    void class_members_ordering() throws IOException {
+    void class_members_ordering() {
 
         var cc4j = new Cc4j();
         cc4j.analyseFile(getFile("cc4j/rules/class_members_ordering.java"));
@@ -104,7 +104,7 @@ public class Cc4jTest {
     }
 
     @Test
-    void too_many_methods_in_class() throws IOException {
+    void too_many_methods_in_class() {
 
         var cc4j = new Cc4j();
         cc4j.analyseFile(getFile("cc4j/rules/too_many_methods_in_class.java"));
@@ -115,12 +115,12 @@ public class Cc4jTest {
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(1);
         assertThat(ir.getIssues().toString()).contains(
-                "too many methods: 17 (>15 warning, >25 critical, >30 error)"
+                "- too many methods: 17 (>15 warning, >25 critical, >30 error) (at [too_many_methods_in_class.java]: Jou)"
         );
     }
 
     @Test
-    void too_many_method_arguments() throws IOException {
+    void too_many_method_arguments() {
 
         var cc4j = new Cc4j();
         cc4j.analyseFile(getFile("cc4j/rules/too_many_method_arguments.java"));
@@ -136,7 +136,7 @@ public class Cc4jTest {
     }
 
     @Test
-    void use_pronounceable_names() throws IOException {
+    void use_pronounceable_names() {
 
         var cc4j = new Cc4j();
         cc4j.analyseFile(getFile("cc4j/rules/use_pronounceable_names.java"));
@@ -152,7 +152,7 @@ public class Cc4jTest {
     }
 
     @Test
-    void too_deply_nested_code() throws IOException {
+    void too_deply_nested_code() {
 
         var cc4j = new Cc4j();
         cc4j.analyseFile(getFile("cc4j/rules/too_deply_nested_code.java"));
@@ -163,12 +163,12 @@ public class Cc4jTest {
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
         assertThat(ir.getIssues().toString()).contains(
-                "+ 5 indent levels (>3 warning, >4 critical, >5 error)"
+                "+ 5 indent levels (>3 warning, >4 critical, >5 error) (at [too_deply_nested_code.java]: Jou.a(..))"
         );
     }
 
     @Test
-    void too_many_effective_lines_in_method() throws IOException {
+    void too_many_effective_lines_in_method() {
 
         var cc4j = new Cc4j();
         cc4j.analyseFile(getFile("cc4j/rules/too_many_effective_lines_in_method.java"));
@@ -184,7 +184,7 @@ public class Cc4jTest {
     }
 
     @Test
-    void too_many_lines_of_code_per_class() throws IOException {
+    void too_many_lines_of_code_per_class() {
 
         var cc4j = new Cc4j();
         cc4j.analyseFile(getFile("cc4j/rules/too_many_lines_of_code_per_class.java"));
@@ -200,7 +200,7 @@ public class Cc4jTest {
     }
 
     @Test
-    void too_complicated_relational_expression() throws IOException {
+    void too_complicated_relational_expression() {
 
         var cc4j = new Cc4j();
         cc4j.analyseFile(getFile("cc4j/rules/too_complicated_relational_expression.java"));
@@ -211,13 +211,14 @@ public class Cc4jTest {
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
         assertThat(ir.getIssues().toString()).contains(
-                "+ too complicated logical condition, rated as 7 (>3 warning, >5 critical, >7 error); expression=(a <= b && b >= c || c < b && !(b > a || e == f) || f == g || g != h) (at ",
-                "]: Jou.jou(..)"
+                "+ too complicated logical condition, rated as 7 (>3 warning, >5 critical, >7 error); " +
+                        "expression=(a <= b && b >= c || c < b && !(b > a || e == f) || f == g || g != h) " +
+                        "(at [too_complicated_relational_expression.java]: Jou.jou(..))"
         );
     }
 
     @Test
-    void add_spaces_to_increase_the_readibility() throws IOException {
+    void add_spaces_to_increase_the_readibility() {
 
         var cc4j = new Cc4j();
         cc4j.analyseFile(getFile("cc4j/rules/add_spaces_to_increase_the_readibility.java"));
@@ -228,16 +229,15 @@ public class Cc4jTest {
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(4);
         assertThat(ir.getIssues().toString()).contains(
-                "- 2 (after ',') spaces pending to add to increase the readibility (at [",
-                "- 1 ('=') spaces pending to add to increase the readibility (at [",
-                "- 1 ('){') spaces pending to add to increase the readibility (at [",
-                "]: line 2)",
-                "]: line 3)"
+                "- 2 (after ',') spaces pending to add to increase the readibility (at [add_spaces_to_increase_the_readibility.java]: line 2)",
+                "- 1 ('){') spaces pending to add to increase the readibility (at [add_spaces_to_increase_the_readibility.java]: line 2)",
+                "- 1 ('=') spaces pending to add to increase the readibility (at [add_spaces_to_increase_the_readibility.java]: line 3)",
+                "- 1 ('){') spaces pending to add to increase the readibility (at [add_spaces_to_increase_the_readibility.java]: line 3)"
         );
     }
 
     @Test
-    void avoid_optional_arguments() throws IOException {
+    void avoid_optional_arguments() {
 
         var cc4j = new Cc4j();
         cc4j.analyseFile(getFile("cc4j/rules/avoid_optional_arguments.java"));

@@ -73,7 +73,7 @@ public class Cc4j {
     protected void analyseTextBasedRules(FilesAnalyser analizer) {
         analizer.forEachFile(file -> {
             String sourceCode = FileUtils.loadFile(file.toString());
-            String uri = file.toURI().normalize().toString();
+            String uri = file.getName();
 
             final FileRules fileRules = new FileRules(issuesReport);
             fileRules.checkTodosAndFixmes(uri, sourceCode);

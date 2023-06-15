@@ -3,8 +3,6 @@ package org.homs.cc4j.issue;
 import java.io.PrintStream;
 import java.util.*;
 
-import static org.homs.cc4j.issue.IssueSeverity.*;
-
 public class PerClassIssuesReportVisitor implements IssuesReportVisitor {
 
     @Override
@@ -18,23 +16,6 @@ public class PerClassIssuesReportVisitor implements IssuesReportVisitor {
         Collections.sort(issues);
 
         reportByFileDetailed(issues, ps, fileNames);
-        reportByFileBrief(issues, ps, fileNames);
-    }
-
-    protected void reportByFileBrief(List<Issue> issues, PrintStream ps, Set<String> fileNames) {
-        ps.printf("%4s %4s %4s %s%n", "*", "+", "-", "");
-        ps.println("-------------------------------------------------------------");
-        for (var fileName : fileNames) {
-            int errors = getIssuesCountBySeverity(issues, fileName, ERROR);
-            int criticals = getIssuesCountBySeverity(issues, fileName, CRITICAL);
-            int warnings = getIssuesCountBySeverity(issues, fileName, WARNING);
-            ps.printf("%4s %4s %4s %s%n",
-                    errors == 0 ? "" : errors,
-                    criticals == 0 ? "" : criticals,
-                    warnings == 0 ? "" : warnings,
-                    fileName);
-        }
-        ps.println();
     }
 
     protected void reportByFileDetailed(List<Issue> issues, PrintStream ps, Set<String> fileNames) {

@@ -14,17 +14,14 @@ import javax.tools.ToolProvider;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class FilesAnalyser {
 
     public static FilesAnalyser forFiles(List<File> files) {
         final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-
-        List<CompilationUnitTree> r = new ArrayList<>();
+        Map<File, ArrayList<CompilationUnitTree>> r = new LinkedHashMap<>();
 
         try (final StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, StandardCharsets.UTF_8)) {
             for (var file : files) {
@@ -32,48 +29,50 @@ public class FilesAnalyser {
                 final JavacTask javacTask = (JavacTask) compiler.getTask(null, fileManager, null, null, null, compilationUnits);
                 final Iterable<? extends CompilationUnitTree> compilationUnitTrees = javacTask.parse();
 
+                r.putIfAbsent(file, new ArrayList<>());
                 for (var cut : compilationUnitTrees) {
-                    r.add(cut);
+                    r.get(file).add(cut);
                 }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        return new FilesAnalyser(files, r);
+        return new FilesAnalyser(r);
     }
 
     public static FilesAnalyser forFile(File file) {
         return forFiles(List.of(file));
     }
 
-    final List<File> files;
-    final List<CompilationUnitTree> compilationUnitTrees;
+    final Map<File, ArrayList<CompilationUnitTree>> compilationUnitTrees;
 
-    public FilesAnalyser(List<File> files, List<CompilationUnitTree> compilationUnitTrees) {
-        this.files = files;
+    protected FilesAnalyser(Map<File, ArrayList<CompilationUnitTree>> compilationUnitTrees) {
         this.compilationUnitTrees = compilationUnitTrees;
     }
 
     public void forEachFile(Consumer<File> f) {
-        this.files.forEach(f);
+        this.compilationUnitTrees.keySet().forEach(f);
     }
 
     public void acceptRuleVisitors(IssuesReport issuesReport, Collection<RuleTreeVisitor<?>> ruleVisitors) {
         for (var ruleVisitor : ruleVisitors) {
-            for (CompilationUnitTree compUnit : this.compilationUnitTrees) {
-                final String uri = compUnit.getSourceFile().toUri().normalize().toString();
-
-                ruleVisitor.setIssuesReport(issuesReport);
-                ruleVisitor.setLocation(new Location(uri));
-                compUnit.accept(ruleVisitor, null);
+            for (File file : this.compilationUnitTrees.keySet()) {
+                String fileName = file.getName();
+                for (CompilationUnitTree compUnit : this.compilationUnitTrees.get(file)) {
+                    ruleVisitor.setIssuesReport(issuesReport);
+                    ruleVisitor.setLocation(new Location(fileName));
+                    compUnit.accept(ruleVisitor, null);
+                }
             }
         }
     }
 
     public void acceptVisitor(Java19MetricsTreeVisitor<?> visitor) {
-        for (CompilationUnitTree compUnit : this.compilationUnitTrees) {
-            compUnit.accept(visitor, null);
+        for (var entry : this.compilationUnitTrees.entrySet()) {
+            for (CompilationUnitTree compUnit : entry.getValue()) {
+                compUnit.accept(visitor, null);
+            }
         }
     }
 }
