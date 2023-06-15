@@ -73,12 +73,13 @@ public class Cc4j {
     protected void analyseTextBasedRules(FilesAnalyser analizer) {
         analizer.forEachFile(file -> {
             String sourceCode = FileUtils.loadFile(file.toString());
+            String uri = file.toURI().normalize().toString();
 
             final FileRules fileRules = new FileRules(issuesReport);
-            fileRules.checkTodosAndFixmes(file.getName(), sourceCode);
-            fileRules.checkClassMaxLineWidth(file.getName(), sourceCode);
-            fileRules.checkClassMaxNumberOfLines(file.getName(), sourceCode);
-            fileRules.checkForAddSpacesToIncreaseReadibility(file.getName(), sourceCode);
+            fileRules.checkTodosAndFixmes(uri, sourceCode);
+            fileRules.checkClassMaxLineWidth(uri, sourceCode);
+            fileRules.checkClassMaxNumberOfLines(uri, sourceCode);
+            fileRules.checkForAddSpacesToIncreaseReadibility(uri, sourceCode);
         });
     }
 

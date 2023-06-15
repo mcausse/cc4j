@@ -60,11 +60,14 @@ public class Cc4jTest {
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(5);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
         assertThat(ir.getIssues().toString()).contains(
-                "+ 1 pending TODO(s) found (at [todos_and_fixmes_and_posponed_debt.java])",
-                "+ 1 pending FIXME(s) found (at [todos_and_fixmes_and_posponed_debt.java])",
-                "+ 1 pending @Ignore(s) (without justification) found (at [todos_and_fixmes_and_posponed_debt.java]: line 6)",
-                "+ 1 pending @Disabled(s) (without justification) found (at [todos_and_fixmes_and_posponed_debt.java]: line 7)",
-                "+ 1 pending @Deprecated(s) found (at [todos_and_fixmes_and_posponed_debt.java]: line 8)"
+                "+ 1 pending TODO(s) found (at [",
+                "+ 1 pending FIXME(s) found (at [",
+                "+ 1 pending @Ignore(s) (without justification) found (at [",
+                "+ 1 pending @Disabled(s) (without justification) found (at [",
+                "+ 1 pending @Deprecated(s) found (at [",
+                "]: line 6)",
+                "]: line 7)",
+                "]: line 8)"
         );
     }
 
@@ -225,9 +228,11 @@ public class Cc4jTest {
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(4);
         assertThat(ir.getIssues().toString()).contains(
-                "- 2 (after ',') spaces pending to add to increase the readibility (at [add_spaces_to_increase_the_readibility.java]: line 2)",
-                "- 1 ('=') spaces pending to add to increase the readibility (at [add_spaces_to_increase_the_readibility.java]: line 3)",
-                "- 1 ('){') spaces pending to add to increase the readibility (at [add_spaces_to_increase_the_readibility.java]: line 3)"
+                "- 2 (after ',') spaces pending to add to increase the readibility (at [",
+                "- 1 ('=') spaces pending to add to increase the readibility (at [",
+                "- 1 ('){') spaces pending to add to increase the readibility (at [",
+                "]: line 2)",
+                "]: line 3)"
         );
     }
 

@@ -62,8 +62,10 @@ public class FilesAnalyser {
     public void acceptRuleVisitors(IssuesReport issuesReport, Collection<RuleTreeVisitor<?>> ruleVisitors) {
         for (var ruleVisitor : ruleVisitors) {
             for (CompilationUnitTree compUnit : this.compilationUnitTrees) {
+                final String uri = compUnit.getSourceFile().toUri().normalize().toString();
+
                 ruleVisitor.setIssuesReport(issuesReport);
-                ruleVisitor.setLocation(new Location(compUnit.getSourceFile().getName()));
+                ruleVisitor.setLocation(new Location(uri));
                 compUnit.accept(ruleVisitor, null);
             }
         }
