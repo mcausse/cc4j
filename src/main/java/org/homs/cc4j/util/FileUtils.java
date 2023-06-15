@@ -14,9 +14,14 @@ import java.util.stream.Stream;
 
 public class FileUtils {
 
-    public static String loadFile(String filePath) throws IOException {
+    public static String loadFile(String filePath) {
         Path path = Paths.get(filePath);
-        Stream<String> lines = Files.lines(path);
+        Stream<String> lines;
+        try {
+            lines = Files.lines(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         String data = lines.collect(Collectors.joining("\n"));
         lines.close();
         return data;

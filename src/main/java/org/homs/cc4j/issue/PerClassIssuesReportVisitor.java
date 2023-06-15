@@ -22,16 +22,17 @@ public class PerClassIssuesReportVisitor implements IssuesReportVisitor {
     }
 
     protected void reportByFileBrief(List<Issue> issues, PrintStream ps, Set<String> fileNames) {
-        ps.printf("%40s %4s %4s %4s%n", "", "*", "+", "-");
+        ps.printf("%4s %4s %4s %s%n", "*", "+", "-", "");
         ps.println("-------------------------------------------------------------");
         for (var fileName : fileNames) {
             int errors = getIssuesCountBySeverity(issues, fileName, ERROR);
             int criticals = getIssuesCountBySeverity(issues, fileName, CRITICAL);
             int warnings = getIssuesCountBySeverity(issues, fileName, WARNING);
-            ps.printf("%40s %4s %4s %4s%n", fileName,
+            ps.printf("%4s %4s %4s %s%n",
                     errors == 0 ? "" : errors,
                     criticals == 0 ? "" : criticals,
-                    warnings == 0 ? "" : warnings);
+                    warnings == 0 ? "" : warnings,
+                    fileName);
         }
         ps.println();
     }

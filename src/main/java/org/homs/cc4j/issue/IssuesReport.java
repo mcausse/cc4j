@@ -1,5 +1,6 @@
 package org.homs.cc4j.issue;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +16,8 @@ public class IssuesReport {
         return issues;
     }
 
-    public void acceptReportVisitor(IssuesReportVisitor issuesVisitor) {
-        issuesVisitor.visit(this, System.out);
+    public void acceptReportVisitor(PrintStream ps, IssuesReportVisitor issuesVisitor) {
+        issuesVisitor.visit(this, ps);
     }
 
     public int getIssuesCountBySeverity(IssueSeverity severity) {

@@ -1,79 +1,61 @@
 package org.homs.cc4j;
 
-import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.util.JavacTask;
 import org.homs.cc4j.issue.IssuesReport;
-import org.homs.cc4j.issue.Location;
+import org.homs.cc4j.issue.IssuesReportVisitor;
 import org.homs.cc4j.issue.SimpleIssuesReportVisitor;
 import org.homs.cc4j.util.FileUtils;
-import org.homs.cc4j.visitors.Java19MetricsTreeVisitor;
 import org.homs.cc4j.visitors.MetricsCounterVisitor;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 import org.homs.cc4j.visitors.rules.*;
 
-import javax.tools.JavaCompiler;
-import javax.tools.JavaFileObject;
-import javax.tools.StandardJavaFileManager;
-import javax.tools.ToolProvider;
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.io.PrintStream;
 import java.util.List;
+
+import static org.homs.cc4j.util.FileUtils.processDirectory;
 
 public class Cc4j {
 
     final IssuesReport issuesReport;
+    final MetricsCounterVisitor metricsCounterVisitor;
 
-    public Cc4j(IssuesReport issuesReport) {
-        this.issuesReport = issuesReport;
+    public Cc4j() {
+        this.issuesReport = new IssuesReport();
+        this.metricsCounterVisitor = new MetricsCounterVisitor();
     }
 
-    public void analyseJavaFile(File file) throws IOException {
-        analyseJavaFiles(List.of(file));
+    public void analyseDirectory(String directory) {
+        List<File> files = processDirectory(new File(directory),
+                f -> f.endsWith(".java")
+        );
+
+        analyse(files);
     }
 
-    public void analyseJavaFiles(List<File> files) throws IOException {
-
-        /*
-         * METRICS COUNTER (IS A VISITOR)
-         */
-        var metricsCounterVisitor = new MetricsCounterVisitor();
-
-        final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-
-        try (final StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, StandardCharsets.UTF_8)) {
-            for (var file : files) {
-                analizeFile(compiler, fileManager, file, metricsCounterVisitor);
-            }
-            issuesReport.acceptReportVisitor(new SimpleIssuesReportVisitor());
-        }
-
-        metricsCounterVisitor.printMetricsCount();
+    public void analyseFile(String file) {
+        analyse(List.of(new File(file)));
     }
 
-    void analizeFile(JavaCompiler compiler, StandardJavaFileManager fileManager, File file, Java19MetricsTreeVisitor<?> metricsCounterVisitor) throws IOException {
+    public void analyse(List<File> files) {
+        var analizer = FilesAnalyser.forFiles(files);
 
         /*
          * TEXT-BASED RULES
          */
-        {
-            String sourceCode = FileUtils.loadFile(file.toString());
-
-            final FileRules fileRules = new FileRules(issuesReport);
-            fileRules.checkTodosAndFixmes(file.getName(), sourceCode);
-            fileRules.checkClassMaxLineWidth(file.getName(), sourceCode);
-            fileRules.checkClassMaxNumberOfLines(file.getName(), sourceCode);
-            fileRules.checkForAddSpacesToIncreaseReadibility(file.getName(), sourceCode);
-        }
-
-        final Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromFiles(List.of(file));
-
-        final JavacTask javacTask = (JavacTask) compiler.getTask(null, fileManager, null, null, null, compilationUnits);
-        final Iterable<? extends CompilationUnitTree> compilationUnitTrees = javacTask.parse();
+        analyseTextBasedRules(analizer);
 
         /*
          * AST-BASED RULES
          */
+        analyseAstBasedRules(analizer);
+
+        /*
+         * METRICS COUNTER (IS A VISITOR)
+         */
+        analizer.acceptVisitor(metricsCounterVisitor);
+    }
+
+    protected void analyseAstBasedRules(FilesAnalyser analizer) {
         List<RuleTreeVisitor<?>> rules = List.of(
                 new ClassMembersOrderingRule(),
                 new MaxIndentLevelRule(),
@@ -85,17 +67,42 @@ public class Cc4j {
                 new UsePronounceableNamesRule(),
                 new AvoidOptionalArgumentsRule()
         );
+        analizer.acceptRuleVisitors(issuesReport, rules);
+    }
 
-        for (CompilationUnitTree compUnit : compilationUnitTrees) {
-            for (var rule : rules) {
-                rule.setIssuesReport(issuesReport);
-                rule.setLocation(new Location(file.getName()));
+    protected void analyseTextBasedRules(FilesAnalyser analizer) {
+        analizer.forEachFile(file -> {
+            String sourceCode = FileUtils.loadFile(file.toString());
 
-                compUnit.accept(rule, null);
-                compUnit.accept(metricsCounterVisitor, null);
-            }
+            final FileRules fileRules = new FileRules(issuesReport);
+            fileRules.checkTodosAndFixmes(file.getName(), sourceCode);
+            fileRules.checkClassMaxLineWidth(file.getName(), sourceCode);
+            fileRules.checkClassMaxNumberOfLines(file.getName(), sourceCode);
+            fileRules.checkForAddSpacesToIncreaseReadibility(file.getName(), sourceCode);
+        });
+    }
+
+    public void report() {
+        report(System.out);
+    }
+
+    public void report(PrintStream ps) {
+        report(ps, new SimpleIssuesReportVisitor());
+    }
+
+    public void report(PrintStream ps, IssuesReportVisitor... issuesVisitors) {
+        this.metricsCounterVisitor.printMetricsCount();
+        for (var issuesVisitor : issuesVisitors) {
+            this.issuesReport.acceptReportVisitor(ps, issuesVisitor);
         }
     }
 
+    public IssuesReport getIssuesReport() {
+        return issuesReport;
+    }
+
+    public MetricsCounterVisitor getMetricsCounterVisitor() {
+        return metricsCounterVisitor;
+    }
 }
 

@@ -12,49 +12,50 @@ import static org.homs.cc4j.issue.IssueSeverity.*;
 
 public class Cc4jTest {
 
-    private File getFile(String fileName) {
+    private String getFile(String classPathResourceName) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        URL resource = classLoader.getResource(fileName);
+        URL resource = classLoader.getResource(classPathResourceName);
 
         if (resource == null) {
             throw new IllegalArgumentException("file is not found!");
         } else {
-            return new File(resource.getFile());
+            return new File(resource.getFile()).toString();
         }
     }
 
     @Test
     void naming_convention_rules() throws IOException {
 
-        var ir = new IssuesReport();
+        var cc4j = new Cc4j();
+        cc4j.analyseFile(getFile("cc4j/rules/naming_convention_rules.java"));
+        cc4j.report();
 
-        // act
-        new Cc4j(ir).analyseJavaFile(
-                getFile("cc4j/rules/naming_convention_rules.java"));
-
+        var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(7);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
         assertThat(ir.getIssues().toString()).contains(
-                "class 'le_class' should comply with a naming convention: ^[A-Z][a-zA-Z0-9]*$ (at [naming_convention_rules.java]: le_class)",
+                "class 'le_class' should comply with a naming convention: ^[A-Z][a-zA-Z0-9]*$ (at ",
                 "constant 'leConstant' should comply with a naming convention: ^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$",
                 "property 'LeProperty' should comply with a naming convention: ^[a-z][a-zA-Z0-9]*$",
                 "method 'Le_Method' should comply with a naming convention: ^[a-z][a-zA-Z0-9]*$",
                 "parameter 'Abc' should comply with a naming convention: ^[a-z][a-zA-Z0-9]*$",
                 "class 'le_inner_class' should comply with a naming convention: ^[A-Z][a-zA-Z0-9]*$",
-                "class 'le_inner_class2' should comply with a naming convention: ^[A-Z][a-zA-Z0-9]*$"
+                "class 'le_inner_class2' should comply with a naming convention: ^[A-Z][a-zA-Z0-9]*$",
+
+                "]: le_class.Le_Method(..))",
+                "]: le_class.le_inner_class.le_inner_class2)"
         );
     }
 
     @Test
     void todos_and_fixmes_and_posponed_debt() throws IOException {
 
-        var ir = new IssuesReport();
+        var cc4j = new Cc4j();
+        cc4j.analyseFile(getFile("cc4j/rules/todos_and_fixmes_and_posponed_debt.java"));
+        cc4j.report();
 
-        // act
-        new Cc4j(ir).analyseJavaFile(
-                getFile("cc4j/rules/todos_and_fixmes_and_posponed_debt.java"));
-
+        var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(5);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
@@ -70,12 +71,11 @@ public class Cc4jTest {
     @Test
     void class_max_line_width() throws IOException {
 
-        var ir = new IssuesReport();
+        var cc4j = new Cc4j();
+        cc4j.analyseFile(getFile("cc4j/rules/class_max_line_width.java"));
+        cc4j.report();
 
-        // act
-        new Cc4j(ir).analyseJavaFile(
-                getFile("cc4j/rules/class_max_line_width.java"));
-
+        var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(1);
@@ -87,12 +87,11 @@ public class Cc4jTest {
     @Test
     void class_members_ordering() throws IOException {
 
-        var ir = new IssuesReport();
+        var cc4j = new Cc4j();
+        cc4j.analyseFile(getFile("cc4j/rules/class_members_ordering.java"));
+        cc4j.report();
 
-        // act
-        new Cc4j(ir).analyseJavaFile(
-                getFile("cc4j/rules/class_members_ordering.java"));
-
+        var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
@@ -104,29 +103,27 @@ public class Cc4jTest {
     @Test
     void too_many_methods_in_class() throws IOException {
 
-        var ir = new IssuesReport();
+        var cc4j = new Cc4j();
+        cc4j.analyseFile(getFile("cc4j/rules/too_many_methods_in_class.java"));
+        cc4j.report();
 
-        // act
-        new Cc4j(ir).analyseJavaFile(
-                getFile("cc4j/rules/too_many_methods_in_class.java"));
-
+        var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(1);
         assertThat(ir.getIssues().toString()).contains(
-                "too many methods: 17 (>15 warning, >25 critical, >30 error) (at [too_many_methods_in_class.java]: Jou)"
+                "too many methods: 17 (>15 warning, >25 critical, >30 error)"
         );
     }
 
     @Test
     void too_many_method_arguments() throws IOException {
 
-        var ir = new IssuesReport();
+        var cc4j = new Cc4j();
+        cc4j.analyseFile(getFile("cc4j/rules/too_many_method_arguments.java"));
+        cc4j.report();
 
-        // act
-        new Cc4j(ir).analyseJavaFile(
-                getFile("cc4j/rules/too_many_method_arguments.java"));
-
+        var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
@@ -138,12 +135,11 @@ public class Cc4jTest {
     @Test
     void use_pronounceable_names() throws IOException {
 
-        var ir = new IssuesReport();
+        var cc4j = new Cc4j();
+        cc4j.analyseFile(getFile("cc4j/rules/use_pronounceable_names.java"));
+        cc4j.report();
 
-        // act
-        new Cc4j(ir).analyseJavaFile(
-                getFile("cc4j/rules/use_pronounceable_names.java"));
-
+        var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(1);
@@ -155,29 +151,27 @@ public class Cc4jTest {
     @Test
     void too_deply_nested_code() throws IOException {
 
-        var ir = new IssuesReport();
+        var cc4j = new Cc4j();
+        cc4j.analyseFile(getFile("cc4j/rules/too_deply_nested_code.java"));
+        cc4j.report();
 
-        // act
-        new Cc4j(ir).analyseJavaFile(
-                getFile("cc4j/rules/too_deply_nested_code.java"));
-
+        var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
         assertThat(ir.getIssues().toString()).contains(
-                "5 indent levels"
+                "+ 5 indent levels (>3 warning, >4 critical, >5 error)"
         );
     }
 
     @Test
     void too_many_effective_lines_in_method() throws IOException {
 
-        var ir = new IssuesReport();
+        var cc4j = new Cc4j();
+        cc4j.analyseFile(getFile("cc4j/rules/too_many_effective_lines_in_method.java"));
+        cc4j.report();
 
-        // act
-        new Cc4j(ir).analyseJavaFile(
-                getFile("cc4j/rules/too_many_effective_lines_in_method.java"));
-
+        var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(1);
@@ -189,12 +183,11 @@ public class Cc4jTest {
     @Test
     void too_many_lines_of_code_per_class() throws IOException {
 
-        var ir = new IssuesReport();
+        var cc4j = new Cc4j();
+        cc4j.analyseFile(getFile("cc4j/rules/too_many_lines_of_code_per_class.java"));
+        cc4j.report();
 
-        // act
-        new Cc4j(ir).analyseJavaFile(
-                getFile("cc4j/rules/too_many_lines_of_code_per_class.java"));
-
+        var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(1);
@@ -206,29 +199,28 @@ public class Cc4jTest {
     @Test
     void too_complicated_relational_expression() throws IOException {
 
-        var ir = new IssuesReport();
+        var cc4j = new Cc4j();
+        cc4j.analyseFile(getFile("cc4j/rules/too_complicated_relational_expression.java"));
+        cc4j.report();
 
-        // act
-        new Cc4j(ir).analyseJavaFile(
-                getFile("cc4j/rules/too_complicated_relational_expression.java"));
-
+        var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
         assertThat(ir.getIssues().toString()).contains(
-                "+ too complicated logical condition, rated as 7 (>3 warning, >5 critical, >7 error); expression=(a <= b && b >= c || c < b && !(b > a || e == f) || f == g || g != h) (at [too_complicated_relational_expression.java]: Jou.jou(..))]"
+                "+ too complicated logical condition, rated as 7 (>3 warning, >5 critical, >7 error); expression=(a <= b && b >= c || c < b && !(b > a || e == f) || f == g || g != h) (at ",
+                "]: Jou.jou(..)"
         );
     }
 
     @Test
     void add_spaces_to_increase_the_readibility() throws IOException {
 
-        var ir = new IssuesReport();
+        var cc4j = new Cc4j();
+        cc4j.analyseFile(getFile("cc4j/rules/add_spaces_to_increase_the_readibility.java"));
+        cc4j.report();
 
-        // act
-        new Cc4j(ir).analyseJavaFile(
-                getFile("cc4j/rules/add_spaces_to_increase_the_readibility.java"));
-
+        var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(4);
@@ -242,18 +234,20 @@ public class Cc4jTest {
     @Test
     void avoid_optional_arguments() throws IOException {
 
-        var ir = new IssuesReport();
+        var cc4j = new Cc4j();
+        cc4j.analyseFile(getFile("cc4j/rules/avoid_optional_arguments.java"));
+        cc4j.report();
 
-        // act
-        new Cc4j(ir).analyseJavaFile(
-                getFile("cc4j/rules/avoid_optional_arguments.java"));
-
+        var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(2);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
         assertThat(ir.getIssues().toString()).contains(
-                "+ avoid Optional<..> arguments (at [avoid_optional_arguments.java]: Jou.a(..))",
-                "+ avoid Optional<..> arguments (at [avoid_optional_arguments.java]: Jou.b(..))"
+                "+ avoid Optional<..> arguments (at ",
+                "+ avoid Optional<..> arguments (at ",
+
+                "]: Jou.a(..))",
+                "]: Jou.b(..))"
         );
     }
 }

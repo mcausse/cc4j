@@ -2,6 +2,7 @@ package org.homs.cc4j;
 
 import org.homs.cc4j.issue.IssuesReport;
 import org.homs.cc4j.issue.PerClassIssuesReportVisitor;
+import org.homs.cc4j.issue.SimpleIssuesReportVisitor;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -22,9 +23,11 @@ public class Cc4jSelfTest {
                         && !f.contains("test")
         );
 
-        var ir = new IssuesReport();
-        new Cc4j(ir).analyseJavaFiles(files);
-        ir.acceptReportVisitor(new PerClassIssuesReportVisitor());
+        var cc4j = new Cc4j();
+        cc4j.analyse(files);
+        cc4j.report(System.out,
+                new SimpleIssuesReportVisitor(),
+                new PerClassIssuesReportVisitor());
     }
 
     @Test
@@ -34,8 +37,9 @@ public class Cc4jSelfTest {
                 f -> f.endsWith(".java")
         );
 
-        var ir = new IssuesReport();
-        new Cc4j(ir).analyseJavaFiles(files);
+        var cc4j = new Cc4j();
+        cc4j.analyse(files);
+        cc4j.report();
     }
 
     @Test
@@ -45,8 +49,9 @@ public class Cc4jSelfTest {
                 f -> f.endsWith(".java")
         );
 
-        var ir = new IssuesReport();
-        new Cc4j(ir).analyseJavaFiles(files);
+        var cc4j = new Cc4j();
+        cc4j.analyse(files);
+        cc4j.report();
     }
 
     @Test
@@ -56,8 +61,9 @@ public class Cc4jSelfTest {
                 f -> f.endsWith(".java")
         );
 
-        var ir = new IssuesReport();
-        new Cc4j(ir).analyseJavaFiles(files);
+        var cc4j = new Cc4j();
+        cc4j.analyse(files);
+        cc4j.report();
     }
 
     @Disabled
@@ -68,8 +74,8 @@ public class Cc4jSelfTest {
                 f -> f.endsWith(".java")
         );
 
-        var ir = new IssuesReport();
-        new Cc4j(ir).analyseJavaFiles(files);
+        var cc4j = new Cc4j();
+        cc4j.analyse(files);
+        cc4j.report();
     }
-
 }
