@@ -21,6 +21,7 @@ public abstract class RuleTreeVisitor<T> extends Java19MetricsTreeVisitor<T> {
         this.location = location;
     }
 
+    @Override
     public Integer visitClass(ClassTree node, T p) {
         this.location.push(node.getSimpleName().toString());
         var r = super.visitClass(node, p);
@@ -28,6 +29,7 @@ public abstract class RuleTreeVisitor<T> extends Java19MetricsTreeVisitor<T> {
         return r;
     }
 
+    @Override
     public Integer visitMethod(MethodTree node, T p) {
         location.push(node.getName().toString() + "(..)");
         int r = super.visitMethod(node, p);

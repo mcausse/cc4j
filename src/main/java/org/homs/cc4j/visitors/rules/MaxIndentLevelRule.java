@@ -11,6 +11,7 @@ public class MaxIndentLevelRule extends RuleTreeVisitor<Void> {
     static final int THR_CRITICAL = 4;
     static final int THR_WARNING = 3;
 
+    @Override
     public Integer visitMethod(MethodTree node, Void p) {
         location.push(node.getName().toString() + "(..)");
 

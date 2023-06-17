@@ -28,6 +28,7 @@ public class ClassMembersOrderingRule extends RuleTreeVisitor<Void> {
         }
     }
 
+    @Override
     public Integer visitClass(ClassTree node, Void p) {
         location.push(node.getSimpleName().toString());
         inspectClassMembersOrder(node);

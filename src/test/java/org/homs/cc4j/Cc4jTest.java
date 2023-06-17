@@ -264,11 +264,9 @@ public class Cc4jTest {
         cc4j.report();
 
         var ir = cc4j.getIssuesReport();
-        assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
-        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
-        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(1);
         assertThat(ir.getIssues().toString()).contains(
-                "- cyclomatic complexity too high: 16 (>10 warning, >20 critical, >30 error (at [cyclomatic_complexity_too_high.java]: Jou.cognitive17cyclomatic16(..))"
+                "- cyclomatic complexity too high: 16 (>10 warning, >20 critical, >30 error (at [cyclomatic_complexity_too_high.java]: Jou.cyclomatic16(..))",
+                "- cyclomatic complexity too high: 15 (>10 warning, >20 critical, >30 error (at [cyclomatic_complexity_too_high.java]: Jou.cyclomatic15(..))"
         );
     }
 

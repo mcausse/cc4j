@@ -1,6 +1,6 @@
 public class Jou {
 
-    void cognitive17cyclomatic16(int a, int b, int c) {
+    void cyclomatic16(int a, int b, int c) {
         while (a > 0 && b > 0 && c > 0) {
             switch (b) {
                 case 0:
@@ -22,6 +22,22 @@ public class Jou {
             } else {
                 System.out.println("b");
             }
+        }
+    }
+
+    void cyclomatic15(int a, int b, int c, List<String> ks) {
+        for (var k : ks) {
+        }
+        do {
+        } while (a > 0 && b > 0 || c > 0);
+        for (int i = 0; i < ks.length && a > 0 ||b>0; i++) {
+        }
+
+        for (var k : ks) {
+        }
+        do {
+        } while (a > 0 && b > 0 || c > 0);
+        for (int i = 0; i < ks.length && a > 0 ||b>0; i++) {
         }
     }
 }

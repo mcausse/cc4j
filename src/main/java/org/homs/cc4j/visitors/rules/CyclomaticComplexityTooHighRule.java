@@ -14,6 +14,7 @@ public class CyclomaticComplexityTooHighRule extends RuleTreeVisitor<Void> {
         generateIssueIfThreshold(message, metricValue, THR_WARNING, THR_CRITICAL, THR_ERROR);
     }
 
+    @Override
     public Integer visitMethod(MethodTree node, Void p) {
         location.push(node.getName().toString() + "(..)");
         int r = super.visitMethod(node, p);
@@ -22,25 +23,38 @@ public class CyclomaticComplexityTooHighRule extends RuleTreeVisitor<Void> {
         return 0;
     }
 
+    @Override
     public Integer visitIf(IfTree node, Void p) {
         return super.visitIf(node, p) + 1;
     }
 
+    @Override
     public Integer visitWhileLoop(WhileLoopTree node, Void p) {
         return super.visitWhileLoop(node, p) + 1;
     }
 
+    @Override
     public Integer visitDoWhileLoop(DoWhileLoopTree node, Void p) {
         return super.visitDoWhileLoop(node, p) + 1;
     }
 
-//    @Override
+    @Override
+    public Integer visitForLoop(ForLoopTree node, Void unused) {
+        return super.visitForLoop(node, unused) + 1;
+    }
+
+    @Override
+    public Integer visitEnhancedForLoop(EnhancedForLoopTree node, Void unused) {
+        return super.visitEnhancedForLoop(node, unused) + 1;
+    }
+    //    @Override
 //    public Integer visitReturn(ReturnTree node, Void p) {
 //        return super.visitReturn(node, p) + 1;
 //    }
 
     // ===
 
+    @Override
     public Integer visitBinary(BinaryTree node, Void p) {
         var n = 0;
         if (node.getKind() == Tree.Kind.CONDITIONAL_AND || node.getKind() == Tree.Kind.CONDITIONAL_OR) {
@@ -54,6 +68,7 @@ public class CyclomaticComplexityTooHighRule extends RuleTreeVisitor<Void> {
         return super.visitCase(node, p) + 1;
     }
 
+    @Override
     public Integer visitConditionalExpression(ConditionalExpressionTree node, Void p) {
         var r = super.visitConditionalExpression(node, p);
         return r + 1;

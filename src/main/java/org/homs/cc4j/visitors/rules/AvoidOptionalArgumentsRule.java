@@ -10,6 +10,7 @@ import static org.homs.cc4j.issue.IssueSeverity.CRITICAL;
 
 public class AvoidOptionalArgumentsRule extends RuleTreeVisitor<Void> {
 
+    @Override
     public Integer visitMethod(MethodTree node, Void p) {
         location.push(node.getName().toString() + "(..)");
 
