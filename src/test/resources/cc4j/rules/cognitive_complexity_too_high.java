@@ -156,4 +156,97 @@ public class Jou {
             }
         }
     }
+
+
+    @Override
+    public Token next24() {
+
+        consumeWhitespaces();
+
+        Token r;
+
+        char c = program.charAt(p);
+        int beginTokenPos = p;
+
+        switch (c) {
+            case '"': {
+                if (program.startsWith("\"\"\"", p)) {
+                    r = consumeString("\"\"\"", EToken.INTERPOLATION_STRING);
+                } else {
+                    r = consumeString("\"", EToken.STRING);
+                }
+                break;
+            }
+            case ':': {
+                p++; // chupa :
+                int k = p;
+                while (k < program.length() && (program.charAt(k) == '.' || program.charAt(k) == '-' || program.charAt(k) == '/'
+                        || Character.isJavaIdentifierPart(program.charAt(k)))) {
+                    k++;
+                }
+                String value = program.substring(p, k);
+                p = k;
+                r = new Token(EToken.STRING, value, sourceDesc, row, col);
+                break;
+            }
+            case '(':
+                r = new Token(EToken.OPEN_PAR, String.valueOf(c), sourceDesc, row, col);
+                p++; // chupa
+                break;
+            case ')':
+                r = new Token(EToken.CLOSE_PAR, String.valueOf(c), sourceDesc, row, col);
+                p++; // chupa
+                break;
+            case '[':
+                r = new Token(EToken.OPEN_LIST, String.valueOf(c), sourceDesc, row, col);
+                p++; // chupa
+                break;
+            case ']':
+                r = new Token(EToken.CLOSE_LIST, String.valueOf(c), sourceDesc, row, col);
+                p++; // chupa
+                break;
+            case '{':
+                r = new Token(EToken.OPEN_MAP, String.valueOf(c), sourceDesc, row, col);
+                p++; // chupa
+                break;
+            case '}':
+                r = new Token(EToken.CLOSE_MAP, String.valueOf(c), sourceDesc, row, col);
+                p++; // chupa
+                break;
+            default: {
+                int k = p;
+                while (k < program.length() && !Character.isWhitespace(program.charAt(k))
+                        && "()[]{}".indexOf(program.charAt(k)) < 0) {
+                    k++;
+                }
+                String value = program.substring(p, k);
+                p = k;
+
+                if (value.equals("null")) {
+                    r = new Token(EToken.NULL, null, sourceDesc, row, col);
+                } else if (value.equals("true") || value.equals("false")) {
+                    r = new Token(EToken.BOOL, value, sourceDesc, row, col);
+                } else {
+
+                    try {
+                        Integer.valueOf(value);
+                        r = new Token(EToken.NUMERIC, value, sourceDesc, row, col);
+                    } catch (NumberFormatException e) {
+                        try {
+                            Double.valueOf(value);
+                            r = new Token(EToken.NUMERIC, value, sourceDesc, row, col);
+                        } catch (NumberFormatException e2) {
+                            r = new Token(EToken.SYMBOL, value, sourceDesc, row, col);
+                        }
+                    }
+                }
+                break;
+            }
+        }
+
+        for (int i = beginTokenPos; i < p; i++) {
+            updateRowCol(i);
+        }
+        return r;
+    }
 }

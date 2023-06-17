@@ -486,9 +486,6 @@ public class Java19MetricsTreeVisitor<P> implements TreeVisitor<Integer, P> {
         for (CatchTree catchTree : node.getCatches()) {
             r += catchTree.accept(this, p);
         }
-        for (CatchTree tree : node.getCatches()) {
-            r += tree.accept(this, p);
-        }
         if (node.getFinallyBlock() != null)
             r += node.getFinallyBlock().accept(this, p);
         return r;

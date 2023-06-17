@@ -104,7 +104,13 @@ public class CognitiveComplexityTooHighRule extends RuleTreeVisitor<CognitiveCom
 
     @Override
     public Integer visitCatch(CatchTree node, NestingStatus nestingStatus) {
-        return super.visitCatch(node, nestingStatus.incNestedLevel()) + 1 + nestingStatus.nestedLevel;
+        final int r = super.visitCatch(node, nestingStatus.incNestedLevel()) + 1 + nestingStatus.nestedLevel;
+        return r;
+    }
+
+    @Override
+    public Integer visitSwitch(SwitchTree node, NestingStatus nestingStatus) {
+        return super.visitSwitch(node, nestingStatus.incNestedLevel()) + 1 + nestingStatus.nestedLevel;
     }
 
     // ===

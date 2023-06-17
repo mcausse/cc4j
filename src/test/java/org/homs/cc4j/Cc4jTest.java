@@ -159,7 +159,7 @@ public class Cc4jTest {
         var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
-        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(1);
+        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
         assertThat(ir.getIssues().toString()).contains(
                 "+ 5 indent levels (>3 warning, >4 critical, >5 error) (at [too_deply_nested_code.java]: Jou.a(..))"
         );
@@ -288,9 +288,9 @@ public class Cc4jTest {
                 "- cognitive complexity too high: 13 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.aaa13(..))",
                 "+ cognitive complexity too high: 29 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive29(..))",
                 "+ cognitive complexity too high: 28 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive28(..))",
-                // TODO 24 vs. 27?
-                "+ cognitive complexity too high: 27 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.evalAstCognitive24(..))",
-                "+ cognitive complexity too high: 21 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.aaa21(..))"
+                "+ cognitive complexity too high: 24 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.evalAstCognitive24(..))",
+                "+ cognitive complexity too high: 21 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.aaa21(..))",
+                "+ cognitive complexity too high: 24 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.next24(..))"
         );
     }
 
