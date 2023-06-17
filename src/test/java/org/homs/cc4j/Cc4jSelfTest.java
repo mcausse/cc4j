@@ -84,4 +84,13 @@ public class Cc4jSelfTest {
         cc4j.analyse(files);
         cc4j.report();
     }
+
+
+    @Test
+    void all2() {
+
+        var cc4j = new Cc4j();
+        cc4j.analyseFile("C:\\java\\workospace\\lispo2021\\src\\main\\java\\org\\homs\\lechugascript\\eval\\Evaluator.java");
+        cc4j.report();
+    }
 }

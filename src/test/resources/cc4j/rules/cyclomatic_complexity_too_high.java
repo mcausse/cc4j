@@ -30,14 +30,14 @@ public class Jou {
         }
         do {
         } while (a > 0 && b > 0 || c > 0);
-        for (int i = 0; i < ks.length && a > 0 ||b>0; i++) {
+        for (int i = 0; i < ks.size() && a > 0 ||b>0; i++) {
         }
 
         for (var k : ks) {
         }
         do {
         } while (a > 0 && b > 0 || c > 0);
-        for (int i = 0; i < ks.length && a > 0 ||b>0; i++) {
+        for (int i = 0; i < ks.size() && a > 0 ||b>0; i++) {
         }
     }
 }

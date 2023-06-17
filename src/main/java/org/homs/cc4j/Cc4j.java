@@ -66,7 +66,8 @@ public class Cc4j {
                 new TooManyMethodsRule(),
                 new UsePronounceableNamesRule(),
                 new AvoidOptionalArgumentsRule(),
-                new CyclomaticComplexityTooHighRule()
+                new CyclomaticComplexityTooHighRule(),
+                new CognitiveComplexityTooHighRule()
         );
         analizer.acceptRuleVisitors(issuesReport, rules);
     }

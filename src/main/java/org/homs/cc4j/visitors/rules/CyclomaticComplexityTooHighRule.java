@@ -10,8 +10,9 @@ public class CyclomaticComplexityTooHighRule extends RuleTreeVisitor<Void> {
     static final int THR_WARNING = 10;
 
     void generateIssueIfThreshold(int metricValue) {
-        String message = "cyclomatic complexity too high: %s (>%s warning, >%s critical, >%s error";
-        generateIssueIfThreshold(message, metricValue, THR_WARNING, THR_CRITICAL, THR_ERROR);
+        generateIssueIfThreshold(
+                "cyclomatic complexity too high: %s (>%s warning, >%s critical, >%s error",
+                metricValue, THR_WARNING, THR_CRITICAL, THR_ERROR);
     }
 
     @Override
@@ -47,10 +48,16 @@ public class CyclomaticComplexityTooHighRule extends RuleTreeVisitor<Void> {
     public Integer visitEnhancedForLoop(EnhancedForLoopTree node, Void unused) {
         return super.visitEnhancedForLoop(node, unused) + 1;
     }
+
+    @Override
+    public Integer visitCase(CaseTree node, Void p) {
+        return super.visitCase(node, p) + 1;
+    }
+
     //    @Override
-//    public Integer visitReturn(ReturnTree node, Void p) {
-//        return super.visitReturn(node, p) + 1;
-//    }
+    //    public Integer visitReturn(ReturnTree node, Void p) {
+    //        return super.visitReturn(node, p) + 1;
+    //    }
 
     // ===
 
@@ -61,11 +68,6 @@ public class CyclomaticComplexityTooHighRule extends RuleTreeVisitor<Void> {
             n = 1;
         }
         return super.visitBinary(node, p) + n;
-    }
-
-    @Override
-    public Integer visitCase(CaseTree node, Void p) {
-        return super.visitCase(node, p) + 1;
     }
 
     @Override
