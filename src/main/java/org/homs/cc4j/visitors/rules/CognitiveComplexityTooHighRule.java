@@ -5,11 +5,34 @@ import org.homs.cc4j.visitors.RuleTreeVisitor;
 
 import java.util.regex.Pattern;
 
-public class CognitiveComplexityTooHighRule extends RuleTreeVisitor<Integer> {
+public class CognitiveComplexityTooHighRule extends RuleTreeVisitor<CognitiveComplexityTooHighRule.NestingStatus> {
 
     static final int THR_ERROR = 30;
     static final int THR_CRITICAL = 20;
     static final int THR_WARNING = 10;
+
+    static class NestingStatus {
+
+        public final int nestedLevel;
+        public final boolean nestingBonus;
+
+        public static NestingStatus build() {
+            return new NestingStatus(0, true);
+        }
+
+        private NestingStatus(int nestedLevel, boolean nestingBonus) {
+            this.nestedLevel = nestedLevel;
+            this.nestingBonus = nestingBonus;
+        }
+
+        public NestingStatus incNestedLevel() {
+            return new NestingStatus(nestedLevel + 1, true);
+        }
+
+        public NestingStatus incNestedLevelButAvoidNextNestingBonus() {
+            return new NestingStatus(nestedLevel, false);
+        }
+    }
 
     void generateIssueIfThreshold(int metricValue) {
         generateIssueIfThreshold(
@@ -18,58 +41,70 @@ public class CognitiveComplexityTooHighRule extends RuleTreeVisitor<Integer> {
     }
 
     @Override
-    public Integer visitClass(ClassTree node, Integer p) {
-        return super.visitClass(node, 0);
+    public Integer visitClass(ClassTree node, NestingStatus p) {
+        return super.visitClass(node, NestingStatus.build());
     }
 
     @Override
-    public Integer visitMethod(MethodTree node, Integer nestedLevel) {
+    public Integer visitMethod(MethodTree node, NestingStatus nestingStatus) {
         location.push(node.getName().toString() + "(..)");
-        int r = super.visitMethod(node, 0);
+        int r = super.visitMethod(node, NestingStatus.build());
         generateIssueIfThreshold(r);
         location.pop();
         return 0;
     }
 
     @Override
-    public Integer visitIf(IfTree node, Integer nestedLevel) {
+    public Integer visitIf(IfTree node, NestingStatus nestingStatus) {
         int r = 1;
+        if (nestingStatus.nestingBonus) {
+            r += nestingStatus.nestedLevel;
+        }
         r += computeExpression(node.getCondition().toString());
-        r += node.getThenStatement().accept(this, nestedLevel + 1);
+        r += node.getThenStatement().accept(this, nestingStatus.incNestedLevel());
+
+        //        hybrid increments for:
+        //             else if, elif, else, …
+        //        No nesting increment is assessed for these structures because the mental cost has already
+        //        been paid when reading the if.
         if (node.getElseStatement() != null) {
             if (node.getElseStatement() instanceof IfTree) {
-                // Manté el nested level per "elseif"
-                r += node.getElseStatement().accept(this, nestedLevel);
+                r += node.getElseStatement().accept(this, nestingStatus.incNestedLevelButAvoidNextNestingBonus());
             } else {
-                r += node.getElseStatement().accept(this, nestedLevel + 1) + 1;
+                r += node.getElseStatement().accept(this, nestingStatus.incNestedLevel()) + 1;
             }
         }
+
         return r;
     }
 
     @Override
-    public Integer visitWhileLoop(WhileLoopTree node, Integer nestedLevel) {
-        return super.visitWhileLoop(node, nestedLevel + 1) + 1 + nestedLevel + computeExpression(node.getCondition().toString());
+    public Integer visitWhileLoop(WhileLoopTree node, NestingStatus nestingStatus) {
+        return super.visitWhileLoop(node, nestingStatus.incNestedLevel()) + 1 + nestingStatus.nestedLevel + computeExpression(node.getCondition().toString());
     }
 
     @Override
-    public Integer visitDoWhileLoop(DoWhileLoopTree node, Integer nestedLevel) {
-        return super.visitDoWhileLoop(node, nestedLevel + 1) + 1 + nestedLevel + computeExpression(node.getCondition().toString());
+    public Integer visitDoWhileLoop(DoWhileLoopTree node, NestingStatus nestingStatus) {
+        return super.visitDoWhileLoop(node, nestingStatus.incNestedLevel()) + 1 + nestingStatus.nestedLevel + computeExpression(node.getCondition().toString());
     }
 
     @Override
-    public Integer visitForLoop(ForLoopTree node, Integer nestedLevel) {
-        return super.visitForLoop(node, nestedLevel + 1) + 1 + nestedLevel + computeExpression(node.getCondition().toString());
+    public Integer visitForLoop(ForLoopTree node, NestingStatus nestingStatus) {
+        var expression = 0;
+        if (node.getCondition() != null) {
+            expression += computeExpression(node.getCondition().toString());
+        }
+        return super.visitForLoop(node, nestingStatus.incNestedLevel()) + 1 + nestingStatus.nestedLevel + expression;
     }
 
     @Override
-    public Integer visitEnhancedForLoop(EnhancedForLoopTree node, Integer nestedLevel) {
-        return super.visitEnhancedForLoop(node, nestedLevel + 1) + 1 + nestedLevel;
+    public Integer visitEnhancedForLoop(EnhancedForLoopTree node, NestingStatus nestingStatus) {
+        return super.visitEnhancedForLoop(node, nestingStatus.incNestedLevel()) + 1 + nestingStatus.nestedLevel;
     }
 
     @Override
-    public Integer visitCatch(CatchTree node, Integer nestedLevel) {
-        return super.visitCatch(node, nestedLevel + 1) + 1 + nestedLevel;
+    public Integer visitCatch(CatchTree node, NestingStatus nestingStatus) {
+        return super.visitCatch(node, nestingStatus.incNestedLevel()) + 1 + nestingStatus.nestedLevel;
     }
 
     // ===

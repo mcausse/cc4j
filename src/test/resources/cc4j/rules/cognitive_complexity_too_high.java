@@ -111,4 +111,49 @@ public class Jou {
             throw new ValidationError(e.getMessage(), new ValidationError(ast + "; " + ast.getTokenAt().toString()));
         }
     }
+
+    void aaa21(int a, int b, int c) {
+
+        if (a == 1) {
+        } else if (a == 2) {
+            if (b == 1) {
+            } else {
+            }
+        } else if (a == 3) {
+            if (b == 1) {
+            } else {
+            }
+        } else if (a == 4) {
+            if (b == 1) {
+            } else {
+            }
+        } else if (a == 5) {
+            if (b == 1) {
+            } else {
+            }
+        } else {
+            if (b == 1) {
+            } else {
+            }
+        }
+    }
+
+
+    void aaa13(int a, int b, int c) {
+
+        if (a == 1) {               // 1
+        } else if (a == 2) {        // 1
+            if (b == 1) {           // 2
+            } else {                // 1
+            }
+        } else if (a == 2) {        // 1
+            if (b == 1) {           // 2
+            } else {                // 1
+            }
+        } else {                    // 1
+            if (b == 11) {          // 2
+            } else {                // 1
+            }
+        }
+    }
 }

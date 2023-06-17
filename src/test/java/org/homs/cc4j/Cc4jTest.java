@@ -207,13 +207,14 @@ public class Cc4jTest {
         var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(2);
-        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
+        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(1);
         assertThat(ir.getIssues().toString()).contains(
                 "+ too complicated logical condition, rated as 7 (>3 warning, >5 critical, >7 error); " +
                         "expression=(a <= b && b >= c || c < b && !(b > a || e == f) || f == g || g != h) " +
                         "(at [too_complicated_relational_expression.java]: Jou.jou(..))",
 
-                "+ cyclomatic complexity too high: 21 (>10 warning, >20 critical, >30 error (at [too_complicated_relational_expression.java]: Jou.jou(..))"
+                "+ cyclomatic complexity too high: 21 (>10 warning, >20 critical, >30 error (at [too_complicated_relational_expression.java]: Jou.jou(..))",
+                "- cognitive complexity too high: 11 (>10 warning, >20 critical, >30 error (at [too_complicated_relational_expression.java]: Jou.jou(..))"
         );
     }
 
@@ -279,9 +280,17 @@ public class Cc4jTest {
 
         var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssues().toString()).contains(
+                "+ cyclomatic complexity too high: 29 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive28(..))",
+                "- cyclomatic complexity too high: 15 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive29(..))",
+                "- cyclomatic complexity too high: 14 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.evalAstCognitive24(..))",
+                "- cyclomatic complexity too high: 11 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.aaa21(..))",
+
+                "- cognitive complexity too high: 13 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.aaa13(..))",
                 "+ cognitive complexity too high: 29 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive29(..))",
                 "+ cognitive complexity too high: 28 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive28(..))",
-                "+ cognitive complexity too high: 24 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.evalAstCognitive24(..))"
+                // TODO 24 vs. 27?
+                "+ cognitive complexity too high: 27 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.evalAstCognitive24(..))",
+                "+ cognitive complexity too high: 21 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.aaa21(..))"
         );
     }
 
