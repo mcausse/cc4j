@@ -23,19 +23,19 @@ public class BriefReportVisitor implements IssuesReportVisitor {
     protected void reportByFileBrief(List<Issue> issues, PrintStream ps, Set<String> fileNames) {
         ps.printf("%4s %4s %4s %s%n", "*", "+", "-", "");
         ps.println("-------------------------------------------------------------");
-        int total = 0;
+        //int total = 0;
         for (var fileName : fileNames) {
             int errors = getIssuesCountBySeverity(issues, fileName, ERROR);
             int criticals = getIssuesCountBySeverity(issues, fileName, CRITICAL);
             int warnings = getIssuesCountBySeverity(issues, fileName, WARNING);
-            total += errors * 3 + criticals * 2 + warnings;
+            //total += errors * 3 + criticals * 2 + warnings;
             ps.printf("%4s %4s %4s %s%n",
                     errors == 0 ? "" : errors,
                     criticals == 0 ? "" : criticals,
                     warnings == 0 ? "" : warnings,
                     fileName);
         }
-        ps.println("=> " + total); // TODO
+//        ps.println("=> " + total); // TODO
         ps.println();
     }
 

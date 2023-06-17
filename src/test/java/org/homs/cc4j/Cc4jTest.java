@@ -1,10 +1,8 @@
 package org.homs.cc4j;
 
-import org.homs.cc4j.issue.IssuesReport;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,10 +15,10 @@ public class Cc4jTest {
         URL resource = classLoader.getResource(classPathResourceName);
 
         if (resource == null) {
-            throw new IllegalArgumentException("file is not found!");
-        } else {
-            return new File(resource.getFile()).toString();
+            throw new IllegalArgumentException("file not found: " + classPathResourceName);
         }
+
+        return new File(resource.getFile()).toString();
     }
 
     @Test
@@ -208,12 +206,14 @@ public class Cc4jTest {
 
         var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
-        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
+        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(2);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
         assertThat(ir.getIssues().toString()).contains(
                 "+ too complicated logical condition, rated as 7 (>3 warning, >5 critical, >7 error); " +
                         "expression=(a <= b && b >= c || c < b && !(b > a || e == f) || f == g || g != h) " +
-                        "(at [too_complicated_relational_expression.java]: Jou.jou(..))"
+                        "(at [too_complicated_relational_expression.java]: Jou.jou(..))",
+
+                "+ cyclomatic complexity too high: 21 (>10 warning, >20 critical, >30 error (at [too_complicated_relational_expression.java]: Jou.jou(..))"
         );
     }
 
@@ -253,6 +253,43 @@ public class Cc4jTest {
 
                 "]: Jou.a(..))",
                 "]: Jou.b(..))"
+        );
+    }
+
+    @Test
+    void cyclomatic_complexity_too_high() {
+
+        var cc4j = new Cc4j();
+        cc4j.analyseFile(getFile("cc4j/rules/cyclomatic_complexity_too_high.java"));
+        cc4j.report();
+
+        var ir = cc4j.getIssuesReport();
+        assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
+        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
+        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(1);
+        assertThat(ir.getIssues().toString()).contains(
+                "- cyclomatic complexity too high: 16 (>10 warning, >20 critical, >30 error (at [cyclomatic_complexity_too_high.java]: Jou.cognitive17cyclomatic16(..))"
+        );
+    }
+
+    @Test
+    void securityArguments() {
+
+        var cc4j = new Cc4j();
+        cc4j.analyseFile(getFile("SecurityArguments.java"));
+        cc4j.report();
+
+        var ir = cc4j.getIssuesReport();
+        assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(2);
+        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(2);
+        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(2);
+        assertThat(ir.getIssues().toString()).contains(
+                "* too complicated logical condition, rated as 12 (>3 warning, >5 critical, >7 error); expression=!isTLSEnable && !isMutualEnable && (crtPath == null || crtPath.isEmpty()) && (keyPath == null || keyPath.isEmpty()) && (caCrtPath == null || caCrtPath.isEmpty()) && (clientAuthHosts == null || clientAuthHosts.isEmpty()) && port == 0 (at [SecurityArguments.java]: SecurityArguments.isEmpty(..))",
+                "* too many arguments: 7 (>3 warning, >4 critical, >5 error) (at [SecurityArguments.java]: SecurityArguments.<init>(..))",
+                "+ 3 pending TODO(s) found (at [SecurityArguments.java])",
+                "+ file has a line (line #16) of 177 columns width (>140 warning, >160 critical, >190 error) (at [SecurityArguments.java])",
+                "- too many methods: 16 (>15 warning, >25 critical, >30 error) (at [SecurityArguments.java]: SecurityArguments)",
+                "- cyclomatic complexity too high: 11 (>10 warning, >20 critical, >30 error (at [SecurityArguments.java]: SecurityArguments.isEmpty(..))"
         );
     }
 }

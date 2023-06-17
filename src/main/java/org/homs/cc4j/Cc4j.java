@@ -65,7 +65,8 @@ public class Cc4j {
                 new TooManyEffectiveLinesPerMethodRule(),
                 new TooManyMethodsRule(),
                 new UsePronounceableNamesRule(),
-                new AvoidOptionalArgumentsRule()
+                new AvoidOptionalArgumentsRule(),
+                new CyclomaticComplexityTooHighRule()
         );
         analizer.acceptRuleVisitors(issuesReport, rules);
     }
@@ -92,7 +93,7 @@ public class Cc4j {
     }
 
     public void report(PrintStream ps, IssuesReportVisitor... issuesVisitors) {
-        this.metricsCounterVisitor.printMetricsCount();
+        this.metricsCounterVisitor.printMetricsCount(/*issuesReport*/);
         for (var issuesVisitor : issuesVisitors) {
             this.issuesReport.acceptReportVisitor(ps, issuesVisitor);
         }

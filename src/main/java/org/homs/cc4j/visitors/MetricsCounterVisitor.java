@@ -39,7 +39,7 @@ public class MetricsCounterVisitor extends Java19MetricsTreeVisitor<String> {
         return super.visitMethod(node, methodName);
     }
 
-    public void printMetricsCount() {
+    public void printMetricsCount(/*IssuesReport issuesReport*/) {
         System.out.println("=============================================================");
         System.out.println("Inspected classes:");
         System.out.println("-------------------------------------------------------------");
@@ -50,6 +50,12 @@ public class MetricsCounterVisitor extends Java19MetricsTreeVisitor<String> {
         System.out.printf(" #classes: %7d%n", classes.size());
         System.out.printf(" #methods: %7d (%5.2f methods/class)%n", methods.size(), (double) methods.size() / classes.size());
         System.out.printf(" #elc:     %7d (%5.2f elc/class)%n", totalEffectiveLinesOfCode, (double) totalEffectiveLinesOfCode / classes.size());
+        System.out.println("-------------------------------------------------------------");
+//        if (totalEffectiveLinesOfCode > 0) {
+//            System.out.printf(" errors/Kelc:    %3d%n", 1_000 * issuesReport.getIssuesCountBySeverity(IssueSeverity.ERROR) / totalEffectiveLinesOfCode);
+//            System.out.printf(" criticals/Kelc: %3d%n", 1_000 * issuesReport.getIssuesCountBySeverity(IssueSeverity.CRITICAL) / totalEffectiveLinesOfCode);
+//            System.out.printf(" warnings/Kelc:  %3d%n", 1_000 * issuesReport.getIssuesCountBySeverity(IssueSeverity.WARNING) / totalEffectiveLinesOfCode);
+//        }
         System.out.println("=============================================================");
     }
 

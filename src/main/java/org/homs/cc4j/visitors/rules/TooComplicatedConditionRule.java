@@ -36,6 +36,17 @@ public class TooComplicatedConditionRule extends RuleTreeVisitor<Void> {
         return super.visitDoWhileLoop(node, p);
     }
 
+    @Override
+    public Integer visitReturn(ReturnTree node, Void p) {
+        if (node.getExpression() != null) {
+            int metricValue = node.getExpression().accept(this, p);
+            generateIssueIfThreshold(metricValue, node.getExpression().toString());
+        }
+        return super.visitReturn(node, p);
+    }
+
+    // ===
+
     public Integer visitBinary(BinaryTree node, Void p) {
         var r = super.visitBinary(node, p);
         if (node.getKind() == Tree.Kind.CONDITIONAL_AND || node.getKind() == Tree.Kind.CONDITIONAL_OR) {

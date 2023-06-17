@@ -28,6 +28,9 @@ public class TooManyMethodsRule extends RuleTreeVisitor<Void> {
 
     public Integer visitMethod(MethodTree node, Void p) {
         super.visitMethod(node, p);
+        if (node.getReturnType() == null) { // Returns null for a constructor.
+            return 0;
+        }
         return 1;
     }
 }
