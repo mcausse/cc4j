@@ -36,7 +36,7 @@ public class NamingConventionsRule extends RuleTreeVisitor<Void> {
             if (member instanceof VariableTree) {
                 checkProperty((VariableTree) member);
             } else if (member instanceof MethodTree) {
-                checkMethod(((MethodTree) member));
+                checkMethod(node, ((MethodTree) member));
             }
         }
 
@@ -62,7 +62,7 @@ public class NamingConventionsRule extends RuleTreeVisitor<Void> {
         }
     }
 
-    void checkMethod(MethodTree methodTree) {
+    void checkMethod(ClassTree classTree, MethodTree methodTree) {
         //                /**
         //                 * Returns the return type of the method being declared.
         //                 * Returns {@code null} for a constructor.
@@ -73,6 +73,13 @@ public class NamingConventionsRule extends RuleTreeVisitor<Void> {
             // just skip the c'tors
             return;
         }
+        var className = classTree.getSimpleName().toString();
+        if (className.endsWith("Test") || className.endsWith("Should")) {
+            // we ignore UT classes with methods like "fail_parsing_an_unclosed_list"
+            // or "throw_an_exception_when_tokenizing_a_program_with_an_unclosed_multiline_string".
+            return;
+        }
+
         location.push(methodTree.getName().toString() + "(..)");
 
         String name = methodTree.getName().toString();

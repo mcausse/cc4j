@@ -57,17 +57,17 @@ public class Cc4j {
 
     protected void analyseAstBasedRules(FilesAnalyser analizer) {
         List<RuleTreeVisitor<?>> rules = List.of(
-                new ClassMembersOrderingRule(),
+                new CyclomaticComplexityTooHighRule(),
+                new CognitiveComplexityTooHighRule(),
                 new MaxIndentLevelRule(),
-                new NamingConventionsRule(),
-                new TooComplicatedConditionRule(),
                 new TooManyArgumentsRule(),
+                new TooComplicatedConditionRule(),
+                new ClassMembersOrderingRule(),
+                new NamingConventionsRule(),
                 new TooManyEffectiveLinesPerMethodRule(),
                 new TooManyMethodsRule(),
-                new UsePronounceableNamesRule(),
                 new AvoidOptionalArgumentsRule(),
-                new CyclomaticComplexityTooHighRule(),
-                new CognitiveComplexityTooHighRule()
+                new UsePronounceableNamesRule()
         );
         analizer.acceptRuleVisitors(issuesReport, rules);
     }

@@ -72,6 +72,20 @@ public class Cc4jSelfTest {
                 new BriefReportVisitor());
     }
 
+    @Test
+    void Lenteja() {
+
+        List<File> files = processDirectory(new File("C:\\java\\workospace\\lenteja-jdbc\\src\\main\\java\\org\\homs\\lentejajdbc"),
+                f -> f.endsWith(".java")
+        );
+
+        var cc4j = new Cc4j();
+        cc4j.analyse(files);
+        cc4j.report(System.out,
+                new SimpleIssuesReportVisitor(),
+                new BriefReportVisitor());
+    }
+
     @Disabled
     @Test
     void all() {
