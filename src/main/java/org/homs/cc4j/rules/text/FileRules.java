@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class FileRules {
 
-    final TextRule[] textRules = {
+    public final static TextRule[] textRules = {
             new AddSpacesToIncreaseTheReadibilityRule(),
             new ClassMaxLineWidthRule(),
             new ClassMaxNumberOfLinesRule(),
@@ -38,4 +38,6 @@ public class FileRules {
         }
         return hits;
     }
+
+
 }

@@ -12,6 +12,9 @@ public class RuleInfo {
         this.description = description;
     }
 
+    public String getFullDescription() {
+        return this + " - " + description;
+    }
 
     @Override
     public String toString() {

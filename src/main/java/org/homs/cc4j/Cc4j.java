@@ -15,11 +15,28 @@ import org.homs.cc4j.util.FileUtils;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.homs.cc4j.util.FileUtils.processDirectory;
 
 public class Cc4j {
+
+    public static final List<RuleTreeVisitor<?>> RULES = List.of(
+            new CyclomaticComplexityTooHighRule(),
+            new CognitiveComplexityTooHighRule(),
+            new MaxIndentLevelRule(),
+            new TooManyArgumentsRule(),
+            new TooComplicatedConditionRule(),
+            new ClassMembersOrderingRule(),
+            new NamingConventionsRule(),
+            new TooManyEffectiveLinesPerMethodRule(),
+            new TooManyMethodsRule(),
+            new AvoidOptionalArgumentsRule(),
+            new UsePronounceableNamesRule()
+    );
 
     final IssuesReport issuesReport;
     final MetricsCounterVisitor metricsCounterVisitor;
@@ -61,20 +78,7 @@ public class Cc4j {
     }
 
     protected void analyseAstBasedRules(FilesAnalyser analizer) {
-        List<RuleTreeVisitor<?>> rules = List.of(
-                new CyclomaticComplexityTooHighRule(),
-                new CognitiveComplexityTooHighRule(),
-                new MaxIndentLevelRule(),
-                new TooManyArgumentsRule(),
-                new TooComplicatedConditionRule(),
-                new ClassMembersOrderingRule(),
-                new NamingConventionsRule(),
-                new TooManyEffectiveLinesPerMethodRule(),
-                new TooManyMethodsRule(),
-                new AvoidOptionalArgumentsRule(),
-                new UsePronounceableNamesRule()
-        );
-        analizer.acceptRuleVisitors(issuesReport, rules);
+        analizer.acceptRuleVisitors(issuesReport, RULES);
     }
 
     protected void analyseTextBasedRules(FilesAnalyser analizer) {
@@ -96,6 +100,14 @@ public class Cc4j {
     }
 
     public void report(PrintStream ps, IssuesReportVisitor... issuesVisitors) {
+
+        List<Rule> rules = new ArrayList<>();
+        rules.addAll(RULES);
+        rules.addAll(Arrays.asList(FileRules.textRules));
+        rules.sort(Comparator.comparing(o -> o.getRuleInfo().toString()));
+        rules.forEach(r -> System.out.println(r.getRuleInfo().getFullDescription()));
+
+
         this.metricsCounterVisitor.printMetricsCount(/*issuesReport*/);
         for (var issuesVisitor : issuesVisitors) {
             this.issuesReport.acceptReportVisitor(ps, issuesVisitor);
