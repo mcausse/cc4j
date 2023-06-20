@@ -1,4 +1,4 @@
-package org.homs.cc4j.visitors.rules;
+package org.homs.cc4j.visitors.rules.cc;
 
 import com.sun.source.tree.*;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
@@ -8,6 +8,11 @@ public class TooComplicatedConditionRule extends RuleTreeVisitor<Void> {
     static final int THR_ERROR = 7;
     static final int THR_CRITICAL = 5;
     static final int THR_WARNING = 3;
+
+    @Override
+    public String getRuleId() {
+        return "cc02";
+    }
 
     void generateIssueIfThreshold(int metricValue, String expression) {
         String message = "too complicated logical condition, rated as %s (>%s warning, >%s critical, >%s error); expression=" +

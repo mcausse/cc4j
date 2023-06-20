@@ -1,4 +1,4 @@
-package org.homs.cc4j.visitors.rules;
+package org.homs.cc4j.visitors.rules.co;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
@@ -15,6 +15,11 @@ public class NamingConventionsRule extends RuleTreeVisitor<Void> {
     static final String VARIABLE_NAME_PATTERN = "^[a-z][a-zA-Z0-9]*$";
     static final String METHOD_NAME_PATTERN = "^[a-z][a-zA-Z0-9]*$";
     static final String CLASS_NAME_PATTERN = "^[A-Z][a-zA-Z0-9]*$";
+
+    @Override
+    public String getRuleId() {
+        return "co03";
+    }
 
     public Integer visitClass(ClassTree node, Void p) {
 

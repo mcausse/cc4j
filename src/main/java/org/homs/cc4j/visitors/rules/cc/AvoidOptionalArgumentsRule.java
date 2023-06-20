@@ -1,4 +1,4 @@
-package org.homs.cc4j.visitors.rules;
+package org.homs.cc4j.visitors.rules.cc;
 
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ParameterizedTypeTree;
@@ -9,6 +9,11 @@ import java.util.Optional;
 import static org.homs.cc4j.issue.IssueSeverity.CRITICAL;
 
 public class AvoidOptionalArgumentsRule extends RuleTreeVisitor<Void> {
+
+    @Override
+    public String getRuleId() {
+        return "cc04";
+    }
 
     @Override
     public Integer visitMethod(MethodTree node, Void p) {

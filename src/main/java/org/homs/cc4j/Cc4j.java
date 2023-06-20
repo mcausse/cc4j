@@ -3,10 +3,15 @@ package org.homs.cc4j;
 import org.homs.cc4j.issue.IssuesReport;
 import org.homs.cc4j.issue.IssuesReportVisitor;
 import org.homs.cc4j.issue.SimpleIssuesReportVisitor;
+import org.homs.cc4j.text.FileRules;
 import org.homs.cc4j.util.FileUtils;
 import org.homs.cc4j.visitors.MetricsCounterVisitor;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
-import org.homs.cc4j.visitors.rules.*;
+import org.homs.cc4j.visitors.rules.CognitiveComplexityTooHighRule;
+import org.homs.cc4j.visitors.rules.CyclomaticComplexityTooHighRule;
+import org.homs.cc4j.visitors.rules.cc.*;
+import org.homs.cc4j.visitors.rules.co.ClassMembersOrderingRule;
+import org.homs.cc4j.visitors.rules.co.NamingConventionsRule;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -75,13 +80,10 @@ public class Cc4j {
     protected void analyseTextBasedRules(FilesAnalyser analizer) {
         analizer.forEachFile(file -> {
             String sourceCode = FileUtils.loadFile(file.toString());
-            String uri = file.getName();
+            String javaFilename = file.getName();
 
             final FileRules fileRules = new FileRules(issuesReport);
-            fileRules.checkTodosAndFixmes(uri, sourceCode);
-            fileRules.checkClassMaxLineWidth(uri, sourceCode);
-            fileRules.checkClassMaxNumberOfLines(uri, sourceCode);
-            fileRules.checkForAddSpacesToIncreaseReadibility(uri, sourceCode);
+            fileRules.check(javaFilename, sourceCode);
         });
     }
 

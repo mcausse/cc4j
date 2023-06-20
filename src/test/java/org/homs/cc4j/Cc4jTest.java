@@ -58,11 +58,11 @@ public class Cc4jTest {
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(5);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
         assertThat(ir.getIssues().toString()).contains(
-                "+ 1 pending TODO(s) found (at [",
-                "+ 1 pending FIXME(s) found (at [",
-                "+ 1 pending @Ignore(s) (without justification) found (at [",
-                "+ 1 pending @Disabled(s) (without justification) found (at [",
-                "+ 1 pending @Deprecated(s) found (at [",
+                "+ [td02] 1 pending TODO(s) found (at [",
+                "+ [td01] 1 pending FIXME(s) found (at [",
+                "+ [td03] 1 pending @Ignore(s) (without justification) found (at [",
+                "+ [td03] 1 pending @Disabled(s) (without justification) found (at [",
+                "+ [td03] 1 pending @Deprecated(s) found (at [",
                 "]: line 6)",
                 "]: line 7)",
                 "]: line 8)"
@@ -113,7 +113,7 @@ public class Cc4jTest {
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(1);
         assertThat(ir.getIssues().toString()).contains(
-                "- too many methods: 17 (>15 warning, >25 critical, >30 error) (at [too_many_methods_in_class.java]: Jou)"
+                "- [cc07] too many methods: 17 (>15 warning, >25 critical, >30 error) (at [too_many_methods_in_class.java]: Jou)"
         );
     }
 
@@ -161,7 +161,7 @@ public class Cc4jTest {
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
         assertThat(ir.getIssues().toString()).contains(
-                "+ 5 indent levels (>3 warning, >4 critical, >5 error) (at [too_deply_nested_code.java]: Jou.a(..))"
+                "+ [cc05] 5 indent levels (>3 warning, >4 critical, >5 error) (at [too_deply_nested_code.java]: Jou.a(..))"
         );
     }
 
@@ -209,12 +209,12 @@ public class Cc4jTest {
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(2);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(1);
         assertThat(ir.getIssues().toString()).contains(
-                "+ too complicated logical condition, rated as 7 (>3 warning, >5 critical, >7 error); " +
+                "+ [cc02] too complicated logical condition, rated as 7 (>3 warning, >5 critical, >7 error); " +
                         "expression=(a <= b && b >= c || c < b && !(b > a || e == f) || f == g || g != h) " +
                         "(at [too_complicated_relational_expression.java]: Jou.jou(..))",
 
-                "+ cyclomatic complexity too high: 21 (>10 warning, >20 critical, >30 error (at [too_complicated_relational_expression.java]: Jou.jou(..))",
-                "- cognitive complexity too high: 11 (>10 warning, >20 critical, >30 error (at [too_complicated_relational_expression.java]: Jou.jou(..))"
+                "+ [cy01] cyclomatic complexity too high: 21 (>10 warning, >20 critical, >30 error (at [too_complicated_relational_expression.java]: Jou.jou(..))",
+                "- [cy02] cognitive complexity too high: 11 (>10 warning, >20 critical, >30 error (at [too_complicated_relational_expression.java]: Jou.jou(..))"
         );
     }
 
@@ -230,10 +230,10 @@ public class Cc4jTest {
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(4);
         assertThat(ir.getIssues().toString()).contains(
-                "- 2 (after ',') spaces pending to add to increase the readibility (at [add_spaces_to_increase_the_readibility.java]: line 2)",
-                "- 1 ('){') spaces pending to add to increase the readibility (at [add_spaces_to_increase_the_readibility.java]: line 2)",
-                "- 1 ('=') spaces pending to add to increase the readibility (at [add_spaces_to_increase_the_readibility.java]: line 3)",
-                "- 1 ('){') spaces pending to add to increase the readibility (at [add_spaces_to_increase_the_readibility.java]: line 3)"
+                "- [co01] 2 (after ',') spaces pending to add to increase the readibility (at [add_spaces_to_increase_the_readibility.java]: line 2)",
+                "- [co01] 1 ('){') spaces pending to add to increase the readibility (at [add_spaces_to_increase_the_readibility.java]: line 2)",
+                "- [co01] 1 ('=') spaces pending to add to increase the readibility (at [add_spaces_to_increase_the_readibility.java]: line 3)",
+                "- [co01] 1 ('){') spaces pending to add to increase the readibility (at [add_spaces_to_increase_the_readibility.java]: line 3)"
         );
     }
 
@@ -249,8 +249,8 @@ public class Cc4jTest {
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(2);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
         assertThat(ir.getIssues().toString()).contains(
-                "+ avoid Optional<..> arguments (at ",
-                "+ avoid Optional<..> arguments (at ",
+                "+ [cc04] avoid Optional<..> arguments (at ",
+                "+ [cc04] avoid Optional<..> arguments (at ",
 
                 "]: Jou.a(..))",
                 "]: Jou.b(..))"
@@ -266,8 +266,8 @@ public class Cc4jTest {
 
         var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssues().toString()).contains(
-                "- cyclomatic complexity too high: 16 (>10 warning, >20 critical, >30 error (at [cyclomatic_complexity_too_high.java]: Jou.cyclomatic16(..))",
-                "- cyclomatic complexity too high: 15 (>10 warning, >20 critical, >30 error (at [cyclomatic_complexity_too_high.java]: Jou.cyclomatic15(..))"
+                "- [cy01] cyclomatic complexity too high: 16 (>10 warning, >20 critical, >30 error (at [cyclomatic_complexity_too_high.java]: Jou.cyclomatic16(..))",
+                "- [cy01] cyclomatic complexity too high: 15 (>10 warning, >20 critical, >30 error (at [cyclomatic_complexity_too_high.java]: Jou.cyclomatic15(..))"
         );
     }
 
@@ -280,17 +280,17 @@ public class Cc4jTest {
 
         var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssues().toString()).contains(
-                "+ cyclomatic complexity too high: 29 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive28(..))",
-                "- cyclomatic complexity too high: 15 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive29(..))",
-                "- cyclomatic complexity too high: 14 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.evalAstCognitive24(..))",
-                "- cyclomatic complexity too high: 11 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.aaa21(..))",
+                "+ [cy01] cyclomatic complexity too high: 29 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive28(..))",
+                "- [cy01] cyclomatic complexity too high: 15 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive29(..))",
+                "- [cy01] cyclomatic complexity too high: 14 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.evalAstCognitive24(..))",
+                "- [cy01] cyclomatic complexity too high: 11 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.aaa21(..))",
 
-                "- cognitive complexity too high: 13 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.aaa13(..))",
-                "+ cognitive complexity too high: 29 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive29(..))",
-                "+ cognitive complexity too high: 28 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive28(..))",
-                "+ cognitive complexity too high: 24 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.evalAstCognitive24(..))",
-                "+ cognitive complexity too high: 21 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.aaa21(..))",
-                "+ cognitive complexity too high: 24 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.next24(..))"
+                "- [cy02] cognitive complexity too high: 13 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.aaa13(..))",
+                "+ [cy02] cognitive complexity too high: 29 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive29(..))",
+                "+ [cy02] cognitive complexity too high: 28 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive28(..))",
+                "+ [cy02] cognitive complexity too high: 24 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.evalAstCognitive24(..))",
+                "+ [cy02] cognitive complexity too high: 21 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.aaa21(..))",
+                "+ [cy02] cognitive complexity too high: 24 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.next24(..))"
         );
     }
 
@@ -306,12 +306,12 @@ public class Cc4jTest {
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(2);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(2);
         assertThat(ir.getIssues().toString()).contains(
-                "* too complicated logical condition, rated as 12 (>3 warning, >5 critical, >7 error); expression=!isTLSEnable && !isMutualEnable && (crtPath == null || crtPath.isEmpty()) && (keyPath == null || keyPath.isEmpty()) && (caCrtPath == null || caCrtPath.isEmpty()) && (clientAuthHosts == null || clientAuthHosts.isEmpty()) && port == 0 (at [SecurityArguments.java]: SecurityArguments.isEmpty(..))",
-                "* too many arguments: 7 (>3 warning, >4 critical, >5 error) (at [SecurityArguments.java]: SecurityArguments.<init>(..))",
-                "+ 3 pending TODO(s) found (at [SecurityArguments.java])",
-                "+ file has a line (line #16) of 177 columns width (>140 warning, >160 critical, >190 error) (at [SecurityArguments.java])",
-                "- too many methods: 16 (>15 warning, >25 critical, >30 error) (at [SecurityArguments.java]: SecurityArguments)",
-                "- cyclomatic complexity too high: 11 (>10 warning, >20 critical, >30 error (at [SecurityArguments.java]: SecurityArguments.isEmpty(..))"
+                "* [cc02] too complicated logical condition, rated as 12 (>3 warning, >5 critical, >7 error); expression=!isTLSEnable && !isMutualEnable && (crtPath == null || crtPath.isEmpty()) && (keyPath == null || keyPath.isEmpty()) && (caCrtPath == null || caCrtPath.isEmpty()) && (clientAuthHosts == null || clientAuthHosts.isEmpty()) && port == 0 (at [SecurityArguments.java]: SecurityArguments.isEmpty(..))",
+                "* [cc03] too many arguments: 7 (>3 warning, >4 critical, >5 error) (at [SecurityArguments.java]: SecurityArguments.<init>(..))",
+                "+ [td02] 3 pending TODO(s) found (at [SecurityArguments.java])",
+                "+ [cc08] file has a line (line #16) of 177 columns width (>140 warning, >160 critical, >190 error) (at [SecurityArguments.java])",
+                "- [cc07] too many methods: 16 (>15 warning, >25 critical, >30 error) (at [SecurityArguments.java]: SecurityArguments)",
+                "- [cy01] cyclomatic complexity too high: 11 (>10 warning, >20 critical, >30 error (at [SecurityArguments.java]: SecurityArguments.isEmpty(..))"
         );
     }
 }

@@ -27,4 +27,16 @@ public enum IssueSeverity {
     public int getOrder() {
         return order;
     }
+
+    public static IssueSeverity getIssueSeverity(int currentMetric, Thresholds thresholds) {
+        IssueSeverity severity = null;
+        if (currentMetric > thresholds.errorThr) {
+            severity = ERROR;
+        } else if (currentMetric > thresholds.criticalThr) {
+            severity = CRITICAL;
+        } else if (currentMetric > thresholds.warningThr) {
+            severity = WARNING;
+        }
+        return severity;
+    }
 }

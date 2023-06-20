@@ -1,4 +1,4 @@
-package org.homs.cc4j.visitors.rules;
+package org.homs.cc4j.visitors.rules.co;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
@@ -13,6 +13,11 @@ import java.util.List;
 import static org.homs.cc4j.issue.IssueSeverity.CRITICAL;
 
 public class ClassMembersOrderingRule extends RuleTreeVisitor<Void> {
+
+    @Override
+    public String getRuleId() {
+        return "co02";
+    }
 
     enum Member {
         LOGGER(1), STATIC(2), PROPERTY(3), CTOR(4), METHOD(5), EQUALS_HASHCODE(6), TOSTRING(7);

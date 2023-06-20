@@ -1,4 +1,4 @@
-package org.homs.cc4j.visitors.rules;
+package org.homs.cc4j.visitors.rules.cc;
 
 import com.sun.source.tree.*;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
@@ -10,6 +10,11 @@ public class MaxIndentLevelRule extends RuleTreeVisitor<Void> {
     static final int THR_ERROR = 5;
     static final int THR_CRITICAL = 4;
     static final int THR_WARNING = 3;
+
+    @Override
+    public String getRuleId() {
+        return "cc05";
+    }
 
     @Override
     public Integer visitMethod(MethodTree node, Void p) {

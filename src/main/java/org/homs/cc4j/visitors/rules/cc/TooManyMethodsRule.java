@@ -1,4 +1,4 @@
-package org.homs.cc4j.visitors.rules;
+package org.homs.cc4j.visitors.rules.cc;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
@@ -10,6 +10,11 @@ public class TooManyMethodsRule extends RuleTreeVisitor<Void> {
     static final int THR_ERROR = 30;
     static final int THR_CRITICAL = 25;
     static final int THR_WARNING = 15;
+
+    @Override
+    public String getRuleId() {
+        return "cc07";
+    }
 
     public Integer visitClass(ClassTree node, Void p) {
         location.push(node.getSimpleName().toString());

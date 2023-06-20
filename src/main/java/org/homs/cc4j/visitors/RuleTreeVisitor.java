@@ -2,13 +2,14 @@ package org.homs.cc4j.visitors;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
+import org.homs.cc4j.Rule;
 import org.homs.cc4j.issue.IssueSeverity;
 import org.homs.cc4j.issue.IssuesReport;
 import org.homs.cc4j.issue.Location;
 
 import java.util.UnknownFormatConversionException;
 
-public abstract class RuleTreeVisitor<T> extends Java19MetricsTreeVisitor<T> {
+public abstract class RuleTreeVisitor<T> extends Java19MetricsTreeVisitor<T> implements Rule {
 
     protected IssuesReport issuesReport;
     protected Location location;
@@ -38,7 +39,7 @@ public abstract class RuleTreeVisitor<T> extends Java19MetricsTreeVisitor<T> {
     }
 
     protected void generateIssue(IssueSeverity severity, String message) {
-        issuesReport.registerIssue(severity, location, message);
+        issuesReport.registerIssue(location, severity, getRuleId(), message);
     }
 
     protected void generateIssueIfThreshold(String message, int metricValue, int warningThr, int criticalThr, int errorThr) {
@@ -48,12 +49,11 @@ public abstract class RuleTreeVisitor<T> extends Java19MetricsTreeVisitor<T> {
             throw new RuntimeException(message, e);
         }
         if (metricValue > errorThr) {
-            issuesReport.registerIssue(IssueSeverity.ERROR, location, message);
+            issuesReport.registerIssue(location, IssueSeverity.ERROR, getRuleId(), message);
         } else if (metricValue > criticalThr) {
-            issuesReport.registerIssue(IssueSeverity.CRITICAL, location, message);
+            issuesReport.registerIssue(location, IssueSeverity.CRITICAL, getRuleId(), message);
         } else if (metricValue > warningThr) {
-            issuesReport.registerIssue(IssueSeverity.WARNING, location, message);
+            issuesReport.registerIssue(location, IssueSeverity.WARNING, getRuleId(), message);
         }
     }
-
 }

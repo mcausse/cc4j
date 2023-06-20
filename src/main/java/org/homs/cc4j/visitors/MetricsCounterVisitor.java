@@ -3,7 +3,7 @@ package org.homs.cc4j.visitors;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
-import org.homs.cc4j.visitors.rules.TooManyEffectiveLinesPerMethodRule;
+import org.homs.cc4j.visitors.rules.cc.TooManyEffectiveLinesPerMethodRule;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

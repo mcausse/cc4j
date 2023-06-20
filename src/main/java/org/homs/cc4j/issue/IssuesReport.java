@@ -8,8 +8,8 @@ public class IssuesReport {
 
     final List<Issue> issues = new ArrayList<>();
 
-    public void registerIssue(IssueSeverity severity, Location location, String message) {
-        issues.add(new Issue(location, severity, message));
+    public void registerIssue(Location location, IssueSeverity severity, String ruleId, String message) {
+        issues.add(new Issue(location, severity, ruleId, message));
     }
 
     public List<Issue> getIssues() {

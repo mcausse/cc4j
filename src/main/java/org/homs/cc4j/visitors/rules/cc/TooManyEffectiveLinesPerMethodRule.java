@@ -1,4 +1,4 @@
-package org.homs.cc4j.visitors.rules;
+package org.homs.cc4j.visitors.rules.cc;
 
 import com.sun.source.tree.MethodTree;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
@@ -8,6 +8,11 @@ public class TooManyEffectiveLinesPerMethodRule extends RuleTreeVisitor<Void> {
     static final int THR_ERROR = 45;
     static final int THR_CRITICAL = 35;
     static final int THR_WARNING = 25;
+
+    @Override
+    public String getRuleId() {
+        return "cc06";
+    }
 
     public Integer visitMethod(MethodTree node, Void p) {
         location.push(node.getName().toString() + "(..)");

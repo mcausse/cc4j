@@ -11,6 +11,11 @@ public class CognitiveComplexityTooHighRule extends RuleTreeVisitor<CognitiveCom
     static final int THR_CRITICAL = 20;
     static final int THR_WARNING = 10;
 
+    @Override
+    public String getRuleId() {
+        return "cy02";
+    }
+
     static class NestingStatus {
 
         public final int nestedLevel;

@@ -9,6 +9,11 @@ public class CyclomaticComplexityTooHighRule extends RuleTreeVisitor<Void> {
     static final int THR_CRITICAL = 20;
     static final int THR_WARNING = 10;
 
+    @Override
+    public String getRuleId() {
+        return "cy01";
+    }
+
     void generateIssueIfThreshold(int metricValue) {
         generateIssueIfThreshold(
                 "cyclomatic complexity too high: %s (>%s warning, >%s critical, >%s error",

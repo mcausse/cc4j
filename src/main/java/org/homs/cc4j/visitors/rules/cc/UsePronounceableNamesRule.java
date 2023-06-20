@@ -1,4 +1,4 @@
-package org.homs.cc4j.visitors.rules;
+package org.homs.cc4j.visitors.rules.cc;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
@@ -6,6 +6,11 @@ import com.sun.source.tree.VariableTree;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
 public class UsePronounceableNamesRule extends RuleTreeVisitor<Void> {
+
+    @Override
+    public String getRuleId() {
+        return "cc01";
+    }
 
     @Override
     public Integer visitClass(ClassTree node, Void p) {
