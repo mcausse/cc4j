@@ -4,6 +4,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import org.homs.cc4j.RuleInfo;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
 import javax.lang.model.element.Modifier;
@@ -15,8 +16,8 @@ import static org.homs.cc4j.issue.IssueSeverity.CRITICAL;
 public class ClassMembersOrderingRule extends RuleTreeVisitor<Void> {
 
     @Override
-    public String getRuleId() {
-        return "co02";
+    public RuleInfo getRuleInfo() {
+        return new RuleInfo("co", 2, "Vertical ordering of a class.");
     }
 
     enum Member {

@@ -4,6 +4,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import org.homs.cc4j.RuleInfo;
 import org.homs.cc4j.issue.IssueSeverity;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
@@ -17,8 +18,8 @@ public class NamingConventionsRule extends RuleTreeVisitor<Void> {
     static final String CLASS_NAME_PATTERN = "^[A-Z][a-zA-Z0-9]*$";
 
     @Override
-    public String getRuleId() {
-        return "co03";
+    public RuleInfo getRuleInfo() {
+        return new RuleInfo("co", 3, "Use conventional names.");
     }
 
     public Integer visitClass(ClassTree node, Void p) {

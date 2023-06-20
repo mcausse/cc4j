@@ -1,6 +1,7 @@
 package org.homs.cc4j.visitors.rules.cc;
 
 import com.sun.source.tree.*;
+import org.homs.cc4j.RuleInfo;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
 public class TooComplicatedConditionRule extends RuleTreeVisitor<Void> {
@@ -10,8 +11,8 @@ public class TooComplicatedConditionRule extends RuleTreeVisitor<Void> {
     static final int THR_WARNING = 3;
 
     @Override
-    public String getRuleId() {
-        return "cc02";
+    public RuleInfo getRuleInfo() {
+        return new RuleInfo("cc", 2, "Avoid complicated relational expressions.");
     }
 
     void generateIssueIfThreshold(int metricValue, String expression) {

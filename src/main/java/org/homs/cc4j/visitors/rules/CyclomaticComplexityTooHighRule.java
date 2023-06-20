@@ -1,6 +1,7 @@
 package org.homs.cc4j.visitors.rules;
 
 import com.sun.source.tree.*;
+import org.homs.cc4j.RuleInfo;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
 public class CyclomaticComplexityTooHighRule extends RuleTreeVisitor<Void> {
@@ -10,8 +11,8 @@ public class CyclomaticComplexityTooHighRule extends RuleTreeVisitor<Void> {
     static final int THR_WARNING = 10;
 
     @Override
-    public String getRuleId() {
-        return "cy01";
+    public RuleInfo getRuleInfo() {
+        return new RuleInfo("cy", 1, "Cyclomatic complexity too high.");
     }
 
     void generateIssueIfThreshold(int metricValue) {

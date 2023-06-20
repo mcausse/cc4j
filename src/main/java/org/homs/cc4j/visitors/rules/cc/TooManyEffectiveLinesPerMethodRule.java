@@ -1,6 +1,7 @@
 package org.homs.cc4j.visitors.rules.cc;
 
 import com.sun.source.tree.MethodTree;
+import org.homs.cc4j.RuleInfo;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
 public class TooManyEffectiveLinesPerMethodRule extends RuleTreeVisitor<Void> {
@@ -10,8 +11,8 @@ public class TooManyEffectiveLinesPerMethodRule extends RuleTreeVisitor<Void> {
     static final int THR_WARNING = 25;
 
     @Override
-    public String getRuleId() {
-        return "cc06";
+    public RuleInfo getRuleInfo() {
+        return new RuleInfo("cc", 6, "Avoid too many effective lines of code in function.");
     }
 
     public Integer visitMethod(MethodTree node, Void p) {

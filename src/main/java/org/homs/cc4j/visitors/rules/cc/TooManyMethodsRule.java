@@ -3,6 +3,7 @@ package org.homs.cc4j.visitors.rules.cc;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
+import org.homs.cc4j.RuleInfo;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
 public class TooManyMethodsRule extends RuleTreeVisitor<Void> {
@@ -12,8 +13,8 @@ public class TooManyMethodsRule extends RuleTreeVisitor<Void> {
     static final int THR_WARNING = 15;
 
     @Override
-    public String getRuleId() {
-        return "cc07";
+    public RuleInfo getRuleInfo() {
+        return new RuleInfo("cc", 7, "Avoid too many methods per class.");
     }
 
     public Integer visitClass(ClassTree node, Void p) {

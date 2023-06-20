@@ -1,6 +1,7 @@
 package org.homs.cc4j.visitors.rules;
 
 import com.sun.source.tree.*;
+import org.homs.cc4j.RuleInfo;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
 import java.util.regex.Pattern;
@@ -12,8 +13,8 @@ public class CognitiveComplexityTooHighRule extends RuleTreeVisitor<CognitiveCom
     static final int THR_WARNING = 10;
 
     @Override
-    public String getRuleId() {
-        return "cy02";
+    public RuleInfo getRuleInfo() {
+        return new RuleInfo("cy", 2, "Cognitive complexity too high.");
     }
 
     static class NestingStatus {

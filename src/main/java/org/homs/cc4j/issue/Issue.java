@@ -1,16 +1,18 @@
 package org.homs.cc4j.issue;
 
+import org.homs.cc4j.RuleInfo;
+
 public class Issue implements Comparable<Issue> {
 
     public final Location location;
     public final IssueSeverity severity;
-    public final String ruleId;
+    public final RuleInfo ruleInfo;
     public final String message;
 
-    public Issue(Location location, IssueSeverity severity, String ruleId, String message) {
+    public Issue(Location location, IssueSeverity severity, RuleInfo ruleInfo, String message) {
         this.location = new Location(location);
         this.severity = severity;
-        this.ruleId = ruleId;
+        this.ruleInfo = ruleInfo;
         this.message = message;
     }
 
@@ -22,13 +24,6 @@ public class Issue implements Comparable<Issue> {
         return location;
     }
 
-    public String getRuleId() {
-        return ruleId;
-    }
-
-    public String getMessage() {
-        return message;
-    }
 
     @Override
     public int compareTo(Issue o) {
@@ -37,6 +32,6 @@ public class Issue implements Comparable<Issue> {
 
     @Override
     public String toString() {
-        return String.format("%s [%s] %s (at %s)", severity.getSymbol(), ruleId, message, location);
+        return String.format("%s [%s] %s (at %s)", severity.getSymbol(), ruleInfo, message, location);
     }
 }

@@ -1,5 +1,6 @@
 package org.homs.cc4j.text.rules;
 
+import org.homs.cc4j.RuleInfo;
 import org.homs.cc4j.issue.IssuesReport;
 import org.homs.cc4j.issue.Location;
 import org.homs.cc4j.text.TextRule;
@@ -11,8 +12,8 @@ import static org.homs.cc4j.text.FileRules.checkForRegexp;
 public class AddSpacesToIncreaseTheReadibilityRule implements TextRule {
 
     @Override
-    public String getRuleId() {
-        return "co01";
+    public RuleInfo getRuleInfo() {
+        return new RuleInfo("co", 1, "add spaces to increase the readability. Just format your code.");
     }
 
     @Override
@@ -37,27 +38,27 @@ public class AddSpacesToIncreaseTheReadibilityRule implements TextRule {
 
         hits = checkForRegexp(line, ",[^\\s]");
         if (hits > 0) {
-            issuesReport.registerIssue(location, WARNING, getRuleId(),
+            issuesReport.registerIssue(location, WARNING, getRuleInfo(),
                     String.format("%s (after ',') spaces pending to add to increase the readibility", hits));
         }
         hits = checkForRegexp(line, "[^\\s]\\&\\&[^\\s]");
         if (hits > 0) {
-            issuesReport.registerIssue(location, WARNING, getRuleId(),
+            issuesReport.registerIssue(location, WARNING, getRuleInfo(),
                     String.format("%s ('&&') spaces pending to add to increase the readibility", hits));
         }
         hits = checkForRegexp(line, "[^\\s]\\|\\|[^\\s]");
         if (hits > 0) {
-            issuesReport.registerIssue(location, WARNING, getRuleId(),
+            issuesReport.registerIssue(location, WARNING, getRuleInfo(),
                     String.format("%s ('||') spaces pending to add to increase the readibility", hits));
         }
         hits = checkForRegexp(line, "[^\\s]\\=+[^\\s]");
         if (hits > 0) {
-            issuesReport.registerIssue(location, WARNING, getRuleId(),
+            issuesReport.registerIssue(location, WARNING, getRuleInfo(),
                     String.format("%s ('=') spaces pending to add to increase the readibility", hits));
         }
         hits = checkForRegexp(line, "\\)\\{");
         if (hits > 0) {
-            issuesReport.registerIssue(location, WARNING, getRuleId(),
+            issuesReport.registerIssue(location, WARNING, getRuleInfo(),
                     String.format("%s ('){') spaces pending to add to increase the readibility", hits));
         }
     }

@@ -1,5 +1,7 @@
 package org.homs.cc4j.issue;
 
+import org.homs.cc4j.RuleInfo;
+
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +10,8 @@ public class IssuesReport {
 
     final List<Issue> issues = new ArrayList<>();
 
-    public void registerIssue(Location location, IssueSeverity severity, String ruleId, String message) {
-        issues.add(new Issue(location, severity, ruleId, message));
+    public void registerIssue(Location location, IssueSeverity severity, RuleInfo ruleInfo, String message) {
+        issues.add(new Issue(location, severity, ruleInfo, message));
     }
 
     public List<Issue> getIssues() {

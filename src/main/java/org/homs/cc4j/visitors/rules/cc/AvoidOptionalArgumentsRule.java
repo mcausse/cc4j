@@ -2,6 +2,7 @@ package org.homs.cc4j.visitors.rules.cc;
 
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ParameterizedTypeTree;
+import org.homs.cc4j.RuleInfo;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
 import java.util.Optional;
@@ -11,8 +12,8 @@ import static org.homs.cc4j.issue.IssueSeverity.CRITICAL;
 public class AvoidOptionalArgumentsRule extends RuleTreeVisitor<Void> {
 
     @Override
-    public String getRuleId() {
-        return "cc04";
+    public RuleInfo getRuleInfo() {
+        return new RuleInfo("cc", 4, "Avoid Optional<..> arguments.");
     }
 
     @Override

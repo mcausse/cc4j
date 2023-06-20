@@ -39,7 +39,7 @@ public abstract class RuleTreeVisitor<T> extends Java19MetricsTreeVisitor<T> imp
     }
 
     protected void generateIssue(IssueSeverity severity, String message) {
-        issuesReport.registerIssue(location, severity, getRuleId(), message);
+        issuesReport.registerIssue(location, severity, getRuleInfo(), message);
     }
 
     protected void generateIssueIfThreshold(String message, int metricValue, int warningThr, int criticalThr, int errorThr) {
@@ -49,11 +49,11 @@ public abstract class RuleTreeVisitor<T> extends Java19MetricsTreeVisitor<T> imp
             throw new RuntimeException(message, e);
         }
         if (metricValue > errorThr) {
-            issuesReport.registerIssue(location, IssueSeverity.ERROR, getRuleId(), message);
+            issuesReport.registerIssue(location, IssueSeverity.ERROR, getRuleInfo(), message);
         } else if (metricValue > criticalThr) {
-            issuesReport.registerIssue(location, IssueSeverity.CRITICAL, getRuleId(), message);
+            issuesReport.registerIssue(location, IssueSeverity.CRITICAL, getRuleInfo(), message);
         } else if (metricValue > warningThr) {
-            issuesReport.registerIssue(location, IssueSeverity.WARNING, getRuleId(), message);
+            issuesReport.registerIssue(location, IssueSeverity.WARNING, getRuleInfo(), message);
         }
     }
 }

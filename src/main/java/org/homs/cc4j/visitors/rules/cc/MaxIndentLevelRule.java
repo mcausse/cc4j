@@ -1,6 +1,7 @@
 package org.homs.cc4j.visitors.rules.cc;
 
 import com.sun.source.tree.*;
+import org.homs.cc4j.RuleInfo;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
 import java.util.List;
@@ -12,8 +13,8 @@ public class MaxIndentLevelRule extends RuleTreeVisitor<Void> {
     static final int THR_WARNING = 3;
 
     @Override
-    public String getRuleId() {
-        return "cc05";
+    public RuleInfo getRuleInfo() {
+        return new RuleInfo("cc", 5, "Avoid hadookens.");
     }
 
     @Override

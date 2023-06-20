@@ -1,5 +1,6 @@
 package org.homs.cc4j.text.rules;
 
+import org.homs.cc4j.RuleInfo;
 import org.homs.cc4j.issue.IssuesReport;
 import org.homs.cc4j.issue.Location;
 import org.homs.cc4j.text.TextRule;
@@ -11,8 +12,8 @@ import static org.homs.cc4j.text.FileRules.checkForRegexp;
 public class PendingTodosRule implements TextRule {
 
     @Override
-    public String getRuleId() {
-        return "td02";
+    public RuleInfo getRuleInfo() {
+        return new RuleInfo("td", 2, "A pending TODO is a critical technical debt.");
     }
 
     @Override
@@ -23,7 +24,7 @@ public class PendingTodosRule implements TextRule {
         hits = checkForRegexp(sourceCode, "TODO ");
         hits += checkForRegexp(sourceCode, "TODO\\n");
         if (hits > 0) {
-            issuesReport.registerIssue(new Location(javaFileName), CRITICAL, getRuleId(), String.format("%s pending TODO(s) found", hits));
+            issuesReport.registerIssue(new Location(javaFileName), CRITICAL, getRuleInfo(), String.format("%s pending TODO(s) found", hits));
         }
 
     }

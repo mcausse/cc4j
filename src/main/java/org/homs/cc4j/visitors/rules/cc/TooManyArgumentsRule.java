@@ -1,6 +1,7 @@
 package org.homs.cc4j.visitors.rules.cc;
 
 import com.sun.source.tree.MethodTree;
+import org.homs.cc4j.RuleInfo;
 import org.homs.cc4j.visitors.RuleTreeVisitor;
 
 public class TooManyArgumentsRule extends RuleTreeVisitor<Void> {
@@ -10,8 +11,8 @@ public class TooManyArgumentsRule extends RuleTreeVisitor<Void> {
     static final int THR_WARNING = 3;
 
     @Override
-    public String getRuleId() {
-        return "cc03";
+    public RuleInfo getRuleInfo() {
+        return new RuleInfo("cc", 3, "Avoid too many arguments for a function.");
     }
 
     public Integer visitMethod(MethodTree node, Void p) {
