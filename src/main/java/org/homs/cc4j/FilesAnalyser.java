@@ -4,8 +4,8 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.JavacTask;
 import org.homs.cc4j.issue.IssuesReport;
 import org.homs.cc4j.issue.Location;
-import org.homs.cc4j.visitors.Java19MetricsTreeVisitor;
-import org.homs.cc4j.visitors.RuleTreeVisitor;
+import org.homs.cc4j.rules.visitors.Java19MetricsTreeVisitor;
+import org.homs.cc4j.rules.visitors.RuleTreeVisitor;
 
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
