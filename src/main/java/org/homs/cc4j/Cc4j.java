@@ -4,13 +4,8 @@ import org.homs.cc4j.issue.IssuesReport;
 import org.homs.cc4j.issue.IssuesReportVisitor;
 import org.homs.cc4j.issue.SimpleIssuesReportVisitor;
 import org.homs.cc4j.rules.text.FileRules;
+import org.homs.cc4j.rules.visitors.AstRules;
 import org.homs.cc4j.rules.visitors.MetricsCounterVisitor;
-import org.homs.cc4j.rules.visitors.RuleTreeVisitor;
-import org.homs.cc4j.rules.visitors.rules.CognitiveComplexityTooHighRule;
-import org.homs.cc4j.rules.visitors.rules.CyclomaticComplexityTooHighRule;
-import org.homs.cc4j.rules.visitors.rules.cc.*;
-import org.homs.cc4j.rules.visitors.rules.co.ClassMembersOrderingRule;
-import org.homs.cc4j.rules.visitors.rules.co.NamingConventionsRule;
 import org.homs.cc4j.util.FileUtils;
 
 import java.io.File;
@@ -23,20 +18,6 @@ import java.util.List;
 import static org.homs.cc4j.util.FileUtils.processDirectory;
 
 public class Cc4j {
-
-    public static final List<RuleTreeVisitor<?>> RULES = List.of(
-            new CyclomaticComplexityTooHighRule(),
-            new CognitiveComplexityTooHighRule(),
-            new MaxIndentLevelRule(),
-            new TooManyArgumentsRule(),
-            new TooComplicatedConditionRule(),
-            new ClassMembersOrderingRule(),
-            new NamingConventionsRule(),
-            new TooManyEffectiveLinesPerMethodRule(),
-            new TooManyMethodsRule(),
-            new AvoidOptionalArgumentsRule(),
-            new UsePronounceableNamesRule()
-    );
 
     final IssuesReport issuesReport;
     final MetricsCounterVisitor metricsCounterVisitor;
@@ -78,7 +59,7 @@ public class Cc4j {
     }
 
     protected void analyseAstBasedRules(FilesAnalyser analizer) {
-        analizer.acceptRuleVisitors(issuesReport, RULES);
+        analizer.acceptRuleVisitors(issuesReport, AstRules.RULES);
     }
 
     protected void analyseTextBasedRules(FilesAnalyser analizer) {
@@ -101,8 +82,11 @@ public class Cc4j {
 
     public void report(PrintStream ps, IssuesReportVisitor... issuesVisitors) {
 
+        /*
+         * list all the rules to STDOUT
+         */
         List<Rule> rules = new ArrayList<>();
-        rules.addAll(RULES);
+        rules.addAll(AstRules.RULES);
         rules.addAll(Arrays.asList(FileRules.textRules));
         rules.sort(Comparator.comparing(o -> o.getRuleInfo().toString()));
         rules.forEach(r -> System.out.println(r.getRuleInfo().getFullDescription()));

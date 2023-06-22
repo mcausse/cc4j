@@ -13,7 +13,7 @@ public class PendingTodosRule implements TextRule {
 
     @Override
     public RuleInfo getRuleInfo() {
-        return new RuleInfo("td", 2, "A pending TODO is a critical technical debt.");
+        return new RuleInfo("td", 2, "A pending TODO is a postponed technical debt.");
     }
 
     @Override
@@ -23,6 +23,7 @@ public class PendingTodosRule implements TextRule {
 
         hits = checkForRegexp(sourceCode, "TODO ");
         hits += checkForRegexp(sourceCode, "TODO\\n");
+        hits += checkForRegexp(sourceCode, "TODO\\:");
         if (hits > 0) {
             issuesReport.registerIssue(new Location(javaFileName), CRITICAL, getRuleInfo(), String.format("%s pending TODO(s) found", hits));
         }

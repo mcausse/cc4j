@@ -30,6 +30,7 @@ public class Jou {
         }
         do {
         } while (a > 0 && b > 0 || c > 0);
+
         for (int i = 0; i < ks.size() && a > 0 ||b>0; i++) {
         }
 

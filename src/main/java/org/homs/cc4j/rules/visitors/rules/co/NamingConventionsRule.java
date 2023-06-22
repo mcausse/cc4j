@@ -19,7 +19,7 @@ public class NamingConventionsRule extends RuleTreeVisitor<Void> {
 
     @Override
     public RuleInfo getRuleInfo() {
-        return new RuleInfo("co", 3, "Use conventional names.");
+        return new RuleInfo("co", 3, "Follow the naming conventions.");
     }
 
     public Integer visitClass(ClassTree node, Void p) {

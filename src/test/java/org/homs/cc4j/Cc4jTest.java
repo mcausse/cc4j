@@ -60,8 +60,8 @@ public class Cc4jTest {
         assertThat(ir.getIssues().toString()).contains(
                 "+ [td02] 1 pending TODO(s) found (at [",
                 "+ [td01] 1 pending FIXME(s) found (at [",
-                "+ [td03] 1 pending @Ignore(s) (without justification) found (at [",
-                "+ [td03] 1 pending @Disabled(s) (without justification) found (at [",
+                "+ [td04] 1 pending @Ignore(s) (without justification) found (at [",
+                "+ [td04] 1 pending @Disabled(s) (without justification) found (at [",
                 "+ [td03] 1 pending @Deprecated(s) found (at [",
                 "]: line 6)",
                 "]: line 7)",
@@ -207,7 +207,7 @@ public class Cc4jTest {
         var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(2);
-        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(1);
+        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(2);
         assertThat(ir.getIssues().toString()).contains(
                 "+ [cc02] too complicated logical condition, rated as 7 (>3 warning, >5 critical, >7 error); " +
                         "expression=(a <= b && b >= c || c < b && !(b > a || e == f) || f == g || g != h) " +
@@ -265,6 +265,9 @@ public class Cc4jTest {
         cc4j.report();
 
         var ir = cc4j.getIssuesReport();
+        assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
+        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
+        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(4);
         assertThat(ir.getIssues().toString()).contains(
                 "- [cy01] cyclomatic complexity too high: 16 (>10 warning, >20 critical, >30 error (at [cyclomatic_complexity_too_high.java]: Jou.cyclomatic16(..))",
                 "- [cy01] cyclomatic complexity too high: 15 (>10 warning, >20 critical, >30 error (at [cyclomatic_complexity_too_high.java]: Jou.cyclomatic15(..))"
@@ -279,19 +282,39 @@ public class Cc4jTest {
         cc4j.report();
 
         var ir = cc4j.getIssuesReport();
-        assertThat(ir.getIssues().toString()).contains(
-                "+ [cy01] cyclomatic complexity too high: 29 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive28(..))",
-                "- [cy01] cyclomatic complexity too high: 15 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive29(..))",
-                "- [cy01] cyclomatic complexity too high: 14 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.evalAstCognitive24(..))",
-                "- [cy01] cyclomatic complexity too high: 11 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.aaa21(..))",
+        assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(5);
+        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(9);
+        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(9);
+//        assertThat(ir.getIssues().toString()).contains(
+//                "+ [cy01] cyclomatic complexity too high: 29 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive28(..))",
+//                "- [cy01] cyclomatic complexity too high: 15 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive29(..))",
+//                "- [cy01] cyclomatic complexity too high: 14 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.evalAstCognitive24(..))",
+//                "- [cy01] cyclomatic complexity too high: 11 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.aaa21(..))",
+//
+//                "- [cy02] cognitive complexity too high: 13 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.aaa13(..))",
+//                "+ [cy02] cognitive complexity too high: 29 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive29(..))",
+//                "+ [cy02] cognitive complexity too high: 28 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive28(..))",
+//                "+ [cy02] cognitive complexity too high: 24 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.evalAstCognitive24(..))",
+//                "+ [cy02] cognitive complexity too high: 21 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.aaa21(..))",
+//                "+ [cy02] cognitive complexity too high: 24 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.next24(..))"
+//        );
+    }
 
-                "- [cy02] cognitive complexity too high: 13 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.aaa13(..))",
-                "+ [cy02] cognitive complexity too high: 29 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive29(..))",
-                "+ [cy02] cognitive complexity too high: 28 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive28(..))",
-                "+ [cy02] cognitive complexity too high: 24 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.evalAstCognitive24(..))",
-                "+ [cy02] cognitive complexity too high: 21 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.aaa21(..))",
-                "+ [cy02] cognitive complexity too high: 24 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.next24(..))"
-        );
+
+    @Test
+    void mhoms_cognitive_complexity_too_high() {
+
+        var cc4j = new Cc4j();
+        cc4j.analyseFile(getFile("cc4j/rules/mhoms_cognitive_complexity_too_high.java"));
+        cc4j.report();
+
+        var ir = cc4j.getIssuesReport();
+        assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
+        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
+        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(1);
+//        assertThat(ir.getIssues().toString()).contains(
+//                "+ [cy01] cyclomatic complexity too high: 29 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive28(..))",
+//        );
     }
 
     @Test

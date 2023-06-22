@@ -32,7 +32,7 @@ public class FileUtils {
         for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
             if (fileEntry.isDirectory()) {
                 r.addAll(processDirectory(fileEntry, fileNamePredicate));
-            } else if (fileNamePredicate.test(fileEntry.getAbsoluteFile().toString())) {
+            } else if (fileNamePredicate.test(fileEntry.getAbsoluteFile().toString().replace('\\', '/'))) {
                 r.add(fileEntry);
             }
         }

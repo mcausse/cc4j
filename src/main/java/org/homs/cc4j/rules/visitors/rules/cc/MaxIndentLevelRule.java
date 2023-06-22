@@ -72,7 +72,8 @@ public class MaxIndentLevelRule extends RuleTreeVisitor<Void> {
                     }
                 }
                 return localLevel;
-            } else if (stm instanceof TryTree stmTree) {
+            } else if (stm instanceof TryTree) {
+                var stmTree = (TryTree) stm;
                 int maxLevel = inspectStatements(stmTree.getBlock().getStatements(), level);
                 for (CatchTree catchTree : stmTree.getCatches()) {
                     int catchMaxLevel = inspectStatement(catchTree.getBlock(), level);

@@ -13,7 +13,7 @@ public class AddSpacesToIncreaseTheReadibilityRule implements TextRule {
 
     @Override
     public RuleInfo getRuleInfo() {
-        return new RuleInfo("co", 1, "add spaces to increase the readability. Just format your code.");
+        return new RuleInfo("co", 1, "Add spaces to increase the readability. Just format your code.");
     }
 
     @Override

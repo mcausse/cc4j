@@ -13,7 +13,7 @@ public class PendingFixmesRule implements TextRule {
 
     @Override
     public RuleInfo getRuleInfo() {
-        return new RuleInfo("td", 1, "A pending FIXME is a critical technical debt.");
+        return new RuleInfo("td", 1, "A pending FIXME is a postponed technical debt.");
     }
 
     @Override
@@ -23,6 +23,7 @@ public class PendingFixmesRule implements TextRule {
 
         hits = checkForRegexp(sourceCode, "FIXME ");
         hits += checkForRegexp(sourceCode, "FIXME\\n");
+        hits += checkForRegexp(sourceCode, "FIXME\\:");
         if (hits > 0) {
             issuesReport.registerIssue(new Location(javaFileName), CRITICAL, getRuleInfo(), String.format("%s pending FIXME(s) found", hits));
         }

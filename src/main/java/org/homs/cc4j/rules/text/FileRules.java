@@ -14,7 +14,8 @@ public class FileRules {
             new ClassMaxNumberOfLinesRule(),
             new PendingFixmesRule(),
             new PendingTodosRule(),
-            new TechnicalDebtRule()
+            new AvoidDeprecatedAnnotation(),
+            new AvoidIgnoredTestsAnnotation()
     };
 
     final IssuesReport issuesReport;
@@ -38,6 +39,4 @@ public class FileRules {
         }
         return hits;
     }
-
-
 }
