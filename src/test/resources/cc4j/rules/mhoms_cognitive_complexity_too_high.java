@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.function.Predicate;
 
 public class Jou {
 
@@ -98,4 +99,76 @@ public class Jou {
         return value;
     }
 
+    public String getValue18(String positionExpression) {
+        var m42exp = M42PositionExpression.build(positionExpression);
+        int segmentIndex = findSegmentIndex(m42exp);
+        if (m42exp.position == null) {
+            return m4.getValue(segmentIndex);
+        } else {
+            var position = m42exp.position;
+            /*
+             * MSH Position Corection
+             *
+             *  MSH.0 - Segment name            MSH
+             *  MSH.1 - Field Separator         |
+             *  MSH.2 - Encoding Characters     ^~\&
+             *  MSH.3 - Sending Application     Sopa
+             */
+            if (m42exp.segmentName.equals("MSH")) {
+                if (position == 0) {
+                    return "MSH";
+                } else if (position == 1) {
+                    // m4.getSeparators()[0] és \n
+                    return String.valueOf(m4.getSeparators()[1]);
+                } else if (position == 2) {
+                    var separators = new StringBuilder();
+                    for (int i = 2; i < m4.getSeparators().length; i++) {
+                        separators.append(m4.getSeparators()[i]);
+                    }
+                    return separators.toString();
+                } else {
+                    position--;
+                }
+            }
+
+            if (m42exp.subposition == null) {
+                return m4.getValue(segmentIndex, position);
+            } else {
+                return m4.getValue(segmentIndex, position, m42exp.subposition);
+            }
+        }
+    }
+
+    public Map<String, String> CucarachaMicroDb_find11(Predicate<String> keyPredicate, Predicate<String> valuePredicate) {
+        Map<String, String> r = new LinkedHashMap<>();
+        for (Object okey : p.keySet()) {
+            String key = (String) okey;
+            if (keyPredicate == null || keyPredicate.test(key)) {
+                String value = p.getProperty(key);
+                if (valuePredicate == null || valuePredicate.test(value)) {
+                    r.put(key, value);
+                }
+            }
+        }
+        return r;
+    }
+
+    public String getVentanaMessageType9(M42 m42) {
+        String messageType = getMessageType(m42);
+        if (messageType.equals("OML^O21")) {
+            if (isWorkflowFlexibilityRequest(m42)) {
+                return "OE/WF";
+            } else if (isAdditionRequest(m42)) {
+                return "Addition";
+            }
+        } else if (messageType.equals("OUL^R21")) {
+            if (m42.existsSegment("OBR")) {
+                var artifactType = m42.getValue("OBR-4-0");
+                if (artifactTypes.contains(artifactType)) {
+                    return m42.getValue("OBR-4");
+                }
+            }
+        }
+        return messageType;
+    }
 }

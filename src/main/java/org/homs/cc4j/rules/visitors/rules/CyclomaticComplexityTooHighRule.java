@@ -60,11 +60,6 @@ public class CyclomaticComplexityTooHighRule extends RuleTreeVisitor<Void> {
         return super.visitCase(node, p) + 1;
     }
 
-    //    @Override
-    //    public Integer visitReturn(ReturnTree node, Void p) {
-    //        return super.visitReturn(node, p) + 1;
-    //    }
-
     // ===
 
     @Override

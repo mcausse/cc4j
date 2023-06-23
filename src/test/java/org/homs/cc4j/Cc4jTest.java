@@ -310,11 +310,12 @@ public class Cc4jTest {
 
         var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
-        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
-        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(1);
-//        assertThat(ir.getIssues().toString()).contains(
-//                "+ [cy01] cyclomatic complexity too high: 29 (>10 warning, >20 critical, >30 error (at [cognitive_complexity_too_high.java]: Jou.cognitive28(..))",
-//        );
+        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(3);
+        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(6);
+        assertThat(ir.getIssues().toString()).contains(
+                "+ [co03] method 'CucarachaMicroDb_find11' should comply with a naming convention: ^[a-z][a-zA-Z0-9]*$ (at [mhoms_cognitive_complexity_too_high.java]: Jou.CucarachaMicroDb_find11(..))",
+                "- [cy03] M.Homs complexity metric is too high: 6 (>4 warning, >9 critical, >14 error (at [mhoms_cognitive_complexity_too_high.java]: Jou.CucarachaMicroDb_find11(..))"
+        );
     }
 
     @Test

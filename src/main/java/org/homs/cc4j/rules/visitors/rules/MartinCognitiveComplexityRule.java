@@ -14,8 +14,6 @@ import java.util.regex.Pattern;
  * - o sigui: cada expresió booleana +1. +1 per cada combinació de && ||. i *nest level.
  * <p>
  * <p>
- * TODO problema cadenes de if..elseif: per 3 elseif dóna 1+2+3=6
- * TODO que compti la negacio !  ???
  */
 public class MartinCognitiveComplexityRule extends RuleTreeVisitor<Integer> {
 
