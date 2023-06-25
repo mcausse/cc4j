@@ -11,9 +11,11 @@ import static org.homs.cc4j.issue.IssueSeverity.getIssueSeverity;
 
 public class ClassMaxLineWidthRule implements TextRule {
 
+    static final Thresholds THRESHOLDS = new Thresholds(140, 160, 190);
+
     @Override
     public RuleInfo getRuleInfo() {
-        return new RuleInfo("cc", 8, "Avoid writing long lines (spaghetti).");
+        return new RuleInfo("cc", 8, "Avoid writing long lines (spaghetti). (" + THRESHOLDS + ")");
     }
 
     @Override
@@ -29,12 +31,11 @@ public class ClassMaxLineWidthRule implements TextRule {
             }
         }
 
-        var thrs = new Thresholds(140, 160, 190);
-        IssueSeverity severity = getIssueSeverity(maxWidth, thrs);
+        IssueSeverity severity = getIssueSeverity(maxWidth, THRESHOLDS);
         if (severity != null) {
             var msg = String.format(
-                    "file has a line (line #%s) of %s columns width (>%s warning, >%s critical, >%s error)",
-                    maxWidthNumLine + 1, maxWidth, thrs.warningThr, thrs.criticalThr, thrs.errorThr);
+                    "file has a line (line #%s) of %s columns width (%s)",
+                    maxWidthNumLine + 1, maxWidth, THRESHOLDS);
             issuesReport.registerIssue(new Location(javaFileName), severity, getRuleInfo(), msg);
         }
     }

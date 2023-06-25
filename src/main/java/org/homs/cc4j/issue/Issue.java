@@ -24,7 +24,6 @@ public class Issue implements Comparable<Issue> {
         return location;
     }
 
-
     @Override
     public int compareTo(Issue o) {
         return Integer.compare(severity.getOrder(), o.getSeverity().getOrder());

@@ -6,6 +6,7 @@ import org.homs.cc4j.Rule;
 import org.homs.cc4j.issue.IssueSeverity;
 import org.homs.cc4j.issue.IssuesReport;
 import org.homs.cc4j.issue.Location;
+import org.homs.cc4j.issue.Thresholds;
 
 import java.util.UnknownFormatConversionException;
 
@@ -42,17 +43,17 @@ public abstract class RuleTreeVisitor<T> extends Java19MetricsTreeVisitor<T> imp
         issuesReport.registerIssue(location, severity, getRuleInfo(), message);
     }
 
-    protected void generateIssueIfThreshold(String message, int metricValue, int warningThr, int criticalThr, int errorThr) {
+    protected void generateIssueIfThreshold(String message, int metricValue, Thresholds thresholds) {
         try {
-            message = String.format(message, metricValue, warningThr, criticalThr, errorThr);
+            message = String.format(message, metricValue, thresholds);
         } catch (UnknownFormatConversionException e) {
             throw new RuntimeException(message, e);
         }
-        if (metricValue > errorThr) {
+        if (metricValue > thresholds.errorThr) {
             issuesReport.registerIssue(location, IssueSeverity.ERROR, getRuleInfo(), message);
-        } else if (metricValue > criticalThr) {
+        } else if (metricValue > thresholds.criticalThr) {
             issuesReport.registerIssue(location, IssueSeverity.CRITICAL, getRuleInfo(), message);
-        } else if (metricValue > warningThr) {
+        } else if (metricValue > thresholds.warningThr) {
             issuesReport.registerIssue(location, IssueSeverity.WARNING, getRuleInfo(), message);
         }
     }

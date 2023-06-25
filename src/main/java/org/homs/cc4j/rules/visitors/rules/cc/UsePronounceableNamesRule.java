@@ -4,13 +4,16 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 import org.homs.cc4j.RuleInfo;
+import org.homs.cc4j.issue.Thresholds;
 import org.homs.cc4j.rules.visitors.RuleTreeVisitor;
 
 public class UsePronounceableNamesRule extends RuleTreeVisitor<Void> {
 
+    static final Thresholds THRESHOLDS = new Thresholds(4, 5, 6);
+
     @Override
     public RuleInfo getRuleInfo() {
-        return new RuleInfo("cc", 1, "Avoid unpronounceable names.");
+        return new RuleInfo("cc", 1, "Avoid unpronounceable names. (" + THRESHOLDS + ")");
     }
 
     @Override
@@ -42,9 +45,8 @@ public class UsePronounceableNamesRule extends RuleTreeVisitor<Void> {
 
     void pronounceableAnalysis(String name) {
         int consonants = consonantAnalysis(name);
-        generateIssueIfThreshold("use pronounceable names: '" + name +
-                        "' scored with %s (>%s warning, >%s critical, >%s error)",
-                consonants, 4, 5, 6);
+        generateIssueIfThreshold("use pronounceable names: '" + name + "' scored with %s (%s)",
+                consonants, THRESHOLDS);
     }
 
     boolean isVowel(char c) {

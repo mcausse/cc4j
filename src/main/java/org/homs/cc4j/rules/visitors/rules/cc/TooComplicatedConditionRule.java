@@ -2,23 +2,22 @@ package org.homs.cc4j.rules.visitors.rules.cc;
 
 import com.sun.source.tree.*;
 import org.homs.cc4j.RuleInfo;
+import org.homs.cc4j.issue.Thresholds;
 import org.homs.cc4j.rules.visitors.RuleTreeVisitor;
 
 public class TooComplicatedConditionRule extends RuleTreeVisitor<Void> {
 
-    static final int THR_ERROR = 7;
-    static final int THR_CRITICAL = 5;
-    static final int THR_WARNING = 3;
+    static final Thresholds THRESHOLDS = new Thresholds(3, 5, 7);
 
     @Override
     public RuleInfo getRuleInfo() {
-        return new RuleInfo("cc", 2, "Avoid complicated relational expressions.");
+        return new RuleInfo("cc", 2, "Avoid complicated relational expressions. (" + THRESHOLDS + ")");
     }
 
     void generateIssueIfThreshold(int metricValue, String expression) {
-        String message = "too complicated logical condition, rated as %s (>%s warning, >%s critical, >%s error); expression=" +
+        String message = "too complicated logical condition, rated as %s (%s); expression=" +
                 expression.replace("%", "%%");
-        generateIssueIfThreshold(message, metricValue, THR_WARNING, THR_CRITICAL, THR_ERROR);
+        generateIssueIfThreshold(message, metricValue, THRESHOLDS);
     }
 
     public Integer visitIf(IfTree node, Void p) {

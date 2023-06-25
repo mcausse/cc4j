@@ -79,4 +79,36 @@ class CodeCleanerTest {
                         "}\n" +
                         "}");
     }
+
+    @Test
+    void name_3() throws Exception {
+
+        String code = TestUtils.loadFromClasspath("CodeCleaner.java");
+
+        // Act
+        var cleaned = new CodeCleaner(true, true).cleanTheCode(code);
+
+        assertThat(cleaned).isEqualTo(
+                "package org.homs.cc4j.util;\n" +
+                        "\n" +
+                        "// **** ** * ****** **** *******\n" +
+                        "public class CodeCleaner {\n" +
+                        "\n" +
+                        "    final Sting pi = \"*******\";\n" +
+                        "\n" +
+                        "    /* **** ** * ********* ******* **** ** ****** **** */\n" +
+                        "    enum State {\n" +
+                        "        CODE, SLASH, SINGLELINE_COMMENT,\n" +
+                        "        /**\n" +
+                        "         * ********* *******\n" +
+                        "         */\n" +
+                        "        MULTILINE_COMMENT, STAR, STRING\n" +
+                        "    }\n" +
+                        "\n" +
+                        "    public CodeCleaner() {\n" +
+                        "        System.out.println(\"****** ******\");\n" +
+                        "    }"
+        );
+    }
+
 }

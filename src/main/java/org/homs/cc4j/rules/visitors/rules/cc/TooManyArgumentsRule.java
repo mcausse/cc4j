@@ -2,21 +2,18 @@ package org.homs.cc4j.rules.visitors.rules.cc;
 
 import com.sun.source.tree.MethodTree;
 import org.homs.cc4j.RuleInfo;
+import org.homs.cc4j.issue.Thresholds;
 import org.homs.cc4j.rules.visitors.RuleTreeVisitor;
 
 public class TooManyArgumentsRule extends RuleTreeVisitor<Void> {
 
-    static final int THR_ERROR = 5;
-    static final int THR_CRITICAL = 4;
-    static final int THR_WARNING = 3;
-
-    static final int CTOR_THR_ERROR = 9;
-    static final int CTOR_THR_CRITICAL = 7;
-    static final int CTOR_THR_WARNING = 5;
+    static final Thresholds CTOR_THRESHOLDS = new Thresholds(5, 7, 9);
+    static final Thresholds METHOD_THRESHOLDS = new Thresholds(3, 4, 5);
 
     @Override
     public RuleInfo getRuleInfo() {
-        return new RuleInfo("cc", 3, "Avoid too many arguments for a C'tor or a function.");
+        return new RuleInfo("cc", 3,
+                "Avoid too many arguments for a C'tor or a function. C'tors=(" + CTOR_THRESHOLDS + "), methods=(" + METHOD_THRESHOLDS + ")");
     }
 
     public Integer visitMethod(MethodTree node, Void p) {
@@ -25,14 +22,12 @@ public class TooManyArgumentsRule extends RuleTreeVisitor<Void> {
 
         if (node.getReturnType() == null) {
             // C'tor
-            generateIssueIfThreshold("too many arguments for a C'tor: %s (>%s warning, >%s critical, >%s error)",
-                    node.getParameters().size(),
-                    CTOR_THR_WARNING, CTOR_THR_CRITICAL, CTOR_THR_ERROR);
+            generateIssueIfThreshold("too many arguments for a C'tor: %s (%s)",
+                    node.getParameters().size(), CTOR_THRESHOLDS);
         } else {
             // Method
-            generateIssueIfThreshold("too many arguments: %s (>%s warning, >%s critical, >%s error)",
-                    node.getParameters().size(),
-                    THR_WARNING, THR_CRITICAL, THR_ERROR);
+            generateIssueIfThreshold("too many arguments: %s (%s)",
+                    node.getParameters().size(), METHOD_THRESHOLDS);
         }
         location.pop();
         return 0;

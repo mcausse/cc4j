@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class FileRules {
 
-    public final static TextRule[] textRules = {
+    public final static TextRule[] TEXT_RULES = {
             new AddSpacesToIncreaseTheReadibilityRule(),
             new ClassMaxLineWidthRule(),
             new ClassMaxNumberOfLinesRule(),
@@ -25,7 +25,7 @@ public class FileRules {
     }
 
     public void check(String javaFilename, String sourceCode) {
-        for (var textRule : textRules) {
+        for (var textRule : TEXT_RULES) {
             textRule.execute(issuesReport, javaFilename, sourceCode);
         }
     }

@@ -14,7 +14,7 @@ public class Thresholds {
 
     @Override
     public String toString() {
-        return String.format("(>%s warning, >%s critical, >%s error)", warningThr, criticalThr, errorThr);
+        return String.format(">%s warning, >%s critical, >%s error", warningThr, criticalThr, errorThr);
     }
 }
 

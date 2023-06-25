@@ -87,7 +87,7 @@ public class Cc4j {
          */
         List<Rule> rules = new ArrayList<>();
         rules.addAll(AstRules.RULES);
-        rules.addAll(Arrays.asList(FileRules.textRules));
+        rules.addAll(Arrays.asList(FileRules.TEXT_RULES));
         rules.sort(Comparator.comparing(o -> o.getRuleInfo().toString()));
         rules.forEach(r -> System.out.println(r.getRuleInfo().getFullDescription()));
 

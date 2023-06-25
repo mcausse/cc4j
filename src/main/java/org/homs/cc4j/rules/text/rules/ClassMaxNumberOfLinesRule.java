@@ -11,22 +11,20 @@ import static org.homs.cc4j.issue.IssueSeverity.getIssueSeverity;
 
 public class ClassMaxNumberOfLinesRule implements TextRule {
 
+    static final Thresholds THRESHOLDS = new Thresholds(200, 350, 500);
+
     @Override
     public RuleInfo getRuleInfo() {
-        return new RuleInfo("cc", 9, "Classes should be small.");
+        return new RuleInfo("cc", 9, "Classes should be small. (" + THRESHOLDS + ")");
     }
 
     @Override
     public void execute(IssuesReport issuesReport, String javaFileName, String sourceCode) {
         int classLines = sourceCode.split("\\n").length;
 
-        var thrs = new Thresholds(200, 350, 500);
-        IssueSeverity severity = getIssueSeverity(classLines, thrs);
+        IssueSeverity severity = getIssueSeverity(classLines, THRESHOLDS);
         if (severity != null) {
-            var msg = String.format(
-                    "file has a total of %s lines (>%s warning, >%s critical, >%s error)",
-                    classLines, thrs.warningThr, thrs.criticalThr, thrs.errorThr);
-
+            var msg = String.format("file has a total of %s lines (%s)", classLines, THRESHOLDS);
             issuesReport.registerIssue(new Location(javaFileName), severity, getRuleInfo(), msg);
         }
     }

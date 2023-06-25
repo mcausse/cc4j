@@ -2,23 +2,20 @@ package org.homs.cc4j.rules.visitors.rules;
 
 import com.sun.source.tree.*;
 import org.homs.cc4j.RuleInfo;
+import org.homs.cc4j.issue.Thresholds;
 import org.homs.cc4j.rules.visitors.RuleTreeVisitor;
 
 public class CyclomaticComplexityTooHighRule extends RuleTreeVisitor<Void> {
 
-    static final int THR_ERROR = 30;
-    static final int THR_CRITICAL = 20;
-    static final int THR_WARNING = 10;
+    static final Thresholds THRESHOLDS = new Thresholds(10, 20, 30);
 
     @Override
     public RuleInfo getRuleInfo() {
-        return new RuleInfo("cy", 1, "Cyclomatic complexity too high.");
+        return new RuleInfo("cy", 1, "Cyclomatic complexity too high. (" + THRESHOLDS + ")");
     }
 
     void generateIssueIfThreshold(int metricValue) {
-        generateIssueIfThreshold(
-                "cyclomatic complexity too high: %s (>%s warning, >%s critical, >%s error",
-                metricValue, THR_WARNING, THR_CRITICAL, THR_ERROR);
+        generateIssueIfThreshold("cyclomatic complexity too high: %s (%s)", metricValue, THRESHOLDS);
     }
 
     @Override
