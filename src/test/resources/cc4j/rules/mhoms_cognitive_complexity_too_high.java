@@ -1,4 +1,10 @@
-import java.util.*;
+import com.sun.source.tree.*;
+import org.homs.cc4j.util.CodeCleaner;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public class Jou {
@@ -170,5 +176,135 @@ public class Jou {
             }
         }
         return messageType;
+    }
+
+    CodeCleaner.State consumeChar25(CodeCleaner.State state, char c, StringBuilder strb) {
+        switch (state) {
+            case CODE -> {
+                strb.append(c);
+                if (c == '/') {
+                    return CodeCleaner.State.SLASH;
+                }
+                if (c == '"') {
+                    return CodeCleaner.State.STRING;
+                }
+                return CodeCleaner.State.CODE;
+            }
+            case SLASH -> {
+                if (c == '/') {
+                    strb.append(c);
+                    return CodeCleaner.State.SINGLELINE_COMMENT;
+                }
+                if (c == '*') {
+                    strb.append(c);
+                    return CodeCleaner.State.MULTILINE_COMMENT;
+                }
+                strb.append(encode(c));
+                return CodeCleaner.State.CODE;
+            }
+            case SINGLELINE_COMMENT -> {
+                if (c == '\n') {
+                    strb.append(c);
+                    return CodeCleaner.State.CODE;
+                }
+                if (cleanComments) {
+                    strb.append(encode(c));
+                } else {
+                    strb.append(c);
+                }
+                return CodeCleaner.State.SINGLELINE_COMMENT;
+            }
+            case MULTILINE_COMMENT -> {
+                if (c == '*') {
+                    strb.append(c);
+                    return CodeCleaner.State.STAR;
+                }
+                if (cleanComments) {
+                    strb.append(encode(c));
+                } else {
+                    strb.append(c);
+                }
+                return CodeCleaner.State.MULTILINE_COMMENT;
+            }
+            case STAR -> {
+                if (c == '/') {
+                    strb.append(c);
+                    return CodeCleaner.State.CODE;
+                }
+                if (c == '*') { // while *
+                    strb.append(c);
+                    return CodeCleaner.State.STAR;
+                }
+                strb.append(encode(c));
+                return CodeCleaner.State.MULTILINE_COMMENT;
+            }
+            case STRING -> {
+                if (c == '"') {
+                    strb.append(c);
+                    return CodeCleaner.State.CODE;
+                }
+                if (cleanStrings) {
+                    strb.append(encode(c));
+                } else {
+                    strb.append(c);
+                }
+                return CodeCleaner.State.STRING;
+            }
+            default -> throw new RuntimeException(state.name());
+        }
+    }
+
+
+    int inspectStatement20(StatementTree stm, int level) {
+        if (stm instanceof BlockTree) {
+            return inspectStatements(((BlockTree) stm).getStatements(), level);
+        } else if (stm instanceof DoWhileLoopTree) {
+            return inspectStatement(((DoWhileLoopTree) stm).getStatement(), level);
+        } else if (stm instanceof ForLoopTree) {
+            return inspectStatement(((ForLoopTree) stm).getStatement(), level);
+        } else if (stm instanceof EnhancedForLoopTree) {
+            return inspectStatement(((EnhancedForLoopTree) stm).getStatement(), level);
+        } else if (stm instanceof IfTree) {
+            return Math.max(
+                    inspectStatement(((IfTree) stm).getThenStatement(), level),
+                    inspectStatement(((IfTree) stm).getElseStatement(), level));
+        } else
+//        if (stm instanceof LambdaExpressionTree) {
+//            inspectStatement(issuesReport, location, ((LambdaExpressionTree) stm).getBody().);
+//        }else
+            if (stm instanceof SwitchTree) {
+                var cases = ((SwitchTree) stm).getCases();
+                int localLevel = level;
+                for (var casee : cases) {
+                    if (casee.getStatements() != null) {
+                        int caseMaxLevel = inspectStatements(casee.getStatements(), level);
+                        if (localLevel < caseMaxLevel) {
+                            localLevel = caseMaxLevel;
+                        }
+                    }
+                }
+                return localLevel;
+            } else if (stm instanceof TryTree) {
+                var stmTree = (TryTree) stm;
+                int maxLevel = inspectStatements(stmTree.getBlock().getStatements(), level);
+                for (CatchTree catchTree : stmTree.getCatches()) {
+                    int catchMaxLevel = inspectStatement(catchTree.getBlock(), level);
+                    if (maxLevel < catchMaxLevel) {
+                        maxLevel = catchMaxLevel;
+                    }
+                }
+                if (stmTree.getFinallyBlock() != null) {
+                    int finallyMaxLevel = inspectStatements(stmTree.getFinallyBlock().getStatements(), level);
+                    if (maxLevel < finallyMaxLevel) {
+                        maxLevel = finallyMaxLevel;
+                    }
+                }
+                return maxLevel;
+            } else if (stm instanceof WhileLoopTree) {
+                return inspectStatement(((WhileLoopTree) stm).getStatement(), level);
+            } else {
+                // XXX és l'indent level fulla, però no té pq ser el més fondo!!!
+                return level;
+            }
     }
 }

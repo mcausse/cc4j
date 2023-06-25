@@ -13,7 +13,7 @@ public class ClassMaxLineWidthRule implements TextRule {
 
     @Override
     public RuleInfo getRuleInfo() {
-        return new RuleInfo("cc", 8, "Avoid writing long lines. Avoid spaghetti lines.");
+        return new RuleInfo("cc", 8, "Avoid writing long lines (spaghetti).");
     }
 
     @Override

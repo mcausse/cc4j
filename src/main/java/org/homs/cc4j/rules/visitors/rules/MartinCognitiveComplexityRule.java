@@ -11,15 +11,15 @@ import java.util.regex.Pattern;
  * - penalitza les condicions amb combinacions de && ||.
  * - penalitza exageradament combinacions en condicions en les anidacions.
  * <p>
- * - o sigui: cada expresió booleana +1. +1 per cada combinació de && ||. i *nest level.
+ * - o sigui: cada expresió booleana +1. +1 per cada combinació de && ||. i x nest level.
  * <p>
  * <p>
  */
 public class MartinCognitiveComplexityRule extends RuleTreeVisitor<Integer> {
 
-    static final int THR_ERROR = 14;
-    static final int THR_CRITICAL = 9;
-    static final int THR_WARNING = 4;
+    static final int THR_ERROR = 20;
+    static final int THR_CRITICAL = 12;
+    static final int THR_WARNING = 7;
 
     @Override
     public RuleInfo getRuleInfo() {
@@ -97,6 +97,6 @@ public class MartinCognitiveComplexityRule extends RuleTreeVisitor<Integer> {
 
         s = s.replaceAll("\\&+", "&").replaceAll("\\|+", "|");
 
-        return s.length();
+        return s.length() + 1;
     }
 }

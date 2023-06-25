@@ -14,7 +14,7 @@ public class MaxIndentLevelRule extends RuleTreeVisitor<Void> {
 
     @Override
     public RuleInfo getRuleInfo() {
-        return new RuleInfo("cc", 5, "Avoid hadookens.");
+        return new RuleInfo("cc", 5, "Avoid too deply nested code (hadookens).");
     }
 
     @Override

@@ -11,5 +11,10 @@ public class Thresholds {
         this.criticalThr = criticalThr;
         this.errorThr = errorThr;
     }
+
+    @Override
+    public String toString() {
+        return String.format("(>%s warning, >%s critical, >%s error)", warningThr, criticalThr, errorThr);
+    }
 }
 
