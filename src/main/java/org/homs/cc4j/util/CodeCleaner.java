@@ -91,22 +91,32 @@ public class CodeCleaner {
                 return State.MULTILINE_COMMENT;
             }
             case STRING -> {
-                return nextStateInString(c, strb, '"', State.CODE, cleanStrings, State.STRING);
+                // return nextStateInString(c, strb, '"', State.CODE, cleanStrings, State.STRING);
+                if (c == '"') {
+                    strb.append(c);
+                    return State.CODE;
+                }
+                if (cleanStrings) {
+                    strb.append(encode(c));
+                } else {
+                    strb.append(c);
+                }
+                return State.STRING;
             }
             default -> throw new RuntimeException(state.name());
         }
     }
 
-    private State nextStateInString(char c, StringBuilder strb, char c2, State code, boolean cleanStrings, State string) {
-        if (c == c2) {
-            strb.append(c);
-            return code;
-        }
-        if (cleanStrings) {
-            strb.append(encode(c));
-        } else {
-            strb.append(c);
-        }
-        return string;
-    }
+//    private State nextStateInString(char c, StringBuilder strb, char c2, State code, boolean cleanStrings, State string) {
+//        if (c == c2) {
+//            strb.append(c);
+//            return code;
+//        }
+//        if (cleanStrings) {
+//            strb.append(encode(c));
+//        } else {
+//            strb.append(c);
+//        }
+//        return string;
+//    }
 }

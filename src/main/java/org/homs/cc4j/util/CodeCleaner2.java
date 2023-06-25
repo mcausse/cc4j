@@ -1,116 +1,156 @@
-//package org.homs.cc4j.util;
-//
-//public class CodeCleaner2 {
-//
-//    enum State {
-//        CODE, SLASH, SINGLELINE_COMMENT, MULTILINE_COMMENT, STAR, STRING
-//    }
-//
-////    interface State {
-////
-////    }
-//
-//    final boolean cleanComments;
-//    final boolean cleanStrings;
-//
-//    public CodeCleaner2(boolean cleanComments, boolean cleanStrings) {
-//        this.cleanComments = cleanComments;
-//        this.cleanStrings = cleanStrings;
-//    }
-//
-//    public String cleanTheCode(String code) {
-//        var state = State.CODE;
-//        var strb = new StringBuilder();
-//        for (char c : code.toCharArray()) {
-//            state = consumeChar(state, c, strb);
-//        }
-//        return strb.toString();
-//    }
-//
-//    char encode(char c) {
-//        if (Character.isWhitespace(c)) {
-//            return c;
-//        }
-//        return '*';
-//    }
-//
-//    State consumeChar(State state, char c, StringBuilder strb) {
-//        switch (state) {
-//            case CODE -> {
-//                strb.append(c);
-//                if (c == '/') {
-//                    return State.SLASH;
-//                }
-//                if (c == '"') {
-//                    return State.STRING;
-//                }
-//                return State.CODE;
-//            }
-//            case SLASH -> {
-//                if (c == '/') {
-//                    strb.append(c);
-//                    return State.SINGLELINE_COMMENT;
-//                }
-//                if (c == '*') {
-//                    strb.append(c);
-//                    return State.MULTILINE_COMMENT;
-//                }
-//                strb.append(encode(c));
-//                return State.CODE;
-//            }
-//            case SINGLELINE_COMMENT -> {
-//                if (c == '\n') {
-//                    strb.append(c);
-//                    return State.CODE;
-//                }
-//                if (cleanComments) {
-//                    strb.append(encode(c));
-//                } else {
-//                    strb.append(c);
-//                }
-//                return State.SINGLELINE_COMMENT;
-//            }
-//            case MULTILINE_COMMENT -> {
-//                if (c == '*') {
-//                    strb.append(c);
-//                    return State.STAR;
-//                }
-//                if (cleanComments) {
-//                    strb.append(encode(c));
-//                } else {
-//                    strb.append(c);
-//                }
-//                return State.MULTILINE_COMMENT;
-//            }
-//            case STAR -> {
-//                if (c == '/') {
-//                    strb.append(c);
-//                    return State.CODE;
-//                }
-//                if (c == '*') { // while *
-//                    strb.append(c);
-//                    return State.STAR;
-//                }
-//                strb.append(encode(c));
-//                return State.MULTILINE_COMMENT;
-//            }
-//            case STRING -> {
-//                return nextStateInString(c, strb, '"', State.CODE, cleanStrings, State.STRING);
-//            }
-//            default -> throw new RuntimeException(state.name());
-//        }
-//    }
-//
-//    private State nextStateInString(char c, StringBuilder strb, char c2, State code, boolean cleanStrings, State string) {
-//        if (c == c2) {
-//            strb.append(c);
-//            return code;
-//        }
-//        if (cleanStrings) {
-//            strb.append(encode(c));
-//        } else {
-//            strb.append(c);
-//        }
-//        return string;
-//    }
-//}
+package org.homs.cc4j.util;
+
+public class CodeCleaner2 {
+
+    abstract class State {
+        final StringBuilder strb;
+
+        public State(StringBuilder strb) {
+            this.strb = strb;
+        }
+
+        public abstract State getNextState(char c);
+    }
+
+    class CodeState extends State {
+        public CodeState(StringBuilder strb) {
+            super(strb);
+        }
+
+        @Override
+        public State getNextState(char c) {
+            strb.append(c);
+            if (c == '/') {
+                return new SlashState(strb);
+            }
+            if (c == '"') {
+                return new StringState(strb);
+            }
+            return this;
+        }
+    }
+
+    class SlashState extends State {
+        public SlashState(StringBuilder strb) {
+            super(strb);
+        }
+
+        @Override
+        public State getNextState(char c) {
+            if (c == '/') {
+                strb.append(c);
+                return new SingleLineCommentState(strb);
+            }
+            if (c == '*') {
+                strb.append(c);
+                return new MultiLineCommentState(strb);
+            }
+            strb.append(encode(c));
+            return new CodeState(strb);
+        }
+    }
+
+    class SingleLineCommentState extends State {
+        public SingleLineCommentState(StringBuilder strb) {
+            super(strb);
+        }
+
+        @Override
+        public State getNextState(char c) {
+            if (c == '\n') {
+                strb.append(c);
+                return new CodeState(strb);
+            }
+            if (cleanComments) {
+                strb.append(encode(c));
+            } else {
+                strb.append(c);
+            }
+            return this;
+        }
+    }
+
+    class MultiLineCommentState extends State {
+        public MultiLineCommentState(StringBuilder strb) {
+            super(strb);
+        }
+
+        @Override
+        public State getNextState(char c) {
+            if (c == '*') {
+                strb.append(c);
+                return new StarState(strb);
+            }
+            if (cleanComments) {
+                strb.append(encode(c));
+            } else {
+                strb.append(c);
+            }
+            return new MultiLineCommentState(strb);
+        }
+    }
+
+    class StarState extends State {
+        public StarState(StringBuilder strb) {
+            super(strb);
+        }
+
+        @Override
+        public State getNextState(char c) {
+            if (c == '/') {
+                strb.append(c);
+                return new CodeState(strb);
+            }
+            if (c == '*') { // while *
+                strb.append(c);
+                return this;
+            }
+            strb.append(encode(c));
+            return new MultiLineCommentState(strb);
+        }
+    }
+
+    class StringState extends State {
+        public StringState(StringBuilder strb) {
+            super(strb);
+        }
+
+        @Override
+        public State getNextState(char c) {
+            if (c == '"') {
+                strb.append(c);
+                return new CodeState(strb);
+            }
+            if (cleanStrings) {
+                strb.append(encode(c));
+            } else {
+                strb.append(c);
+            }
+            return this;
+        }
+    }
+
+    final boolean cleanComments;
+    final boolean cleanStrings;
+
+    public CodeCleaner2(boolean cleanComments, boolean cleanStrings) {
+        this.cleanComments = cleanComments;
+        this.cleanStrings = cleanStrings;
+    }
+
+    public String cleanTheCode(String code) {
+        var strb = new StringBuilder();
+        State state = new CodeState(strb);
+        for (char c : code.toCharArray()) {
+            state = state.getNextState(c);
+        }
+        return strb.toString();
+    }
+
+    char encode(char c) {
+        if (Character.isWhitespace(c)) {
+            return c;
+        }
+        return '*';
+    }
+}
