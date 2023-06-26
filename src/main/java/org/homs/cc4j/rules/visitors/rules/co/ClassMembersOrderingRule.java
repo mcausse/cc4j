@@ -84,7 +84,7 @@ public class ClassMembersOrderingRule extends RuleTreeVisitor<Void> {
             r.add(Member.EQUALS_HASHCODE);
         } else if (name.equals("toString") && method.getParameters().isEmpty() && method.getReturnType().toString().equals("String")) {
             r.add(Member.TOSTRING);
-        } else {
+        } else if (!method.getModifiers().getFlags().contains(Modifier.STATIC)) { // TODO els static poden anar a on es vulgui
             r.add(Member.METHOD);
         }
     }

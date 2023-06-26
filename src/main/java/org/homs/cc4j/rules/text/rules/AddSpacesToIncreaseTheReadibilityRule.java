@@ -61,5 +61,16 @@ public class AddSpacesToIncreaseTheReadibilityRule implements TextRule {
             issuesReport.registerIssue(location, WARNING, getRuleInfo(),
                     String.format("%s ('){') spaces pending to add to increase the readibility", hits));
         }
+
+        hits = checkForRegexp(line, "\\sif\\(");
+        if (hits > 0) {
+            issuesReport.registerIssue(location, WARNING, getRuleInfo(),
+                    String.format("%s ('if(') spaces pending to add to increase the readibility", hits));
+        }
+        hits = checkForRegexp(line, "\\swhile\\(");
+        if (hits > 0) {
+            issuesReport.registerIssue(location, WARNING, getRuleInfo(),
+                    String.format("%s ('while(') spaces pending to add to increase the readibility", hits));
+        }
     }
 }

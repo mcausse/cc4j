@@ -33,90 +33,100 @@ public class CodeCleaner {
     State consumeChar(State state, char c, StringBuilder strb) {
         switch (state) {
             case CODE -> {
-                strb.append(c);
-                if (c == '/') {
-                    return State.SLASH;
-                }
-                if (c == '"') {
-                    return State.STRING;
-                }
-                return State.CODE;
+                return getNextStateForCode(c, strb);
             }
             case SLASH -> {
-                if (c == '/') {
-                    strb.append(c);
-                    return State.SINGLELINE_COMMENT;
-                }
-                if (c == '*') {
-                    strb.append(c);
-                    return State.MULTILINE_COMMENT;
-                }
-                strb.append(encode(c));
-                return State.CODE;
+                return getNextStateForSlash(c, strb);
             }
             case SINGLELINE_COMMENT -> {
-                if (c == '\n') {
-                    strb.append(c);
-                    return State.CODE;
-                }
-                if (cleanComments) {
-                    strb.append(encode(c));
-                } else {
-                    strb.append(c);
-                }
-                return State.SINGLELINE_COMMENT;
+                return getNextStateForSingleLineComment(c, strb);
             }
             case MULTILINE_COMMENT -> {
-                if (c == '*') {
-                    strb.append(c);
-                    return State.STAR;
-                }
-                if (cleanComments) {
-                    strb.append(encode(c));
-                } else {
-                    strb.append(c);
-                }
-                return State.MULTILINE_COMMENT;
+                return getNextStateForMultilineComment(c, strb);
             }
             case STAR -> {
-                if (c == '/') {
-                    strb.append(c);
-                    return State.CODE;
-                }
-                if (c == '*') { // while *
-                    strb.append(c);
-                    return State.STAR;
-                }
-                strb.append(encode(c));
-                return State.MULTILINE_COMMENT;
+                return getNextStateForStar(c, strb);
             }
             case STRING -> {
-                // return nextStateInString(c, strb, '"', State.CODE, cleanStrings, State.STRING);
-                if (c == '"') {
-                    strb.append(c);
-                    return State.CODE;
-                }
-                if (cleanStrings) {
-                    strb.append(encode(c));
-                } else {
-                    strb.append(c);
-                }
-                return State.STRING;
+                return getNextStateForString(c, strb);
             }
             default -> throw new RuntimeException(state.name());
         }
     }
 
-//    private State nextStateInString(char c, StringBuilder strb, char c2, State code, boolean cleanStrings, State string) {
-//        if (c == c2) {
-//            strb.append(c);
-//            return code;
-//        }
-//        if (cleanStrings) {
-//            strb.append(encode(c));
-//        } else {
-//            strb.append(c);
-//        }
-//        return string;
-//    }
+    private State getNextStateForCode(char c, StringBuilder strb) {
+        strb.append(c);
+        if (c == '/') {
+            return State.SLASH;
+        }
+        if (c == '"') {
+            return State.STRING;
+        }
+        return State.CODE;
+    }
+
+    private State getNextStateForSlash(char c, StringBuilder strb) {
+        if (c == '/') {
+            strb.append(c);
+            return State.SINGLELINE_COMMENT;
+        }
+        if (c == '*') {
+            strb.append(c);
+            return State.MULTILINE_COMMENT;
+        }
+        strb.append(encode(c));
+        return State.CODE;
+    }
+
+    private State getNextStateForSingleLineComment(char c, StringBuilder strb) {
+        if (c == '\n') {
+            strb.append(c);
+            return State.CODE;
+        }
+        if (cleanComments) {
+            strb.append(encode(c));
+        } else {
+            strb.append(c);
+        }
+        return State.SINGLELINE_COMMENT;
+    }
+
+    private State getNextStateForMultilineComment(char c, StringBuilder strb) {
+        if (c == '*') {
+            strb.append(c);
+            return State.STAR;
+        }
+        if (cleanComments) {
+            strb.append(encode(c));
+        } else {
+            strb.append(c);
+        }
+        return State.MULTILINE_COMMENT;
+    }
+
+    private State getNextStateForStar(char c, StringBuilder strb) {
+        if (c == '/') {
+            strb.append(c);
+            return State.CODE;
+        }
+        if (c == '*') { // while *
+            strb.append(c);
+            return State.STAR;
+        }
+        strb.append(encode(c));
+        return State.MULTILINE_COMMENT;
+    }
+
+    private State getNextStateForString(char c, StringBuilder strb) {
+        if (c == '"') {
+            strb.append(c);
+            return State.CODE;
+        }
+        if (cleanStrings) {
+            strb.append(encode(c));
+        } else {
+            strb.append(c);
+        }
+        return State.STRING;
+    }
 }
