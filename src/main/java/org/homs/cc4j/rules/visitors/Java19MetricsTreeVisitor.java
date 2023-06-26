@@ -113,7 +113,11 @@ public class Java19MetricsTreeVisitor<P> implements TreeVisitor<Integer, P> {
     public Integer visitClass(ClassTree node, P p) {
         var r = 0;
         for (Tree tree1 : node.getMembers()) {
-            r += tree1.accept(this, p);
+            if (tree1 instanceof BlockTree) {
+                r += visitClassInitializer((BlockTree) tree1, p);
+            } else {
+                r += tree1.accept(this, p);
+            }
         }
         for (Tree tree1 : node.getImplementsClause()) {
             r += tree1.accept(this, p);
@@ -129,6 +133,10 @@ public class Java19MetricsTreeVisitor<P> implements TreeVisitor<Integer, P> {
         }
         r += node.getModifiers().accept(this, p);
         return r;
+    }
+
+    public int visitClassInitializer(BlockTree classInitializer, P p) {
+        return classInitializer.accept(this, p);
     }
 
     @Override

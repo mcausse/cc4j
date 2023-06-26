@@ -52,6 +52,7 @@ public class ClassMembersOrderingRule extends RuleTreeVisitor<Void> {
             } else if (member instanceof ClassTree) {
                 // -
             }
+            // TODO ignoring class initializers (BlockTree's hanging directly from ClassTree#getMembers()
         }
 
         var s = new StringBuilder();

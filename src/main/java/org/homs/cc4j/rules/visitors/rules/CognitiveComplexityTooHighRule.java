@@ -60,6 +60,15 @@ public class CognitiveComplexityTooHighRule extends RuleTreeVisitor<CognitiveCom
     }
 
     @Override
+    public int visitClassInitializer(BlockTree classInitializer, NestingStatus nestingStatus) {
+        location.push("{}");
+        int r = super.visitClassInitializer(classInitializer, NestingStatus.build());
+        generateIssueIfThreshold(r);
+        location.pop();
+        return 0;
+    }
+
+    @Override
     public Integer visitIf(IfTree node, NestingStatus nestingStatus) {
         int r = 1;
         if (nestingStatus.nestingBonus) {

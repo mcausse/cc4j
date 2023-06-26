@@ -21,6 +21,7 @@ public class TooManyMethodsRule extends RuleTreeVisitor<Void> {
 
         var r = 0;
         for (Tree tree1 : node.getMembers()) {
+            // includes class initializers
             r += tree1.accept(this, p);
         }
         generateIssueIfThreshold("too many methods: %s (%s)", r, THRESHOLDS);

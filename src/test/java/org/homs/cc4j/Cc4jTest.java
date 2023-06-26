@@ -342,4 +342,17 @@ public class Cc4jTest {
                 "- [cc07] too many methods: 16 (>15 warning, >25 critical, >30 error) (at [SecurityArguments.java]: SecurityArguments)"
         );
     }
+
+    @Test
+    void blocks() {
+
+        var cc4j = new Cc4j();
+        cc4j.analyseFile(getFile("cc4j/rules/blocks.java"));
+        cc4j.report();
+
+        var ir = cc4j.getIssuesReport();
+        assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
+        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(0);
+        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(2);
+    }
 }

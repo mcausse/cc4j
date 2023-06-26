@@ -1,5 +1,6 @@
 package org.homs.cc4j.rules.visitors;
 
+import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
@@ -48,6 +49,12 @@ public class MetricsCounterVisitor extends Java19MetricsTreeVisitor<String> {
             this.totalEffectiveLinesOfCode += TooManyEffectiveLinesPerMethodRule.getLinesOfEffectiveCode(node);
         }
         return super.visitMethod(node, methodName);
+    }
+
+    @Override
+    public int visitClassInitializer(BlockTree classInitializer, String fullyQualifiedClassName) {
+        this.totalEffectiveLinesOfCode += TooManyEffectiveLinesPerMethodRule.getLinesOfEffectiveCode(classInitializer);
+        return super.visitClassInitializer(classInitializer, fullyQualifiedClassName);
     }
 
     public void printMetricsCount(IssuesReport issuesReport) {

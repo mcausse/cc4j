@@ -19,15 +19,24 @@ public class MaxIndentLevelRule extends RuleTreeVisitor<Void> {
     @Override
     public Integer visitMethod(MethodTree node, Void p) {
         location.push(node.getName().toString() + "(..)");
-
-        if (node.getBody() != null) {
-            int indentMaxLevel = inspectStatements(node.getBody().getStatements(), 0);
-
-            generateIssueIfThreshold("%s indent levels (%s)", indentMaxLevel, THRESHOLDS);
-        }
-
+        analizeBlockTree(node.getBody());
         location.pop();
         return 0;
+    }
+
+    @Override
+    public int visitClassInitializer(BlockTree classInitializer, Void unused) {
+        location.push("{}");
+        analizeBlockTree(classInitializer);
+        location.pop();
+        return 0;
+    }
+
+    private void analizeBlockTree(BlockTree block) {
+        if (block != null) {
+            int indentMaxLevel = inspectStatements(block.getStatements(), 0);
+            generateIssueIfThreshold("%s indent levels (%s)", indentMaxLevel, THRESHOLDS);
+        }
     }
 
     int inspectStatements(List<? extends StatementTree> stms, int level) {

@@ -45,6 +45,15 @@ public class MartinCognitiveComplexityRule extends RuleTreeVisitor<Integer> {
     }
 
     @Override
+    public int visitClassInitializer(BlockTree classInitializer, Integer p) {
+        int complexity = super.visitClassInitializer(classInitializer, 1);
+        location.push("{}");
+        generateIssueIfThreshold(complexity);
+        location.pop();
+        return 0;
+    }
+
+    @Override
     public Integer visitIf(IfTree node, Integer deepLevel) {
         int metricValue = computeExpression(node.getCondition().toString());
         if (node.getElseStatement() instanceof IfTree) {

@@ -29,6 +29,15 @@ public class CyclomaticComplexityTooHighRule extends RuleTreeVisitor<Void> {
     }
 
     @Override
+    public int visitClassInitializer(BlockTree classInitializer, Void p) {
+        location.push("{}");
+        int r = super.visitClassInitializer(classInitializer, p);
+        generateIssueIfThreshold(r + 1);
+        location.pop();
+        return 0;
+    }
+
+    @Override
     public Integer visitIf(IfTree node, Void p) {
         return super.visitIf(node, p) + 1;
     }
