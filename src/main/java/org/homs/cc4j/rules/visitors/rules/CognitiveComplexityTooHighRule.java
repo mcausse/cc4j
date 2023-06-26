@@ -7,6 +7,7 @@ import org.homs.cc4j.rules.visitors.RuleTreeVisitor;
 
 import java.util.regex.Pattern;
 
+// TODO intentar injectar per C'tor el Thresholds, per poder fer millors testos
 public class CognitiveComplexityTooHighRule extends RuleTreeVisitor<CognitiveComplexityTooHighRule.NestingStatus> {
 
     static final Thresholds THRESHOLDS = new Thresholds(10, 20, 30);
@@ -84,12 +85,18 @@ public class CognitiveComplexityTooHighRule extends RuleTreeVisitor<CognitiveCom
 
     @Override
     public Integer visitWhileLoop(WhileLoopTree node, NestingStatus nestingStatus) {
-        return super.visitWhileLoop(node, nestingStatus.incNestedLevel()) + 1 + nestingStatus.nestedLevel + computeExpression(node.getCondition().toString());
+        return super.visitWhileLoop(node, nestingStatus.incNestedLevel())
+                + 1
+                + nestingStatus.nestedLevel
+                + computeExpression(node.getCondition().toString());
     }
 
     @Override
     public Integer visitDoWhileLoop(DoWhileLoopTree node, NestingStatus nestingStatus) {
-        return super.visitDoWhileLoop(node, nestingStatus.incNestedLevel()) + 1 + nestingStatus.nestedLevel + computeExpression(node.getCondition().toString());
+        return super.visitDoWhileLoop(node, nestingStatus.incNestedLevel())
+                + 1
+                + nestingStatus.nestedLevel
+                + computeExpression(node.getCondition().toString());
     }
 
     @Override

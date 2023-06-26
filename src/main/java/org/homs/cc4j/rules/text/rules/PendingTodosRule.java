@@ -25,7 +25,11 @@ public class PendingTodosRule implements TextRule {
         hits += checkForRegexp(sourceCode, "TODO\\n");
         hits += checkForRegexp(sourceCode, "TODO\\:");
         if (hits > 0) {
-            issuesReport.registerIssue(new Location(javaFileName), CRITICAL, getRuleInfo(), String.format("%s pending TODO(s) found", hits));
+            issuesReport.registerIssue(
+                    new Location(javaFileName),
+                    CRITICAL,
+                    getRuleInfo(),
+                    String.format("%s pending TODO(s) found", hits));
         }
 
     }

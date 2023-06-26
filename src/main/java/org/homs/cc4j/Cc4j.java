@@ -22,6 +22,7 @@ public class Cc4j {
     final IssuesReport issuesReport;
     final MetricsCounterVisitor metricsCounterVisitor;
 
+    // TODO intentar injectar les 2 llisted de rules
     public Cc4j() {
         this.issuesReport = new IssuesReport();
         this.metricsCounterVisitor = new MetricsCounterVisitor();
@@ -67,7 +68,7 @@ public class Cc4j {
             String sourceCode = FileUtils.loadFile(file.toString());
             String javaFilename = file.getName();
 
-            final FileRules fileRules = new FileRules(issuesReport);
+            final FileRules fileRules = new FileRules(issuesReport);// TODO new per cada file?
             fileRules.check(javaFilename, sourceCode);
         });
     }
@@ -92,7 +93,7 @@ public class Cc4j {
         rules.forEach(r -> System.out.println(r.getRuleInfo().getFullDescription()));
 
 
-        this.metricsCounterVisitor.printMetricsCount(/*issuesReport*/);
+        this.metricsCounterVisitor.printMetricsCount(issuesReport);
         for (var issuesVisitor : issuesVisitors) {
             this.issuesReport.acceptReportVisitor(ps, issuesVisitor);
         }

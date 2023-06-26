@@ -5,6 +5,7 @@ import org.homs.cc4j.RuleInfo;
 import org.homs.cc4j.issue.Thresholds;
 import org.homs.cc4j.rules.visitors.RuleTreeVisitor;
 
+// TODO intentar injectar per C'tor el Thresholds, per poder fer millors testos
 public class CyclomaticComplexityTooHighRule extends RuleTreeVisitor<Void> {
 
     static final Thresholds THRESHOLDS = new Thresholds(10, 20, 30);

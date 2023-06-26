@@ -25,7 +25,11 @@ public class PendingFixmesRule implements TextRule {
         hits += checkForRegexp(sourceCode, "FIXME\\n");
         hits += checkForRegexp(sourceCode, "FIXME\\:");
         if (hits > 0) {
-            issuesReport.registerIssue(new Location(javaFileName), CRITICAL, getRuleInfo(), String.format("%s pending FIXME(s) found", hits));
+            issuesReport.registerIssue(
+                    new Location(javaFileName),
+                    CRITICAL,
+                    getRuleInfo(),
+                    String.format("%s pending FIXME(s) found", hits));
         }
     }
 }

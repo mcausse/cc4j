@@ -3,6 +3,8 @@ package org.homs.cc4j.rules.visitors;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
+import org.homs.cc4j.issue.IssueSeverity;
+import org.homs.cc4j.issue.IssuesReport;
 import org.homs.cc4j.rules.visitors.rules.cc.TooManyEffectiveLinesPerMethodRule;
 
 import java.util.LinkedHashSet;
@@ -48,7 +50,7 @@ public class MetricsCounterVisitor extends Java19MetricsTreeVisitor<String> {
         return super.visitMethod(node, methodName);
     }
 
-    public void printMetricsCount(/*IssuesReport issuesReport*/) {
+    public void printMetricsCount(IssuesReport issuesReport) {
         System.out.println("=============================================================");
         System.out.println("Inspected classes:");
         System.out.println("-------------------------------------------------------------");
@@ -59,15 +61,22 @@ public class MetricsCounterVisitor extends Java19MetricsTreeVisitor<String> {
         System.out.println("-------------------------------------------------------------");
         System.out.printf(" #files:   %7d%n", compilationUnits);
         System.out.printf(" #classes: %7d%n", classes.size());
-        System.out.printf(" #methods: %7d (%5.2f methods/class)%n", methods.size(), (double) methods.size() / compilationUnits);
-        System.out.printf(" #elc:     %7d (%5.2f elc/class)%n", totalEffectiveLinesOfCode, (double) totalEffectiveLinesOfCode / compilationUnits);
+        System.out.printf(" #methods: %7d (%5.2f methods/file)%n", methods.size(), (double) methods.size() / compilationUnits);
+        System.out.printf(" #elc:     %7d (%5.2f elc/file)%n", totalEffectiveLinesOfCode, (double) totalEffectiveLinesOfCode / compilationUnits);
         System.out.println("-------------------------------------------------------------");
-//        if (totalEffectiveLinesOfCode > 0) {
-//            System.out.printf(" errors/Kelc:    %3d%n", 1_000 * issuesReport.getIssuesCountBySeverity(IssueSeverity.ERROR) / totalEffectiveLinesOfCode);
-//            System.out.printf(" criticals/Kelc: %3d%n", 1_000 * issuesReport.getIssuesCountBySeverity(IssueSeverity.CRITICAL) / totalEffectiveLinesOfCode);
-//            System.out.printf(" warnings/Kelc:  %3d%n", 1_000 * issuesReport.getIssuesCountBySeverity(IssueSeverity.WARNING) / totalEffectiveLinesOfCode);
-//        }
-        System.out.println("=============================================================");
+        if (totalEffectiveLinesOfCode > 0) {
+            int errors = issuesReport.getIssuesCountBySeverity(IssueSeverity.ERROR);
+            int criticals = issuesReport.getIssuesCountBySeverity(IssueSeverity.CRITICAL);
+            int warnings = issuesReport.getIssuesCountBySeverity(IssueSeverity.WARNING);
+            System.out.printf(" errors/Kelc:    %5.2f%n", 1_000.0 * errors / totalEffectiveLinesOfCode);
+            System.out.printf(" criticals/Kelc: %5.2f%n", 1_000.0 * criticals / totalEffectiveLinesOfCode);
+            System.out.printf(" warnings/Kelc:  %5.2f%n", 1_000.0 * warnings / totalEffectiveLinesOfCode);
+            System.out.println("-------------------------------------------------------------");
+            System.out.printf(" hits/Kelc:  %5.2f%n", 1_000.0 * (errors + criticals + warnings) / totalEffectiveLinesOfCode);
+            System.out.println("-------------------------------------------------------------");
+            System.out.printf(" technical debt score:  %5.2f%n", 1_000.0 * (errors * 3 + criticals * 2 + warnings) / totalEffectiveLinesOfCode);
+            System.out.println("-------------------------------------------------------------");
+        }
     }
 
 }
