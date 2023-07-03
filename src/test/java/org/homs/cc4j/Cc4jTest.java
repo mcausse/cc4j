@@ -214,7 +214,6 @@ public class Cc4jTest {
                         "expression=(a <= b && b >= c || c < b && !(b > a || e == f) || f == g || g != h) " +
                         "(at [too_complicated_relational_expression.java]: Jou.jou(..))",
 
-                "+ [cy01] cyclomatic complexity too high: 21 (>10 warning, >20 critical, >30 error) (at [too_complicated_relational_expression.java]: Jou.jou(..))",
                 "- [cy02] cognitive complexity too high: 11 (>10 warning, >20 critical, >30 error) (at [too_complicated_relational_expression.java]: Jou.jou(..))"
         );
     }
@@ -270,7 +269,7 @@ public class Cc4jTest {
 //        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
 //        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(4);
         assertThat(ir.getIssues().toString()).contains(
-                "- [cy01] cyclomatic complexity too high: 16 (>10 warning, >20 critical, >30 error) (at [cyclomatic_complexity_too_high.java]: Jou.cyclomatic16(..))",
+                "- [cy01] cyclomatic complexity too high: 12 (>10 warning, >20 critical, >30 error) (at [cyclomatic_complexity_too_high.java]: Jou.cyclomatic12(..))",
                 "- [cy01] cyclomatic complexity too high: 15 (>10 warning, >20 critical, >30 error) (at [cyclomatic_complexity_too_high.java]: Jou.cyclomatic15(..))"
         );
     }
@@ -332,12 +331,11 @@ public class Cc4jTest {
         var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(1);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(2);
-        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(3);
+        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(2);
         assertThat(ir.getIssues().toString()).contains(
                 "* [cc02] too complicated logical condition, rated as 12 (>3 warning, >5 critical, >7 error); expression=!isTLSEnable && !isMutualEnable && ",
                 "+ [cc08] file has a line (line #16) of 177 columns width (>140 warning, >160 critical, >190 error) (at [SecurityArguments.java])",
                 "+ [td02] 3 pending TODO(s) found (at [SecurityArguments.java])",
-                "- [cy01] cyclomatic complexity too high: 11 (>10 warning, >20 critical, >30 error) (at [SecurityArguments.java]: SecurityArguments.isEmpty(..))",
                 "- [cc03] too many arguments for a C'tor: 7 (>5 warning, >7 critical, >9 error) (at [SecurityArguments.java]: SecurityArguments.<init>(..))",
                 "- [cc07] too many methods: 16 (>15 warning, >25 critical, >30 error) (at [SecurityArguments.java]: SecurityArguments)"
         );
