@@ -3,12 +3,14 @@ package org.homs.cc4j.rules.text;
 import org.homs.cc4j.issue.IssuesReport;
 import org.homs.cc4j.rules.text.rules.*;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FileRules {
 
-    public final static TextRule[] TEXT_RULES = {
+    public final static List<TextRule> TEXT_RULES = Arrays.asList(
             new AddSpacesToIncreaseTheReadibilityRule(),
             new ClassMaxLineWidthRule(),
             new ClassMaxNumberOfLinesRule(),
@@ -16,7 +18,7 @@ public class FileRules {
             new PendingTodosRule(),
             new AvoidDeprecatedAnnotation(),
             new AvoidIgnoredTestsAnnotation()
-    };
+    );
 
     final IssuesReport issuesReport;
 

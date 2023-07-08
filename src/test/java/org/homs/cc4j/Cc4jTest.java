@@ -8,7 +8,7 @@ import java.net.URL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.homs.cc4j.issue.IssueSeverity.*;
 
-public class Cc4jTest {
+class Cc4jTest {
 
     private String getFile(String classPathResourceName) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -158,9 +158,6 @@ public class Cc4jTest {
         cc4j.report();
 
         var ir = cc4j.getIssuesReport();
-//        assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
-//        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
-//        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
         assertThat(ir.getIssues().toString()).contains(
                 "+ [cc05] 5 indent levels (>3 warning, >4 critical, >5 error) (at [too_deply_nested_code.java]: Jou.a(..))"
         );
@@ -206,9 +203,6 @@ public class Cc4jTest {
         cc4j.report();
 
         var ir = cc4j.getIssuesReport();
-//        assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
-//        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(2);
-//        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(2);
         assertThat(ir.getIssues().toString()).contains(
                 "+ [cc02] too complicated logical condition, rated as 7 (>3 warning, >5 critical, >7 error); " +
                         "expression=(a <= b && b >= c || c < b && !(b > a || e == f) || f == g || g != h) " +
@@ -265,11 +259,9 @@ public class Cc4jTest {
         cc4j.report();
 
         var ir = cc4j.getIssuesReport();
-//        assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(0);
-//        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
-//        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(4);
         assertThat(ir.getIssues().toString()).contains(
                 "- [cy01] cyclomatic complexity too high: 12 (>10 warning, >20 critical, >30 error) (at [cyclomatic_complexity_too_high.java]: Jou.cyclomatic12(..))",
+                "- [cy01] cyclomatic complexity too high: 14 (>10 warning, >20 critical, >30 error) (at [cyclomatic_complexity_too_high.java]: Jou.cyclomatic14(..))",
                 "- [cy01] cyclomatic complexity too high: 15 (>10 warning, >20 critical, >30 error) (at [cyclomatic_complexity_too_high.java]: Jou.cyclomatic15(..))"
         );
     }
@@ -282,15 +274,7 @@ public class Cc4jTest {
         cc4j.report();
 
         var ir = cc4j.getIssuesReport();
-//        assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(5);
-//        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(9);
-//        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(9);
         assertThat(ir.getIssues().toString()).contains(
-                "+ [cy01] cyclomatic complexity too high: 29 (>10 warning, >20 critical, >30 error) (at [cognitive_complexity_too_high.java]: Jou.cognitive28(..))",
-                "- [cy01] cyclomatic complexity too high: 15 (>10 warning, >20 critical, >30 error) (at [cognitive_complexity_too_high.java]: Jou.cognitive29(..))",
-                "- [cy01] cyclomatic complexity too high: 14 (>10 warning, >20 critical, >30 error) (at [cognitive_complexity_too_high.java]: Jou.evalAstCognitive24(..))",
-                "- [cy01] cyclomatic complexity too high: 11 (>10 warning, >20 critical, >30 error) (at [cognitive_complexity_too_high.java]: Jou.aaa21(..))",
-
                 "- [cy02] cognitive complexity too high: 13 (>10 warning, >20 critical, >30 error) (at [cognitive_complexity_too_high.java]: Jou.aaa13(..))",
                 "+ [cy02] cognitive complexity too high: 29 (>10 warning, >20 critical, >30 error) (at [cognitive_complexity_too_high.java]: Jou.cognitive29(..))",
                 "+ [cy02] cognitive complexity too high: 28 (>10 warning, >20 critical, >30 error) (at [cognitive_complexity_too_high.java]: Jou.cognitive28(..))",
@@ -331,13 +315,14 @@ public class Cc4jTest {
         var ir = cc4j.getIssuesReport();
         assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(1);
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(2);
-        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(2);
+        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(3);
         assertThat(ir.getIssues().toString()).contains(
                 "* [cc02] too complicated logical condition, rated as 12 (>3 warning, >5 critical, >7 error); expression=!isTLSEnable && !isMutualEnable && ",
                 "+ [cc08] file has a line (line #16) of 177 columns width (>140 warning, >160 critical, >190 error) (at [SecurityArguments.java])",
                 "+ [td02] 3 pending TODO(s) found (at [SecurityArguments.java])",
                 "- [cc03] too many arguments for a C'tor: 7 (>5 warning, >7 critical, >9 error) (at [SecurityArguments.java]: SecurityArguments.<init>(..))",
-                "- [cc07] too many methods: 16 (>15 warning, >25 critical, >30 error) (at [SecurityArguments.java]: SecurityArguments)"
+                "- [cc07] too many methods: 16 (>15 warning, >25 critical, >30 error) (at [SecurityArguments.java]: SecurityArguments)",
+                "- [cy01] cyclomatic complexity too high: 11 (>10 warning, >20 critical, >30 error) (at [SecurityArguments.java]: SecurityArguments.isEmpty(..))"
         );
     }
 

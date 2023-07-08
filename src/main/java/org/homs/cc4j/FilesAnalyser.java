@@ -58,13 +58,17 @@ public class FilesAnalyser {
     public void acceptRuleVisitors(IssuesReport issuesReport, Collection<RuleTreeVisitor<?>> ruleVisitors) {
         for (var ruleVisitor : ruleVisitors) {
             for (File file : this.compilationUnitTrees.keySet()) {
-                String fileName = file.getName();
-                for (CompilationUnitTree compUnit : this.compilationUnitTrees.get(file)) {
-                    ruleVisitor.setIssuesReport(issuesReport);
-                    ruleVisitor.setLocation(new Location(fileName));
-                    compUnit.accept(ruleVisitor, null);
-                }
+                runCompilationUnitsForFile(file, issuesReport, ruleVisitor);
             }
+        }
+    }
+
+    protected void runCompilationUnitsForFile(File file, IssuesReport issuesReport, RuleTreeVisitor<?> ruleVisitor) {
+        String fileName = file.getName();
+        for (CompilationUnitTree compUnit : this.compilationUnitTrees.get(file)) {
+            ruleVisitor.setIssuesReport(issuesReport);
+            ruleVisitor.setLocation(new Location(fileName));
+            compUnit.accept(ruleVisitor, null);
         }
     }
 

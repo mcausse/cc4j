@@ -4,14 +4,15 @@ import org.homs.cc4j.issue.IssuesReport;
 import org.homs.cc4j.issue.IssuesReportVisitor;
 import org.homs.cc4j.issue.SimpleIssuesReportVisitor;
 import org.homs.cc4j.rules.text.FileRules;
+import org.homs.cc4j.rules.text.TextRule;
 import org.homs.cc4j.rules.visitors.AstRules;
 import org.homs.cc4j.rules.visitors.MetricsCounterVisitor;
+import org.homs.cc4j.rules.visitors.RuleTreeVisitor;
 import org.homs.cc4j.util.FileUtils;
 
 import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -19,13 +20,20 @@ import static org.homs.cc4j.util.FileUtils.processDirectory;
 
 public class Cc4j {
 
+    final List<RuleTreeVisitor<?>> astRulesList;
+    final List<TextRule> textRulesList;
     final IssuesReport issuesReport;
     final MetricsCounterVisitor metricsCounterVisitor;
 
-    // TODO intentar injectar les 2 llisted de rules
-    public Cc4j() {
+    public Cc4j(List<RuleTreeVisitor<?>> astRulesList, List<TextRule> textRulesList) {
+        this.astRulesList = astRulesList;
+        this.textRulesList = textRulesList;
         this.issuesReport = new IssuesReport();
         this.metricsCounterVisitor = new MetricsCounterVisitor();
+    }
+
+    public Cc4j() {
+        this(AstRules.RULES, FileRules.TEXT_RULES);
     }
 
     public void analyseDirectory(String directory) {
@@ -64,11 +72,10 @@ public class Cc4j {
     }
 
     protected void analyseTextBasedRules(FilesAnalyser analizer) {
+        final FileRules fileRules = new FileRules(issuesReport);
         analizer.forEachFile(file -> {
             String sourceCode = FileUtils.loadFile(file.toString());
             String javaFilename = file.getName();
-
-            final FileRules fileRules = new FileRules(issuesReport);// TODO new per cada file?
             fileRules.check(javaFilename, sourceCode);
         });
     }
@@ -88,10 +95,9 @@ public class Cc4j {
          */
         List<Rule> rules = new ArrayList<>();
         rules.addAll(AstRules.RULES);
-        rules.addAll(Arrays.asList(FileRules.TEXT_RULES));
+        rules.addAll(FileRules.TEXT_RULES);
         rules.sort(Comparator.comparing(o -> o.getRuleInfo().toString()));
         rules.forEach(r -> System.out.println(r.getRuleInfo().getFullDescription()));
-
 
         this.metricsCounterVisitor.printMetricsCount(issuesReport);
         for (var issuesVisitor : issuesVisitors) {
