@@ -1,3 +1,9 @@
+import com.sun.source.tree.MethodTree;
+import org.homs.cc4j.rules.visitors.rules.co.ClassMembersOrderingRule;
+
+import javax.lang.model.element.Modifier;
+import java.util.List;
+
 public class Jou {
 
     void cyclomatic12(int a, int b, int c) {
@@ -64,6 +70,22 @@ public class Jou {
         do {
         } while (a > 0 && b > 0 || c > 0);
         for (int i = 0; i < ks.size() && a > 0 || b > 0; i++) {
+        }
+    }
+
+    protected void inspectMethod12(List<ClassMembersOrderingRule.Member> r, MethodTree method) {
+        var name = method.getName().toString();
+        if (method.getReturnType() == null) {
+            r.add(ClassMembersOrderingRule.Member.CTOR);
+        } else if ("equals".equals(name) && method.getParameters().size() == 1 && "boolean".equals(method.getReturnType().toString())) {
+            r.add(ClassMembersOrderingRule.Member.EQUALS_HASHCODE);
+        } else if ("hashCode".equals(name) && method.getParameters().isEmpty() && "int".equals(method.getReturnType().toString())) {
+            r.add(ClassMembersOrderingRule.Member.EQUALS_HASHCODE);
+        } else if ("toString".equals(name) && method.getParameters().isEmpty() && "String".equals(method.getReturnType().toString())) {
+            r.add(ClassMembersOrderingRule.Member.TOSTRING);
+        } else if (!method.getModifiers().getFlags().contains(Modifier.STATIC)) {
+            // els static poden anar a on es vulgui
+            r.add(ClassMembersOrderingRule.Member.METHOD);
         }
     }
 }

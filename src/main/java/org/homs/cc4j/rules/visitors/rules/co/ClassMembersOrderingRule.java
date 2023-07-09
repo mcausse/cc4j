@@ -42,29 +42,33 @@ public class ClassMembersOrderingRule extends RuleTreeVisitor<Void> {
         return 0;
     }
 
-    private void inspectClassMembersOrder(ClassTree node) {
-        List<Member> r = new ArrayList<>();
-        for (Tree member : node.getMembers()) {
-            if (member instanceof VariableTree) {
-                inspectProperty(r, (VariableTree) member);
-            } else if (member instanceof MethodTree) {
-                inspectMethod(r, (MethodTree) member);
-            } else if (member instanceof ClassTree) {
-                // -
-            }
-            // TODO ignoring class initializers (BlockTree's hanging directly from ClassTree#getMembers()
-        }
-
-        var s = new StringBuilder();
-        for (var m : r) {
-            s.append(m.getOrder());
-        }
+    void inspectClassMembersOrder(ClassTree node) {
+        StringBuilder s = getMembersSequence(node);
 
         // LOGGER(1), STATIC(2), PROPERTY(3), CTOR(4), METHOD(5), EQUALS_HASHCODE(6), TOSTRING(7);
         var pattern = "^1?2*3*4*5*6*7*$";
         if (!s.toString().matches(pattern)) {
             generateIssue(CRITICAL, String.format("class members should be ordered as the convention: %s (pattern is: %s)", s, pattern));
         }
+    }
+
+    StringBuilder getMembersSequence(ClassTree node) {
+        List<Member> r = new ArrayList<>();
+        for (Tree member : node.getMembers()) {
+            if (member instanceof VariableTree) {
+                inspectProperty(r, (VariableTree) member);
+            } else if (member instanceof MethodTree) {
+                inspectMethod(r, (MethodTree) member);
+            }
+            // - ignoring class initializers (BlockTree's hanging directly from ClassTree#getMembers()
+            // - ignoring inner classes (if (member instanceof ClassTree))
+        }
+
+        var s = new StringBuilder();
+        for (var m : r) {
+            s.append(m.getOrder());
+        }
+        return s;
     }
 
     protected void inspectMethod(List<Member> r, MethodTree method) {
@@ -75,23 +79,41 @@ public class ClassMembersOrderingRule extends RuleTreeVisitor<Void> {
         //                 */
         //                Tree getReturnType();
 
-        var name = method.getName().toString();
         if (method.getReturnType() == null) {
             r.add(Member.CTOR);
-        } else if (name.equals("equals") && method.getParameters().size() == 1 && method.getReturnType().toString().equals("boolean")) {
+        } else if (isEqualsMethod(method)) {
             r.add(Member.EQUALS_HASHCODE);
-        } else if (name.equals("hashCode") && method.getParameters().isEmpty() && method.getReturnType().toString().equals("int")) {
+        } else if (isHashCodeMethod(method)) {
             r.add(Member.EQUALS_HASHCODE);
-        } else if (name.equals("toString") && method.getParameters().isEmpty() && method.getReturnType().toString().equals("String")) {
+        } else if (isToStringMethod(method)) {
             r.add(Member.TOSTRING);
-        } else if (!method.getModifiers().getFlags().contains(Modifier.STATIC)) { // TODO els static poden anar a on es vulgui
+        } else if (!method.getModifiers().getFlags().contains(Modifier.STATIC)) {
+            // els static poden anar a on es vulgui
             r.add(Member.METHOD);
         }
     }
 
-    protected void inspectProperty(List<Member> r, VariableTree var) {
-        boolean isStatic = var.getModifiers().getFlags().contains(Modifier.STATIC);
-        var name = var.getName().toString();
+    boolean isEqualsMethod(MethodTree method) {
+        return "equals".equals(method.getName().toString())
+                && method.getParameters().size() == 1
+                && "boolean".equals(method.getReturnType().toString());
+    }
+
+    boolean isHashCodeMethod(MethodTree method) {
+        return "hashCode".equals(method.getName().toString())
+                && method.getParameters().isEmpty()
+                && "int".equals(method.getReturnType().toString());
+    }
+
+    boolean isToStringMethod(MethodTree method) {
+        return "toString".equals(method.getName().toString())
+                && method.getParameters().isEmpty()
+                && "String".equals(method.getReturnType().toString());
+    }
+
+    protected void inspectProperty(List<Member> r, VariableTree variableTree) {
+        boolean isStatic = variableTree.getModifiers().getFlags().contains(Modifier.STATIC);
+        var name = variableTree.getName().toString();
         if (name.equalsIgnoreCase("log") || name.equalsIgnoreCase("logger")) {
             r.add(Member.LOGGER);
         } else {

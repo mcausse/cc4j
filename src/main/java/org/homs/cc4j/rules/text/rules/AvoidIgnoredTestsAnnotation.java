@@ -16,14 +16,15 @@ public class AvoidIgnoredTestsAnnotation extends AbstractLineBasedTextRule {
     }
 
     protected void checkTechnicalDebtSmells(IssuesReport issuesReport, Location location, String line) {
-        // TODO considerar @org.junit.Disabled
-        int hits = checkForRegexp(line, "\\@Ignore\\s*$");
+        int hits = checkForRegexp(line, "\\@Ignore([^(]|$)");
+        hits += checkForRegexp(line, "\\@org\\.junit\\.Ignore([^(]|$)");
         if (hits > 0) {
             issuesReport.registerIssue(location, CRITICAL, getRuleInfo(),
                     String.format("%s pending @Ignore(s) (without justification) found", hits));
         }
 
-        hits = checkForRegexp(line, "\\@Disabled\\s*$");
+        hits = checkForRegexp(line, "\\@Disabled([^(]|$)");
+        hits += checkForRegexp(line, "\\@org\\.junit\\.jupiter\\.api\\.Disabled([^(]|$)");
         if (hits > 0) {
             issuesReport.registerIssue(location, CRITICAL, getRuleInfo(),
                     String.format("%s pending @Disabled(s) (without justification) found", hits));

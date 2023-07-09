@@ -15,7 +15,7 @@ public class AstRules {
             new CyclomaticComplexityTooHighRule(),
             new CognitiveComplexityTooHighRule(),
             new MartinCognitiveComplexityRule(),
-            new MaxIndentLevelRule(),
+            new MaxIndentLevelRule2(),
             new TooManyArgumentsRule(),
             new TooComplicatedConditionRule(),
             new ClassMembersOrderingRule(),

@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
  * <p>
  * <p>
  */
-// TODO intentar injectar per C'tor el Thresholds, per poder fer millors testos
 public class MartinCognitiveComplexityRule extends RuleTreeVisitor<Integer> {
 
     static final Thresholds THRESHOLDS = new Thresholds(7, 12, 20);

@@ -64,12 +64,13 @@ public class MetricsCounterVisitor extends Java19MetricsTreeVisitor<String> {
         for (var className : classes) {
             System.out.println("- " + className);
         }
-        // TODO aixo es una mierda
+
         System.out.println("-------------------------------------------------------------");
         System.out.printf(" #files:   %7d%n", compilationUnits);
         System.out.printf(" #classes: %7d%n", classes.size());
         System.out.printf(" #methods: %7d (%5.2f methods/file)%n", methods.size(), (double) methods.size() / compilationUnits);
-        System.out.printf(" #elc:     %7d (%5.2f elc/file)%n", totalEffectiveLinesOfCode, (double) totalEffectiveLinesOfCode / compilationUnits);
+        System.out.printf(" #elc:     %7d (%5.2f elc/file)%n",
+                totalEffectiveLinesOfCode, (double) totalEffectiveLinesOfCode / compilationUnits);
         System.out.println("-------------------------------------------------------------");
         if (totalEffectiveLinesOfCode > 0) {
             int errors = issuesReport.getIssuesCountBySeverity(IssueSeverity.ERROR);
@@ -79,9 +80,11 @@ public class MetricsCounterVisitor extends Java19MetricsTreeVisitor<String> {
             System.out.printf(" criticals/Kelc: %5.2f%n", 1_000.0 * criticals / totalEffectiveLinesOfCode);
             System.out.printf(" warnings/Kelc:  %5.2f%n", 1_000.0 * warnings / totalEffectiveLinesOfCode);
             System.out.println("-------------------------------------------------------------");
-            System.out.printf(" hits/Kelc:  %5.2f%n", 1_000.0 * (errors + criticals + warnings) / totalEffectiveLinesOfCode);
+            System.out.printf(" hits/Kelc:                  %5.2f%n",
+                    1_000.0 * (errors + criticals + warnings) / totalEffectiveLinesOfCode);
             System.out.println("-------------------------------------------------------------");
-            System.out.printf(" technical debt score:  %5.2f%n", 1_000.0 * (errors * 3 + criticals * 2 + warnings) / totalEffectiveLinesOfCode);
+            System.out.printf(" technical debt score/Kelc:  %5.2f%n",
+                    1_000.0 * (errors * 3 + criticals * 2 + warnings) / totalEffectiveLinesOfCode);
             System.out.println("-------------------------------------------------------------");
         }
     }

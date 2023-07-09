@@ -5,7 +5,6 @@ import org.homs.cc4j.RuleInfo;
 import org.homs.cc4j.issue.Thresholds;
 import org.homs.cc4j.rules.visitors.RuleTreeVisitor;
 
-// TODO intentar injectar per C'tor el Thresholds, per poder fer millors testos
 public class CyclomaticComplexityTooHighRule extends RuleTreeVisitor<Void> {
 
     static final Thresholds THRESHOLDS = new Thresholds(10, 20, 30);
@@ -44,37 +43,21 @@ public class CyclomaticComplexityTooHighRule extends RuleTreeVisitor<Void> {
 
     @Override
     public Integer visitIf(IfTree node, Void p) {
-//        var r = 1;
-//        r += node.getCondition().accept(this, p);
-//        r += super.visitIf(node, p)+1;
-//        return r;
         return super.visitIf(node, p) + 1;
     }
 
     @Override
     public Integer visitWhileLoop(WhileLoopTree node, Void p) {
-//        var r = 1;
-//        r += node.getCondition().accept(this, p);
-//        r += super.visitWhileLoop(node, p);
-//        return r;
         return super.visitWhileLoop(node, p) + 1;
     }
 
     @Override
     public Integer visitDoWhileLoop(DoWhileLoopTree node, Void p) {
-//        var r = 1;
-//        r += node.getCondition().accept(this, p);
-//        r += super.visitDoWhileLoop(node, p);
-//        return r;
         return super.visitDoWhileLoop(node, p) + 1;
     }
 
     @Override
     public Integer visitForLoop(ForLoopTree node, Void p) {
-//        var r = 1;
-//        r += node.getCondition().accept(this, p);
-//        r += super.visitForLoop(node, p);
-//        return r;
         return super.visitForLoop(node, p) + 1;
     }
 

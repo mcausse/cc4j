@@ -13,7 +13,8 @@ public class TooManyArgumentsRule extends RuleTreeVisitor<Void> {
     @Override
     public RuleInfo getRuleInfo() {
         return new RuleInfo("cc", 3,
-                "Avoid too many arguments for a C'tor or a function. C'tors=(" + CTOR_THRESHOLDS + "), methods=(" + METHOD_THRESHOLDS + ")");
+                "Avoid too many arguments for a C'tor or a function. C'tors=(" +
+                        CTOR_THRESHOLDS + "), methods=(" + METHOD_THRESHOLDS + ")");
     }
 
     public Integer visitMethod(MethodTree node, Void p) {

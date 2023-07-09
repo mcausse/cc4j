@@ -1,3 +1,5 @@
+import org.junit.jupiter.api.Disabled;
+
 public class Jou {
     //    TODO jou
     //    FIXME juas
@@ -11,6 +13,8 @@ public class Jou {
 
     @Ignore("justification")
     @Disabled("justification")
+    @org.junit.Ignore("justification")
+    @org.junit.jupiter.api.Disabled("justification")
     public void ignoredTestWithJustification() {
     }
 }

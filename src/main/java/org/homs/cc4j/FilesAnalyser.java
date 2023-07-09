@@ -19,26 +19,32 @@ import java.util.function.Consumer;
 
 public class FilesAnalyser {
 
-    public static FilesAnalyser forFiles(List<File> files) {
+    public static FilesAnalyser forFiles(Iterable<File> files) {
         final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         Map<File, ArrayList<CompilationUnitTree>> r = new LinkedHashMap<>();
 
         try (final StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, StandardCharsets.UTF_8)) {
             for (var file : files) {
-                final Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromFiles(List.of(file));
-                final JavacTask javacTask = (JavacTask) compiler.getTask(null, fileManager, null, null, null, compilationUnits);
-                final Iterable<? extends CompilationUnitTree> compilationUnitTrees = javacTask.parse();
-
-                r.putIfAbsent(file, new ArrayList<>());
-                for (var cut : compilationUnitTrees) {
-                    r.get(file).add(cut);
-                }
+                forFile(compiler, r, fileManager, file);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         return new FilesAnalyser(r);
+    }
+
+    static void forFile(JavaCompiler compiler, Map<File, ArrayList<CompilationUnitTree>> r,
+                        StandardJavaFileManager fileManager, File file) throws IOException {
+
+        final Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromFiles(List.of(file));
+        final JavacTask javacTask = (JavacTask) compiler.getTask(null, fileManager, null, null, null, compilationUnits);
+        final Iterable<? extends CompilationUnitTree> compilationUnitTrees = javacTask.parse();
+
+        r.putIfAbsent(file, new ArrayList<>());
+        for (var cut : compilationUnitTrees) {
+            r.get(file).add(cut);
+        }
     }
 
     public static FilesAnalyser forFile(File file) {

@@ -68,7 +68,7 @@ public class Cc4j {
     }
 
     protected void analyseAstBasedRules(FilesAnalyser analizer) {
-        analizer.acceptRuleVisitors(issuesReport, AstRules.RULES);
+        analizer.acceptRuleVisitors(issuesReport, astRulesList);
     }
 
     protected void analyseTextBasedRules(FilesAnalyser analizer) {
@@ -94,8 +94,8 @@ public class Cc4j {
          * list all the rules to STDOUT
          */
         List<Rule> rules = new ArrayList<>();
-        rules.addAll(AstRules.RULES);
-        rules.addAll(FileRules.TEXT_RULES);
+        rules.addAll(astRulesList);
+        rules.addAll(textRulesList);
         rules.sort(Comparator.comparing(o -> o.getRuleInfo().toString()));
         rules.forEach(r -> System.out.println(r.getRuleInfo().getFullDescription()));
 

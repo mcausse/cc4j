@@ -1,9 +1,12 @@
 package org.homs.cc4j;
 
+import org.homs.cc4j.rules.visitors.rules.cc.MaxIndentLevelRule2;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Collections;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.homs.cc4j.issue.IssueSeverity.*;
@@ -58,14 +61,11 @@ class Cc4jTest {
         assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(5);
         assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(0);
         assertThat(ir.getIssues().toString()).contains(
-                "+ [td02] 1 pending TODO(s) found (at [",
-                "+ [td01] 1 pending FIXME(s) found (at [",
-                "+ [td04] 1 pending @Ignore(s) (without justification) found (at [",
-                "+ [td04] 1 pending @Disabled(s) (without justification) found (at [",
-                "+ [td03] 1 pending @Deprecated(s) found (at [",
-                "]: line 6)",
-                "]: line 7)",
-                "]: line 8)"
+                "+ [td01] 1 pending FIXME(s) found (at [todos_and_fixmes_and_posponed_debt.java])",
+                "+ [td02] 1 pending TODO(s) found (at [todos_and_fixmes_and_posponed_debt.java])",
+                "+ [td03] 1 pending @Deprecated(s) found (at [todos_and_fixmes_and_posponed_debt.java]: line 10)",
+                "+ [td04] 1 pending @Ignore(s) (without justification) found (at [todos_and_fixmes_and_posponed_debt.java]: line 8)",
+                "+ [td04] 1 pending @Disabled(s) (without justification) found (at [todos_and_fixmes_and_posponed_debt.java]: line 9)"
         );
     }
 
@@ -153,13 +153,18 @@ class Cc4jTest {
     @Test
     void too_deply_nested_code() {
 
-        var cc4j = new Cc4j();
+        var cc4j = new Cc4j(List.of(new MaxIndentLevelRule2()), Collections.emptyList());
         cc4j.analyseFile(getFile("cc4j/rules/too_deply_nested_code.java"));
         cc4j.report();
 
         var ir = cc4j.getIssuesReport();
+        assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(1);
+        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(1);
+        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(1);
         assertThat(ir.getIssues().toString()).contains(
-                "+ [cc05] 5 indent levels (>3 warning, >4 critical, >5 error) (at [too_deply_nested_code.java]: Jou.a(..))"
+                "* [cc05] 5 indent levels (>2 warning, >3 critical, >4 error) (at [too_deply_nested_code.java]: Jou.a5(..))",
+                "+ [cc05] 4 indent levels (>2 warning, >3 critical, >4 error) (at [too_deply_nested_code.java]: Jou.a4(..))",
+                "- [cc05] 3 indent levels (>2 warning, >3 critical, >4 error) (at [too_deply_nested_code.java]: Jou.a3(..))"
         );
     }
 
@@ -262,7 +267,8 @@ class Cc4jTest {
         assertThat(ir.getIssues().toString()).contains(
                 "- [cy01] cyclomatic complexity too high: 12 (>10 warning, >20 critical, >30 error) (at [cyclomatic_complexity_too_high.java]: Jou.cyclomatic12(..))",
                 "- [cy01] cyclomatic complexity too high: 14 (>10 warning, >20 critical, >30 error) (at [cyclomatic_complexity_too_high.java]: Jou.cyclomatic14(..))",
-                "- [cy01] cyclomatic complexity too high: 15 (>10 warning, >20 critical, >30 error) (at [cyclomatic_complexity_too_high.java]: Jou.cyclomatic15(..))"
+                "- [cy01] cyclomatic complexity too high: 15 (>10 warning, >20 critical, >30 error) (at [cyclomatic_complexity_too_high.java]: Jou.cyclomatic15(..))",
+                "- [cy01] cyclomatic complexity too high: 12 (>10 warning, >20 critical, >30 error) (at [cyclomatic_complexity_too_high.java]: Jou.inspectMethod12(..))"
         );
     }
 
@@ -293,9 +299,6 @@ class Cc4jTest {
         cc4j.report();
 
         var ir = cc4j.getIssuesReport();
-        assertThat(ir.getIssuesCountBySeverity(ERROR)).isEqualTo(2);
-        assertThat(ir.getIssuesCountBySeverity(CRITICAL)).isEqualTo(9);
-        assertThat(ir.getIssuesCountBySeverity(WARNING)).isEqualTo(11);
         assertThat(ir.getIssues().toString()).contains(
                 "* [cy03] M.Homs complexity metric is too high: 25 (>7 warning, >12 critical, >20 error) (at [mhoms_cognitive_complexity_too_high.java]: Jou.consumeChar25(..))",
                 "+ [cy03] M.Homs complexity metric is too high: 20 (>7 warning, >12 critical, >20 error) (at [mhoms_cognitive_complexity_too_high.java]: Jou.inspectStatement20(..))",
