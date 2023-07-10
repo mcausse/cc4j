@@ -67,6 +67,11 @@ public class CyclomaticComplexityTooHighRule extends RuleTreeVisitor<Void> {
     }
 
     @Override
+    public Integer visitCatch(CatchTree node, Void unused) {
+        return super.visitCatch(node, unused) + 1;
+    }
+
+    @Override
     public Integer visitCase(CaseTree node, Void p) {
         if (node.getExpressions().isEmpty()) {
             // default:
@@ -80,12 +85,7 @@ public class CyclomaticComplexityTooHighRule extends RuleTreeVisitor<Void> {
     // ? :
     @Override
     public Integer visitConditionalExpression(ConditionalExpressionTree node, Void p) {
-        var r = 1;
-        if (Boolean.TRUE.equals(p)) {
-            r += node.getCondition().accept(this, p);
-        }
-        r += super.visitConditionalExpression(node, p);
-        return r;
+        return super.visitConditionalExpression(node, p) + 1;
     }
 
     // ===

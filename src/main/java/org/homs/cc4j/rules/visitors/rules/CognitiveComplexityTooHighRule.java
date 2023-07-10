@@ -21,13 +21,13 @@ public class CognitiveComplexityTooHighRule extends RuleTreeVisitor<CognitiveCom
         public final int nestedLevel;
         public final boolean nestingBonus;
 
-        public static NestingStatus build() {
-            return new NestingStatus(0, true);
-        }
-
         private NestingStatus(int nestedLevel, boolean nestingBonus) {
             this.nestedLevel = nestedLevel;
             this.nestingBonus = nestingBonus;
+        }
+
+        public static NestingStatus build() {
+            return new NestingStatus(0, true);
         }
 
         public NestingStatus incNestedLevel() {

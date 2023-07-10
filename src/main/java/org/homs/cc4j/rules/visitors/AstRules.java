@@ -2,7 +2,6 @@ package org.homs.cc4j.rules.visitors;
 
 import org.homs.cc4j.rules.visitors.rules.CognitiveComplexityTooHighRule;
 import org.homs.cc4j.rules.visitors.rules.CyclomaticComplexityTooHighRule;
-import org.homs.cc4j.rules.visitors.rules.MartinCognitiveComplexityRule;
 import org.homs.cc4j.rules.visitors.rules.cc.*;
 import org.homs.cc4j.rules.visitors.rules.co.ClassMembersOrderingRule;
 import org.homs.cc4j.rules.visitors.rules.co.NamingConventionsRule;
@@ -14,7 +13,7 @@ public class AstRules {
     public static final List<RuleTreeVisitor<?>> RULES = List.of(
             new CyclomaticComplexityTooHighRule(),
             new CognitiveComplexityTooHighRule(),
-            new MartinCognitiveComplexityRule(),
+//            new MartinCognitiveComplexityRule(),
             new MaxIndentLevelRule2(),
             new TooManyArgumentsRule(),
             new TooComplicatedConditionRule(),

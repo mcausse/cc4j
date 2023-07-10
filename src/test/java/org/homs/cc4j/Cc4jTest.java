@@ -1,6 +1,7 @@
 package org.homs.cc4j;
 
 import org.homs.cc4j.rules.visitors.rules.cc.MaxIndentLevelRule2;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -291,6 +292,7 @@ class Cc4jTest {
     }
 
 
+    @Disabled
     @Test
     void mhoms_cognitive_complexity_too_high() {
 
