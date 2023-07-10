@@ -72,11 +72,12 @@ public class Cc4j {
     }
 
     protected void analyseTextBasedRules(FilesAnalyser analizer) {
-        final FileRules fileRules = new FileRules(issuesReport);
         analizer.forEachFile(file -> {
             String sourceCode = FileUtils.loadFile(file.toString());
             String javaFilename = file.getName();
-            fileRules.check(javaFilename, sourceCode);
+            for (var textRule : this.textRulesList) {
+                textRule.execute(issuesReport, javaFilename, sourceCode);
+            }
         });
     }
 

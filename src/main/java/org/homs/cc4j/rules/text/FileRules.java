@@ -1,6 +1,5 @@
 package org.homs.cc4j.rules.text;
 
-import org.homs.cc4j.issue.IssuesReport;
 import org.homs.cc4j.rules.text.rules.*;
 
 import java.util.Arrays;
@@ -20,18 +19,7 @@ public class FileRules {
             new AvoidIgnoredTestsAnnotation()
     );
 
-    final IssuesReport issuesReport;
-
-    public FileRules(IssuesReport issuesReport) {
-        this.issuesReport = issuesReport;
-    }
-
-    public void check(String javaFilename, String sourceCode) {
-        for (var textRule : TEXT_RULES) {
-            textRule.execute(issuesReport, javaFilename, sourceCode);
-        }
-    }
-
+    // TODO això cap a un utils?
     public static int checkForRegexp(String sourceCode, String regexp) {
         int hits = 0;
         Pattern p = Pattern.compile(regexp, Pattern.MULTILINE);

@@ -7,15 +7,25 @@ import org.homs.cc4j.rules.visitors.RuleTreeVisitor;
 
 public class CyclomaticComplexityTooHighRule extends RuleTreeVisitor<Void> {
 
-    static final Thresholds THRESHOLDS = new Thresholds(10, 20, 30);
+    static final Thresholds DEFAULT_THRESHOLDS = new Thresholds(10, 20, 30);
+
+    final Thresholds thresholds;
+
+    public CyclomaticComplexityTooHighRule(Thresholds thresholds) {
+        this.thresholds = thresholds;
+    }
+
+    public CyclomaticComplexityTooHighRule() {
+        this(DEFAULT_THRESHOLDS);
+    }
 
     @Override
     public RuleInfo getRuleInfo() {
-        return new RuleInfo("cy", 1, "Cyclomatic complexity too high. (" + THRESHOLDS + ")");
+        return new RuleInfo("cy", 1, "Cyclomatic complexity too high. (" + thresholds + ")");
     }
 
     void generateIssueIfThreshold(int metricValue) {
-        generateIssueIfThreshold("cyclomatic complexity too high: %s (%s)", metricValue, THRESHOLDS);
+        generateIssueIfThreshold("cyclomatic complexity too high: %s (%s)", metricValue, thresholds);
     }
 
     @Override
@@ -64,6 +74,11 @@ public class CyclomaticComplexityTooHighRule extends RuleTreeVisitor<Void> {
     @Override
     public Integer visitEnhancedForLoop(EnhancedForLoopTree node, Void unused) {
         return super.visitEnhancedForLoop(node, unused) + 1;
+    }
+
+    @Override
+    public Integer visitLambdaExpression(LambdaExpressionTree node, Void unused) {
+        return super.visitLambdaExpression(node, unused) + 1;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.homs.cc4j;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,8 +20,14 @@ public class TestUtils {
         return String.join("\n", elements);
     }
 
-    public static String classPathResourceToFullPath(String resourceName) throws URISyntaxException {
-        return Path.of(ClassLoader.getSystemResource(resourceName).toURI()).toString();
-//        return Path.of(Thread.currentThread().getContextClassLoader().getResource(resourceName).toURI()).toString();
+    public static String getFile(String classPathResourceName) {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        URL resource = classLoader.getResource(classPathResourceName);
+
+        if (resource == null) {
+            throw new IllegalArgumentException("file not found: " + classPathResourceName);
+        }
+
+        return new File(resource.getFile()).toString();
     }
 }

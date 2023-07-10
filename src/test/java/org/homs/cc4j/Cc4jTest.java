@@ -10,20 +10,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.homs.cc4j.TestUtils.getFile;
 import static org.homs.cc4j.issue.IssueSeverity.*;
 
 class Cc4jTest {
-
-    private String getFile(String classPathResourceName) {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        URL resource = classLoader.getResource(classPathResourceName);
-
-        if (resource == null) {
-            throw new IllegalArgumentException("file not found: " + classPathResourceName);
-        }
-
-        return new File(resource.getFile()).toString();
-    }
 
     @Test
     void naming_convention_rules() {

@@ -6,6 +6,12 @@ import java.util.List;
 
 public class Jou {
 
+    {
+        for (var i = 0; i < 10; i++) {
+            long r = i % 2 == 0 ? 100L : 1_000L:
+        }
+    }
+
     void cyclomatic12(int a, int b, int c) {
         while (a > 0 && b > 0 && c > 0) {
             switch (b) {
@@ -86,6 +92,25 @@ public class Jou {
         } else if (!method.getModifiers().getFlags().contains(Modifier.STATIC)) {
             // els static poden anar a on es vulgui
             r.add(ClassMembersOrderingRule.Member.METHOD);
+        }
+    }
+
+
+    void lambdas_and_catches_3_1() {
+        try {
+
+        } catch (Exception e) {
+            BiFunction k = (a, b) -> a * b;
+        }
+    }
+
+    void lambdas_and_catches_3_2() {
+        try {
+
+        } catch (Exception e) {
+            BiFunction k = (a, b) -> {
+                return a * b;
+            };
         }
     }
 }
