@@ -12,7 +12,7 @@ public class AvoidIgnoredTestsAnnotation extends AbstractLineBasedTextRule {
 
     @Override
     public RuleInfo getRuleInfo() {
-        return new RuleInfo("td", 4, "An ignored Unit Test is a postponed technical debt.");
+        return new RuleInfo("td", 4, "An @Ignored/@Disabled Unit Test is a postponed technical debt.");
     }
 
     protected void checkTechnicalDebtSmells(IssuesReport issuesReport, Location location, String line) {

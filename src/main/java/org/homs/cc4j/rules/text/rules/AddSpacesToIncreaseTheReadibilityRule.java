@@ -1,6 +1,7 @@
 package org.homs.cc4j.rules.text.rules;
 
 import org.homs.cc4j.RuleInfo;
+import org.homs.cc4j.issue.IssueSeverity;
 import org.homs.cc4j.issue.IssuesReport;
 import org.homs.cc4j.issue.Location;
 import org.homs.cc4j.rules.text.TextRule;
@@ -11,9 +12,11 @@ import static org.homs.cc4j.rules.text.FileRules.checkForRegexp;
 
 public class AddSpacesToIncreaseTheReadibilityRule implements TextRule {
 
+    static final IssueSeverity SEVERITY = WARNING;
+
     @Override
     public RuleInfo getRuleInfo() {
-        return new RuleInfo("co", 1, "Add spaces to increase the readability. Just format your code.");
+        return new RuleInfo("co", 1, "Add spaces to increase the readability. Just format your code. (" + SEVERITY.getName() + ")");
     }
 
     @Override
@@ -42,7 +45,7 @@ public class AddSpacesToIncreaseTheReadibilityRule implements TextRule {
     void addSpacesAfterComma(IssuesReport issuesReport, Location location, String line) {
         int hits = checkForRegexp(line, ",[^\\s]");
         if (hits > 0) {
-            issuesReport.registerIssue(location, WARNING, getRuleInfo(),
+            issuesReport.registerIssue(location, SEVERITY, getRuleInfo(),
                     String.format("%s (after ',') spaces pending to add to increase the readibility", hits));
         }
     }
@@ -51,7 +54,7 @@ public class AddSpacesToIncreaseTheReadibilityRule implements TextRule {
         int hits;
         hits = checkForRegexp(line, "[^\\s]\\=[^\\s]");
         if (hits > 0) {
-            issuesReport.registerIssue(location, WARNING, getRuleInfo(),
+            issuesReport.registerIssue(location, SEVERITY, getRuleInfo(),
                     String.format("%s ('=') spaces pending to add to increase the readibility", hits));
         }
     }
@@ -60,12 +63,12 @@ public class AddSpacesToIncreaseTheReadibilityRule implements TextRule {
         int hits;
         hits = checkForRegexp(line, "[^\\s]\\&\\&[^\\s]");
         if (hits > 0) {
-            issuesReport.registerIssue(location, WARNING, getRuleInfo(),
+            issuesReport.registerIssue(location, SEVERITY, getRuleInfo(),
                     String.format("%s ('&&') spaces pending to add to increase the readibility", hits));
         }
         hits = checkForRegexp(line, "[^\\s]\\|\\|[^\\s]");
         if (hits > 0) {
-            issuesReport.registerIssue(location, WARNING, getRuleInfo(),
+            issuesReport.registerIssue(location, SEVERITY, getRuleInfo(),
                     String.format("%s ('||') spaces pending to add to increase the readibility", hits));
         }
     }
@@ -73,17 +76,17 @@ public class AddSpacesToIncreaseTheReadibilityRule implements TextRule {
     void addSpaceAfterIfOrWhile(IssuesReport issuesReport, Location location, String line) {
         int hits = checkForRegexp(line, "\\sif\\(");
         if (hits > 0) {
-            issuesReport.registerIssue(location, WARNING, getRuleInfo(),
+            issuesReport.registerIssue(location, SEVERITY, getRuleInfo(),
                     String.format("%s ('if(') spaces pending to add to increase the readibility", hits));
         }
         hits = checkForRegexp(line, "\\swhile\\(");
         if (hits > 0) {
-            issuesReport.registerIssue(location, WARNING, getRuleInfo(),
+            issuesReport.registerIssue(location, SEVERITY, getRuleInfo(),
                     String.format("%s ('while(') spaces pending to add to increase the readibility", hits));
         }
         hits = checkForRegexp(line, "\\)\\{");
         if (hits > 0) {
-            issuesReport.registerIssue(location, WARNING, getRuleInfo(),
+            issuesReport.registerIssue(location, SEVERITY, getRuleInfo(),
                     String.format("%s ('){') spaces pending to add to increase the readibility", hits));
         }
     }

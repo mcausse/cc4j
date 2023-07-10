@@ -17,7 +17,7 @@ public class ClassMembersOrderingRule extends RuleTreeVisitor<Void> {
 
     @Override
     public RuleInfo getRuleInfo() {
-        return new RuleInfo("co", 2, "Vertical ordering of a class.");
+        return new RuleInfo("co", 2, "Vertical ordering of the class members.");
     }
 
     enum Member {

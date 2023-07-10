@@ -17,9 +17,12 @@ public class NamingConventionsRule extends RuleTreeVisitor<Void> {
     static final String METHOD_NAME_PATTERN = "^[a-z][a-zA-Z0-9]*$";
     static final String CLASS_NAME_PATTERN = "^[A-Z][a-zA-Z0-9]*$";
 
+    static final IssueSeverity SEVERITY = IssueSeverity.CRITICAL;
+
     @Override
     public RuleInfo getRuleInfo() {
-        return new RuleInfo("co", 3, "Follow the naming conventions.");
+        return new RuleInfo("co", 3,
+                "Follow the naming conventions for classes, constants, properties, methods, and arguments. (" + SEVERITY.getName() + ")");
     }
 
     public Integer visitClass(ClassTree node, Void p) {
@@ -33,7 +36,7 @@ public class NamingConventionsRule extends RuleTreeVisitor<Void> {
         location.push(node.getSimpleName().toString());
 
         if (!className.matches(CLASS_NAME_PATTERN)) {
-            generateIssue(IssueSeverity.CRITICAL,
+            generateIssue(SEVERITY,
                     String.format("class '%s' should comply with a naming convention: %s",
                             className, CLASS_NAME_PATTERN));
         }
@@ -55,13 +58,13 @@ public class NamingConventionsRule extends RuleTreeVisitor<Void> {
         boolean isStatic = property.getModifiers().getFlags().contains(Modifier.STATIC);
         if (isStatic) {
             if (!propertyName.matches(CONSTANT_PATTERN)) {
-                generateIssue(IssueSeverity.CRITICAL,
+                generateIssue(SEVERITY,
                         String.format("constant '%s' should comply with a naming convention: %s",
                                 propertyName, CONSTANT_PATTERN));
             }
         } else {
             if (!propertyName.matches(VARIABLE_NAME_PATTERN)) {
-                generateIssue(IssueSeverity.CRITICAL,
+                generateIssue(SEVERITY,
                         String.format("property '%s' should comply with a naming convention: %s",
                                 propertyName, VARIABLE_NAME_PATTERN));
             }
@@ -90,7 +93,7 @@ public class NamingConventionsRule extends RuleTreeVisitor<Void> {
 
         String name = methodTree.getName().toString();
         if (!name.matches(METHOD_NAME_PATTERN)) {
-            generateIssue(IssueSeverity.CRITICAL,
+            generateIssue(SEVERITY,
                     String.format("method '%s' should comply with a naming convention: %s",
                             name, METHOD_NAME_PATTERN));
         }
@@ -103,7 +106,7 @@ public class NamingConventionsRule extends RuleTreeVisitor<Void> {
         for (var paramTree : methodTree.getParameters()) {
             String paramName = paramTree.getName().toString();
             if (!paramName.matches(VARIABLE_NAME_PATTERN)) {
-                generateIssue(IssueSeverity.CRITICAL,
+                generateIssue(SEVERITY,
                         String.format("parameter '%s' should comply with a naming convention: %s",
                                 paramName, VARIABLE_NAME_PATTERN));
             }
