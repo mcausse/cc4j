@@ -5,6 +5,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import org.homs.cc4j.RuleInfo;
+import org.homs.cc4j.issue.IssueSeverity;
 import org.homs.cc4j.rules.visitors.RuleTreeVisitor;
 
 import javax.lang.model.element.Modifier;
@@ -15,9 +16,11 @@ import static org.homs.cc4j.issue.IssueSeverity.CRITICAL;
 
 public class ClassMembersOrderingRule extends RuleTreeVisitor<Void> {
 
+    static final IssueSeverity SEVERITY = CRITICAL;
+
     @Override
     public RuleInfo getRuleInfo() {
-        return new RuleInfo("co", 2, "Vertical ordering of the class members.");
+        return new RuleInfo("co", 2, "Vertical ordering of the class members. (" + SEVERITY.getName() + ")");
     }
 
     enum Member {
@@ -48,7 +51,7 @@ public class ClassMembersOrderingRule extends RuleTreeVisitor<Void> {
         // LOGGER(1), STATIC(2), PROPERTY(3), CTOR(4), METHOD(5), EQUALS_HASHCODE(6), TOSTRING(7);
         var pattern = "^1?2*3*4*5*6*7*$";
         if (!s.toString().matches(pattern)) {
-            generateIssue(CRITICAL, String.format("class members should be ordered as the convention: %s (pattern is: %s)", s, pattern));
+            generateIssue(SEVERITY, String.format("class members should be ordered as the convention: %s (pattern is: %s)", s, pattern));
         }
     }
 
