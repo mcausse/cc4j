@@ -46,8 +46,9 @@ class CodeCleanerTest {
                 Arguments.of("// **", "// **"),
 
                 Arguments.of("// a", "// *"),
-                Arguments.of("// aa", "// **")
+                Arguments.of("// aa", "// **"),
 
+                Arguments.of("jou = \"a\\\"b\\\"c\";", "jou = \"*\\**\\**\";")
         );
     }
 
@@ -110,5 +111,4 @@ class CodeCleanerTest {
                         "    }"
         );
     }
-
 }

@@ -69,7 +69,8 @@ public class AddSpacesToIncreaseTheReadibilityRule implements TextRule {
         hits = checkForRegexp(line, "[^\\s]\\|\\|[^\\s]");
         if (hits > 0) {
             issuesReport.registerIssue(location, SEVERITY, getRuleInfo(),
-                    String.format("%s ('||') spaces pending to add to increase the readibility", hits));
+                    String.format("%s ('||') " +
+                            "spaces pending to add to increase the readibility", hits));
         }
     }
 

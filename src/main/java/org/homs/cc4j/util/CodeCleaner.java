@@ -118,6 +118,17 @@ public class CodeCleaner {
     }
 
     private State getNextStateForString(char c, StringBuilder strb) {
+        if (c == '\\') {
+            strb.append(c);
+            return State.STRING;
+        }
+        if (!strb.isEmpty() && strb.charAt(strb.length() - 1) == '\\') {
+            // lo consumit anteriorment és un backslash que inicia un escape;
+            // ignorar doncs el char actual
+            strb.append(encode(c));
+            return State.STRING;
+        }
+
         if (c == '"') {
             strb.append(c);
             return State.CODE;
