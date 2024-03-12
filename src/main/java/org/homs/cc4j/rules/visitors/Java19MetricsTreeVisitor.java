@@ -40,10 +40,12 @@ public class Java19MetricsTreeVisitor<P> implements TreeVisitor<Integer, P> {
     @Override
     public Integer visitAssert(AssertTree node, P p) {
         var r = 0;
-        if (node.getCondition() != null)
+        if (node.getCondition() != null) {
             r += node.getCondition().accept(this, p);
-        if (node.getDetail() != null)
+        }
+        if (node.getDetail() != null) {
             r += node.getDetail().accept(this, p);
+        }
         return r;
     }
 

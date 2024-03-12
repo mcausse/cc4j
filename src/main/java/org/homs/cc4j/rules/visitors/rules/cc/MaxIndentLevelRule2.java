@@ -140,5 +140,4 @@ public class MaxIndentLevelRule2 extends RuleTreeVisitor<MaxIndentLevelRule2.Dee
         deep.decrementDeep();
         return 0;
     }
-
 }

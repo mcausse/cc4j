@@ -37,7 +37,8 @@ public class Cc4jSelfTest {
                 f -> f.endsWith(".java")
         );
 
-        var cc4j = new Cc4j();
+//        var cc4j = new Cc4j();
+        var cc4j = ComplexityAssessmentCc4j.buildCc4jForComplexityAssessment();
         cc4j.analyse(files);
         cc4j.report(System.out,
                 new SimpleIssuesReportVisitor(),
@@ -51,7 +52,8 @@ public class Cc4jSelfTest {
                 f -> f.endsWith(".java")
         );
 
-        var cc4j = new Cc4j();
+//        var cc4j = new Cc4j();
+        var cc4j = ComplexityAssessmentCc4j.buildCc4jForComplexityAssessment();
         cc4j.analyse(files);
         cc4j.report(System.out,
                 new SimpleIssuesReportVisitor(),
@@ -72,29 +74,16 @@ public class Cc4jSelfTest {
                 new BriefReportVisitor());
     }
 
-    @Test
-    void Lenteja() {
-
-        List<File> files = processDirectory(new File("C:\\java\\workospace\\lenteja-jdbc\\src\\main\\java\\org\\homs\\lentejajdbc"),
-                f -> f.endsWith(".java")
-        );
-
-        var cc4j = new Cc4j();
-        cc4j.analyse(files);
-        cc4j.report(System.out,
-                new SimpleIssuesReportVisitor(),
-                new BriefReportVisitor());
-    }
-
     @Disabled
     @Test
     void all() {
 
-        List<File> files = processDirectory(new File("C:\\java\\workospace"),
+        List<File> files = processDirectory(new File("C:\\java\\workospace\\lab-hub-events-engine\\src\\main\\java\\io\\homs\\eventsengine"),
                 f -> f.endsWith(".java")
         );
 
-        var cc4j = new Cc4j();
+//        var cc4j = new Cc4j();
+        var cc4j = ComplexityAssessmentCc4j.buildCc4jForComplexityAssessment();
         cc4j.analyse(files);
         cc4j.report();
     }
@@ -105,6 +94,21 @@ public class Cc4jSelfTest {
 
         var cc4j = new Cc4j();
         cc4j.analyseFile("C:\\java\\workospace\\lispo2021\\src\\main\\java\\org\\homs\\lechugascript\\eval\\Evaluator.java");
+        cc4j.report();
+    }
+
+    @Test
+    void Self222222222222() {
+
+        List<File> files = processDirectory(new File("."),
+                f -> f.endsWith(".java")
+                        && f.contains("cc4j")
+                        && !f.contains("test")
+        );
+
+//        var cc4j = new Cc4j();
+        var cc4j = ComplexityAssessmentCc4j.buildCc4jForComplexityAssessment();
+        cc4j.analyse(files);
         cc4j.report();
     }
 }
